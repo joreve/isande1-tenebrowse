@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Login</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Embedded Specialized Layout Styles for Login Component -->
+    <style>
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-background);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* Centered Entry Card with Entrance Animation */
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--color-border);
+            padding: 2.5rem 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: formEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Large Institutional Construction Logo Brand Styling */
+        .login-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo-icon {
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin-bottom: 0.75rem;
+            display: inline-block;
+            transition: transform var(--transition-normal);
+        }
+
+        .login-logo-icon:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .login-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .login-tagline {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Professional Input Form Styling */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--color-text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i.input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--color-text-muted);
+            pointer-events: none;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--color-text-main);
+            background-color: var(--color-surface);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(212, 79, 0, 0.15);
+        }
+
+        /* Error States */
+        .form-group.has-error .form-control {
+            border-color: var(--color-danger);
+            background-color: var(--color-danger-light);
+        }
+
+        .error-message {
+            font-size: 0.75rem;
+            color: var(--color-danger);
+            margin-top: 0.25rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Interactive Visibility Toggle Button */
+        .password-toggle-btn {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color var(--transition-fast);
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--color-primary);
+        }
+
+        /* Auxiliary Utilities Option Block */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me-label input[type="checkbox"] {
+            accent-color: var(--color-primary);
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+
+        .forgot-password-link {
+            color: var(--color-primary);
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+
+        .forgot-password-link:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        /* Structural Wide CTA Button Configuration */
+        .btn-login {
+            width: 100%;
+            padding: 0.875rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* App Ecosystem Footer Signature Elements */
+        .login-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Keyframe Entrance Configurations */
+        @keyframes formEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <!-- Toast Container Component Injection Point -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- Centered Login Card -->
+        <div class="login-card">
+            
+            <!-- System Name and Branding Elements -->
+            <div class="login-brand">
+                <div class="login-logo-icon">
+                    <i class="fas fa-hard-hat"></i>
+                </div>
+                <h1 class="login-title">Tenebrowse</h1>
+                <div class="login-tagline">Connect. Complete. Construct.</div>
+            </div>
+
+            <!-- Intercepted Validation Form Shell -->
+            <form id="loginForm" novalidate>
+                
+                <!-- Username Field -->
+                <div class="form-group" id="usernameGroup">
+                    <label class="form-label" for="username">Username / Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input class="form-control" type="text" id="username" placeholder="Enter corporate identity ID" autocomplete="username">
+                    </div>
+                    <div class="error-message" id="usernameError">Username context validation field missing.</div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group" id="passwordGroup">
+                    <label class="form-label" for="password">Security Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input class="form-control" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="password-toggle-btn" id="passwordToggle" aria-label="Toggle password visibility">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError">Security protocol passcode context missing.</div>
+                </div>
+
+                <!-- Remember Me / Forgot Password Configuration Actions -->
+                <div class="form-options">
+                    <label class="remember-me-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember access profile</span>
+                    </label>
+                    <a href="#" class="forgot-password-link" onclick="event.preventDefault(); alert('Enterprise Notice: Password restoration structures must be executed directly via internal Helpdesk systems.');">Forgot credentials?</a>
+                </div>
+
+                <!-- Form Action Event Driver -->
+                <button type="submit" class="btn btn-primary btn-login">
+                    <span>Secure Access Portal</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Explicit Legal / Product Version Tracking Footers -->
+        <footer class="login-footer">
+            <div>Application Ecosystem Environment Platform v1.0.0-Prototype</div>
+            <div>&copy; 2026 Tenebrowse Logistics & Infrastructure Operations. All rights reserved.</div>
+        </footer>
+    </div>
+
+    <!-- Core Functional Application Scripts Insertion Framework -->
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.getElementById('passwordToggle');
+            
+            // Reusable Error Parsing Utilities
+            const clearErrors = () => {
+                document.querySelectorAll('.form-group').forEach(group => group.classList.remove('has-error'));
+                document.querySelectorAll('.error-message').forEach(err => err.style.display = 'none');
+            };
+
+            // Interactive Password Visibility Engine Toggle
+            if (passwordToggle && passwordInput) {
+                passwordToggle.addEventListener('click', () => {
+                    const typeAttribute = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', typeAttribute);
+                    
+                    // Icon Variant Management Sync
+                    const iconElement = passwordToggle.querySelector('i');
+                    if (typeAttribute === 'text') {
+                        iconElement.className = 'far fa-eye-slash';
+                    } else {
+                        iconElement.className = 'far fa-eye';
+                    }
+                });
+            }
+
+            // Client Validation Form Controller Link Execution Rules
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    clearErrors();
+
+                    let clientFormIsValid = true;
+                    const usernameVal = usernameInput.value.trim();
+                    const passwordVal = passwordInput.value.trim();
+
+                    // Static Context Processing Validation Checks
+                    if (!usernameVal) {
+                        document.getElementById('usernameGroup').classList.add('has-error');
+                        document.getElementById('usernameError').style.display = 'block';
+                        clientFormIsValid = false;
+                    }
+
+                    if (!passwordVal) {
+                        document.getElementById('passwordGroup').classList.add('has-error');
+                        document.getElementById('passwordError').style.display = 'block';
+                        clientFormIsValid = false;
+                    }
+
+                    // Execution Branch Path Forward Redirect Mapping Strategy
+                    if (clientFormIsValid) {
+                        // Generate a confirmation UI Toast notification sequence just prior to routing step execution
+                        if (typeof window.showToast === 'function') {
+                            window.showToast('Validation Verified', 'Authorization criteria processed successfully. Mounting internal desktop application metrics...', 'success');
+                        }
+                        
+                        // Execute immediate local platform prototype dashboard file directory rerouting step
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 800);
+                    } else {
+                        if (typeof window.showToast === 'function') {
+                            window.showToast('Authentication Interrupted', 'Please resolve highlighted configuration compliance inputs.', 'danger');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

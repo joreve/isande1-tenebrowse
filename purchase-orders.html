@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Purchase Orders</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Supplemental Layout Styles for this Module -->
+    <style>
+        /* Toolbar & Controls */
+        .module-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .toolbar-filters {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            min-width: 300px;
+        }
+        .toolbar-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            color: var(--color-text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            font-family: inherit;
+            font-size: 0.875rem;
+            color: var(--color-text-main);
+            background-color: var(--color-surface);
+            transition: all var(--transition-fast);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(212, 79, 0, 0.15);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Search Input Specialized */
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 350px;
+        }
+        .search-container i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-muted);
+        }
+        .search-container .form-control {
+            padding-left: 2.5rem;
+        }
+
+        /* Substitution Form Layout */
+        .sub-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 1.5rem;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sub-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .toolbar-filters {
+                flex-direction: column;
+            }
+            .search-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-hard-hat"></i> Tenebrowse
+                    <span>Connect. Complete. Construct.</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="window.location.href='material-requests.html'">
+                        <i class="fas fa-box-open"></i> Material Requests
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-file-invoice"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="window.location.href='settings.html'">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Top Navigation -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 style="font-size: 1.25rem; font-weight: 600;">Logistics & Orders</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    <!-- Profile Placeholder -->
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                        MKS
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                
+                <!-- Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right" style="font-size: 0.65rem;"></i>
+                    <span>Purchase Orders</span>
+                </div>
+
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search PO number or supplier...">
+                        </div>
+                        <select id="statusFilter" class="form-control" style="max-width: 200px;">
+                            <option value="All">All Statuses</option>
+                            <option value="Ordered">Ordered</option>
+                            <option value="Delivering">Delivering</option>
+                            <option value="Received">Received</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
+                    </div>
+                </div>
+
+                <!-- PO Tracking Table -->
+                <div class="card mb-3">
+                    <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-truck-loading" style="color: var(--color-primary); margin-right: 0.5rem;"></i> Active Supply Pipeline</h3>
+                    <div class="table-wrapper">
+                        <table class="table" id="poTable">
+                            <thead>
+                                <tr>
+                                    <th>PO Number</th>
+                                    <th>Supplier</th>
+                                    <th>Date Ordered</th>
+                                    <th>Expected Delivery</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Substitution Request Form Component -->
+                <div class="card" style="border-top: 4px solid var(--color-secondary);">
+                    <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-exchange-alt" style="color: var(--color-secondary); margin-right: 0.5rem;"></i> Material Substitution Request</h3>
+                    <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">File a variance request when original materials are unavailable or delayed to maintain project schedules.</p>
+                    
+                    <form id="substitutionForm">
+                        <div class="sub-form-grid">
+                            
+                            <div class="form-group">
+                                <label class="form-label">Original Material</label>
+                                <input type="text" id="origMaterial" class="form-control" placeholder="e.g., Structural Steel I-Beam (Grade 50)" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Replacement Material</label>
+                                <input type="text" id="repMaterial" class="form-control" placeholder="e.g., Structural Steel H-Beam (Grade 50)" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Quantity Required</label>
+                                <input type="number" id="subQty" class="form-control" placeholder="0" min="1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Reason for Substitution</label>
+                                <select id="subReason" class="form-control" required>
+                                    <option value="" disabled selected>Select reason...</option>
+                                    <option value="Supply Chain Delay">Supply Chain Delay</option>
+                                    <option value="Material Discontinued">Material Discontinued</option>
+                                    <option value="Engineering Variation">Engineering Variation</option>
+                                    <option value="Cost Optimization">Cost Optimization</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Supporting Notes & Technical Specifications</label>
+                                <textarea id="subNotes" class="form-control" placeholder="Detail any structural, architectural, or cost impacts..."></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="btnSaveDraft">Save Draft</button>
+                            <button type="button" class="btn btn-primary" data-modal-target="subModal">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Submission Confirmation Modal -->
+    <div class="modal-overlay" id="subModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Substitution</div>
+            <div class="modal-body">
+                Are you sure you want to submit this material substitution request? It will be forwarded to the Engineering and Procurement teams for final approval.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmSubBtn" data-modal-close>Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Mock Data for Purchase Orders
+            const poData = [
+                { id: 'PO-2026-770', supplier: 'Global Logistics Foundry', dateOrdered: 'Jul 10, 2026', expDelivery: 'Jul 15, 2026', status: 'Delivering', remarks: 'In Transit - Route 4' },
+                { id: 'PO-2026-768', supplier: 'Metro Steelwork', dateOrdered: 'Jul 08, 2026', expDelivery: 'Jul 14, 2026', status: 'Ordered', remarks: 'Awaiting Dispatch' },
+                { id: 'PO-2026-750', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 01, 2026', expDelivery: 'Jul 05, 2026', status: 'Received', remarks: 'Offloaded at Dock A' },
+                { id: 'PO-2026-745', supplier: 'Electra Wire Solutions', dateOrdered: 'Jun 28, 2026', expDelivery: 'Jul 02, 2026', status: 'Received', remarks: 'Verified & Stored' },
+                { id: 'PO-2026-782', supplier: 'Timberland Suppliers', dateOrdered: 'Jul 12, 2026', expDelivery: 'Jul 20, 2026', status: 'Ordered', remarks: 'Pending Supplier Confirmation' }
+            ];
+
+            // DOM Elements
+            const tableBody = document.getElementById('poTableBody');
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const btnExport = document.getElementById('btnExport');
+            
+            const substitutionForm = document.getElementById('substitutionForm');
+            const btnSaveDraft = document.getElementById('btnSaveDraft');
+            const confirmSubBtn = document.getElementById('confirmSubBtn');
+
+            // Render PO Table Function
+            const renderPOTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterStatus = statusFilter.value;
+
+                tableBody.innerHTML = '';
+
+                const filteredData = poData.filter(po => {
+                    const matchesSearch = po.id.toLowerCase().includes(searchTerm) || po.supplier.toLowerCase().includes(searchTerm);
+                    const matchesStatus = filterStatus === 'All' || po.status === filterStatus;
+                    return matchesSearch && matchesStatus;
+                });
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--color-text-muted); padding: 2rem;">No purchase orders match your criteria.</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(po => {
+                    // Badge Styling Logic
+                    let badgeClass = '';
+                    if (po.status === 'Ordered') badgeClass = 'badge-info';
+                    else if (po.status === 'Delivering') badgeClass = 'badge-warning';
+                    else if (po.status === 'Received') badgeClass = 'badge-success';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${po.id}</strong></td>
+                        <td>${po.supplier}</td>
+                        <td>${po.dateOrdered}</td>
+                        <td>${po.expDelivery}</td>
+                        <td><span class="badge ${badgeClass}">${po.status}</span></td>
+                        <td style="color: var(--color-text-muted); font-size: 0.875rem;">${po.remarks}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            };
+
+            // Event Listeners for Filters
+            searchInput.addEventListener('input', renderPOTable);
+            statusFilter.addEventListener('change', renderPOTable);
+
+            // Export Button Logic
+            btnExport.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Export Started', 'Generating PO tracking report in CSV format...', 'primary');
+            });
+
+            // Substitution Request Logic
+            btnSaveDraft.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Draft Saved', 'Substitution request draft has been saved locally.', 'info');
+            });
+
+            confirmSubBtn.addEventListener('click', () => {
+                // Basic HTML5 validation check bypass handling for custom modal trigger
+                const origMat = document.getElementById('origMaterial').value.trim();
+                const repMat = document.getElementById('repMaterial').value.trim();
+                const qty = document.getElementById('subQty').value;
+                const reason = document.getElementById('subReason').value;
+
+                if (!origMat || !repMat || !qty || !reason) {
+                    if(window.showToast) window.showToast('Incomplete Form', 'Please fill out all required fields before submitting.', 'danger');
+                    return;
+                }
+
+                // Simulate successful submission
+                if(window.showToast) window.showToast('Request Submitted', 'Substitution Variance Request has been forwarded to Engineering.', 'success');
+                substitutionForm.reset();
+            });
+
+            // Initial Render
+            renderPOTable();
+        });
+    </script>
+</body>
+</html>
