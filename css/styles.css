@@ -101,6 +101,13 @@ ul {
     display: block;
 }
 
+.sidebar-logo img.brand-logo {
+    max-width: 100%;
+    max-height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
 .sidebar-nav {
     padding: 1.5rem 1rem;
     flex: 1;

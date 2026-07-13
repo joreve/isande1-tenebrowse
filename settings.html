@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - System Settings</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Supplemental Layout Styles for Settings -->
+    <style>
+        /* Settings Grid Layout */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            color: var(--color-text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            font-family: inherit;
+            font-size: 0.875rem;
+            color: var(--color-text-main);
+            background-color: var(--color-surface);
+            transition: all var(--transition-fast);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(212, 79, 0, 0.15);
+        }
+
+        /* Toggle Switch Component */
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .toggle-container:last-child {
+            border-bottom: none;
+        }
+        .toggle-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-main);
+        }
+        .toggle-desc {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+        .toggle-switch input:focus + .toggle-slider {
+            box-shadow: 0 0 1px var(--color-primary);
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Action Footer */
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .settings-actions {
+                flex-direction: column-reverse;
+            }
+            .settings-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                    <!-- <span>Connect. Complete. Construct.</span> -->
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="window.location.href='material-requests.html'">
+                        <i class="fas fa-box-open"></i> Material Requests
+                    </li>
+                    <li class="nav-item" onclick="window.location.href='purchase-orders.html'">
+                        <i class="fas fa-file-invoice"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="window.location.href='index.html'" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Top Navigation -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 style="font-size: 1.25rem; font-weight: 600;">System Configurations</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    <!-- Profile Placeholder -->
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                        SH
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                
+                <!-- Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right" style="font-size: 0.65rem;"></i>
+                    <span>Settings</span>
+                </div>
+
+                <form id="settingsForm">
+                    <div class="settings-grid">
+                        
+                        <!-- Profile Card -->
+                        <div class="card">
+                            <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-user-circle" style="color: var(--color-primary); margin-right: 0.5rem;"></i> Profile</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Update your personal information and contact details.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="profileName" class="form-control" value="Shaira Hadid" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-control" value="s.hadid@tenebrowse.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role / Position</label>
+                                <input type="text" class="form-control" value="Project-in-Charge" disabled style="background-color: #f1f5f9; cursor: not-allowed;">
+                            </div>
+                        </div>
+
+                        <!-- Security Card -->
+                        <div class="card">
+                            <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-shield-alt" style="color: var(--color-secondary); margin-right: 0.5rem;"></i> Security</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Manage your account security and authentication.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="newPassword" class="form-control" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences Card -->
+                        <div class="card">
+                            <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-bell" style="color: var(--color-info); margin-right: 0.5rem;"></i> Notification Preferences</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Choose how you receive alerts and updates.</p>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Email Notifications</div>
+                                    <div class="toggle-desc">Receive daily summaries and critical alerts via email.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifEmail" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">SMS Alerts</div>
+                                    <div class="toggle-desc">Urgent requisition approvals and delivery dispatch texts.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifSMS">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">In-App Push Notifications</div>
+                                    <div class="toggle-desc">Real-time alerts while using the Tenebrowse dashboard.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifPush" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Appearance & Language Card -->
+                        <div class="card">
+                            <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-paint-brush" style="color: var(--color-success); margin-right: 0.5rem;"></i> Appearance & Language</h3>
+                            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Customize your interface experience.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">System Language</label>
+                                <select id="systemLang" class="form-control">
+                                    <option value="en" selected>English (US)</option>
+                                    <option value="es">Español</option>
+                                    <option value="tl">Tagalog (PH)</option>
+                                    <option value="zh">Mandarin (ZH)</option>
+                                </select>
+                            </div>
+
+                            <div class="toggle-container" style="margin-top: 1.5rem;">
+                                <div>
+                                    <div class="toggle-label">Dark Mode</div>
+                                    <div class="toggle-desc">Switch interface to a low-light visual theme.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="themeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Global Action Buttons -->
+                    <div class="settings-actions card">
+                        <button type="button" class="btn btn-outline" data-modal-target="resetModal">Reset to Defaults</button>
+                        <button type="button" class="btn btn-primary" data-modal-target="saveModal">Save Changes</button>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Save Confirmation Modal -->
+    <div class="modal-overlay" id="saveModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Changes</div>
+            <div class="modal-body">
+                Are you sure you want to apply these settings? Changes to security and notifications will take effect immediately.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmSaveBtn" data-modal-close>Apply Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">Reset Settings</div>
+            <div class="modal-body">
+                Warning: This will discard any unsaved changes and revert all preferences back to system defaults. Proceed?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmResetBtn" data-modal-close style="background-color: var(--color-danger); border-color: var(--color-danger);">Reset Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Elements
+            const settingsForm = document.getElementById('settingsForm');
+            const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+            const confirmResetBtn = document.getElementById('confirmResetBtn');
+            const themeToggle = document.getElementById('themeToggle');
+
+            // Save Settings Logic
+            confirmSaveBtn.addEventListener('click', () => {
+                // Verify passwords match if trying to change
+                const newPass = document.getElementById('newPassword').value;
+                const confPass = document.getElementById('confirmPassword').value;
+
+                if (newPass || confPass) {
+                    if (newPass !== confPass) {
+                        if(window.showToast) window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
+                        return;
+                    }
+                }
+
+                // Simulate Save
+                if(window.showToast) window.showToast('Settings Saved', 'Your preferences and profile details have been successfully updated.', 'success');
+                
+                // Clear password fields for security
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            });
+
+            // Reset Settings Logic
+            confirmResetBtn.addEventListener('click', () => {
+                settingsForm.reset();
+                
+                // Manually enforce defaults just in case reset doesn't catch JS altered states
+                document.getElementById('profileName').value = 'Shaira Hadid';
+                document.getElementById('profileEmail').value = 's.hadid@tenebrowse.com';
+                document.getElementById('notifEmail').checked = true;
+                document.getElementById('notifSMS').checked = false;
+                document.getElementById('notifPush').checked = true;
+                document.getElementById('systemLang').value = 'en';
+                
+                // Theme reset visual feedback
+                if (themeToggle.checked) {
+                    themeToggle.checked = false;
+                    document.body.classList.remove('dark-theme');
+                }
+
+                if(window.showToast) window.showToast('Defaults Restored', 'All settings have been reverted to system defaults.', 'info');
+            });
+
+            // Live Theme Toggle Feedback (Visual only for demonstration)
+            themeToggle.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    if(window.showToast) window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
+                    // In a full app, this would toggle a class on the body:
+                    // document.body.classList.add('dark-theme');
+                } else {
+                    // document.body.classList.remove('dark-theme');
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

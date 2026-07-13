@@ -132,8 +132,9 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <i class="fas fa-hard-hat"></i> Tenebrowse
-                    <span>Connect. Complete. Construct.</span>
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                    <!-- <span>Connect. Complete. Construct.</span> -->
                 </div>
             </div>
             <nav class="sidebar-nav">
@@ -149,6 +150,9 @@
                     </li>
                     <li class="nav-item" onclick="window.location.href='settings.html'">
                         <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="window.location.href='index.html'" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
             </nav>
@@ -167,7 +171,7 @@
                 <div class="topbar-right">
                     <!-- Profile Placeholder -->
                     <div style="width: 36px; height: 36px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-                        MKS
+                        SH
                     </div>
                 </div>
             </header>
@@ -290,7 +294,7 @@
         <div class="modal">
             <div class="modal-header">Finalize Material Request</div>
             <div class="modal-body">
-                You are about to submit this requisition manifest to the Purchasing Department. Modifications will not be possible once submitted without a formal revision request. Proceed?
+                You are about to submit this requisition manifest to the Head Manager. Modifications will not be possible once submitted without a formal revision request. Proceed?
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" data-modal-close>Review Draft</button>
@@ -440,7 +444,7 @@
                 // Clear table for simulated successful submission
                 materialList = [];
                 renderTable();
-                if(window.showToast) window.showToast('Request Submitted', 'Requisition successfully routed to Purchasing workflow.', 'success');
+                if(window.showToast) window.showToast('Request Submitted', 'Requisition successfully routed to Head Manager.', 'success');
             });
 
             // Initial Render
