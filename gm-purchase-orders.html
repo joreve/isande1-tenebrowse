@@ -61,8 +61,36 @@
                 </div>
                 
                 <div class="topbar-right">
-                    <!-- Profile Placeholder -->
-                    <div class="profile-avatar">GM</div>
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">Enterprise Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Inventory Alert</div>
+                                    <div class="notif-desc">Global structural steel stock below 15% threshold.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">ST</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Saturn Torres</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                        </button>
+                    </div>
+
                 </div>
             </header>
 

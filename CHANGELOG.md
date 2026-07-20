@@ -24,3 +24,8 @@
 ## v2.0
 - Updated Login Page to include Role Switching
 - Added Head Manager Interface
+
+## v2.1
+- Change Details to Match Persona
+- Change Header to be consistent across each page
+- Fix pic-settings.html to match gm-settings

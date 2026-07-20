@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - System Settings</title>
+    <title>Tenebrowse - <Project-in-Chrage></Project-in-Chrage> Settings</title>
     
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -55,8 +55,36 @@
                 </div>
                 
                 <div class="topbar-right">
-                    <!-- Profile Placeholder -->
-                    <div class="profile-avatar">SH</div>
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-check-circle icon-success"></i>
+                                <div>
+                                    <div class="notif-title">Material Request Approved</div>
+                                    <div class="notif-desc">REQ-2026-089 structural concrete clearance generated.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">SH</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Shaira Hadid</div>
+                                <div class="profile-role">Project-in-Charge</div>
+                            </div>
+                        </button>
+                    </div>
+
                 </div>
             </header>
 
@@ -64,7 +92,7 @@
                 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('dashboard.html')">Tenebrowse Control</a>
+                    <a href="javascript:transitionTo('pic-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Settings</span>
                 </div>
@@ -82,12 +110,16 @@
                                 <input type="text" id="profileName" class="form-control" value="Shaira Hadid" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" id="profileEmail" class="form-control" value="s.hadid@tenebrowse.com" required>
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" id="employeeId" class="form-control" value="EMP-PIC-9932" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Role / Position</label>
                                 <input type="text" class="form-control" value="Project-in-Charge" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-control" value="shaira.hadid@tenebrowse.com" required>
                             </div>
                         </div>
 
