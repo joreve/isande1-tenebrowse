@@ -10,116 +10,8 @@
     
     <!-- Core Design System CSS Reference -->
     <link rel="stylesheet" href="css/styles.css">
-
-    <!-- Supplemental Layout Styles for this Module -->
-    <style>
-        /* Toolbar & Controls */
-        .module-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .toolbar-filters {
-            display: flex;
-            gap: 1rem;
-            flex: 1;
-            min-width: 300px;
-        }
-        .toolbar-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.8125rem;
-            color: var(--color-text-main);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.65rem 1rem;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--color-border);
-            font-family: inherit;
-            font-size: 0.875rem;
-            color: var(--color-text-main);
-            background-color: var(--color-surface);
-            transition: all var(--transition-fast);
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(212, 79, 0, 0.15);
-        }
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        /* Search Input Specialized */
-        .search-container {
-            position: relative;
-            flex: 1;
-            max-width: 350px;
-        }
-        .search-container i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-text-muted);
-        }
-        .search-container .form-control {
-            padding-left: 2.5rem;
-        }
-
-        /* Substitution Form Layout */
-        .sub-form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0 1.5rem;
-        }
-        .full-width {
-            grid-column: span 2;
-        }
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--color-border);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sub-form-grid {
-                grid-template-columns: 1fr;
-            }
-            .full-width {
-                grid-column: span 1;
-            }
-            .toolbar-filters {
-                flex-direction: column;
-            }
-            .search-container {
-                max-width: 100%;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="page-transition">
 
     <div class="app-wrapper">
         
@@ -129,24 +21,23 @@
                 <div class="sidebar-logo">
                     <img src="assets/logo.png" alt="Icon" class="brand-logo">
                     Tenebrowse
-                    <!-- <span>Connect. Complete. Construct.</span> -->
                 </div>
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="window.location.href='dashboard.html'">
+                    <li class="nav-item" onclick="transitionTo('dashboard.html')">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="window.location.href='material-requests.html'">
+                    <li class="nav-item" onclick="transitionTo('material-requests.html')">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
                     <li class="nav-item active">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
                     </li>
-                    <li class="nav-item" onclick="window.location.href='settings.html'">
+                    <li class="nav-item" onclick="transitionTo('settings.html')">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="window.location.href='index.html'" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -160,14 +51,12 @@
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 style="font-size: 1.25rem; font-weight: 600;">Logistics & Orders</h2>
+                    <h2 class="page-title">Logistics & Orders</h2>
                 </div>
                 
                 <div class="topbar-right">
                     <!-- Profile Placeholder -->
-                    <div style="width: 36px; height: 36px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-                        SH
-                    </div>
+                    <div class="profile-avatar">SH</div>
                 </div>
             </header>
 
@@ -175,8 +64,8 @@
                 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="dashboard.html">Tenebrowse Control</a>
-                    <i class="fas fa-chevron-right" style="font-size: 0.65rem;"></i>
+                    <a href="javascript:transitionTo('dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Purchase Orders</span>
                 </div>
 
@@ -187,7 +76,7 @@
                             <i class="fas fa-search"></i>
                             <input type="text" id="searchInput" class="form-control" placeholder="Search PO number or supplier...">
                         </div>
-                        <select id="statusFilter" class="form-control" style="max-width: 200px;">
+                        <select id="statusFilter" class="form-control filter-select">
                             <option value="All">All Statuses</option>
                             <option value="Ordered">Ordered</option>
                             <option value="Delivering">Delivering</option>
@@ -201,7 +90,7 @@
 
                 <!-- PO Tracking Table -->
                 <div class="card mb-3">
-                    <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-truck-loading" style="color: var(--color-primary); margin-right: 0.5rem;"></i> Active Supply Pipeline</h3>
+                    <h3 class="section-title mb-2"><i class="fas fa-truck-loading section-icon icon-primary"></i> Active Supply Pipeline</h3>
                     <div class="table-wrapper">
                         <table class="table" id="poTable">
                             <thead>
@@ -222,9 +111,9 @@
                 </div>
 
                 <!-- Substitution Request Form Component -->
-                <div class="card" style="border-top: 4px solid var(--color-secondary);">
-                    <h3 class="mb-2" style="font-size: 1rem;"><i class="fas fa-exchange-alt" style="color: var(--color-secondary); margin-right: 0.5rem;"></i> Material Substitution Request</h3>
-                    <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">File a variance request when original materials are unavailable or delayed to maintain project schedules.</p>
+                <div class="card card-highlight-secondary">
+                    <h3 class="section-title mb-2"><i class="fas fa-exchange-alt section-icon icon-secondary"></i> Material Substitution Request</h3>
+                    <p class="section-description">File a variance request when original materials are unavailable or delayed to maintain project schedules.</p>
                     
                     <form id="substitutionForm">
                         <div class="sub-form-grid">
@@ -295,9 +184,13 @@
 
     <!-- Page Specific Vanilla JS Logic -->
     <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Mock Data for Purchase Orders
             const poData = [
                 { id: 'PO-2026-770', supplier: 'Global Logistics Foundry', dateOrdered: 'Jul 10, 2026', expDelivery: 'Jul 15, 2026', status: 'Delivering', remarks: 'In Transit - Route 4' },
                 { id: 'PO-2026-768', supplier: 'Metro Steelwork', dateOrdered: 'Jul 08, 2026', expDelivery: 'Jul 14, 2026', status: 'Ordered', remarks: 'Awaiting Dispatch' },
@@ -306,7 +199,6 @@
                 { id: 'PO-2026-782', supplier: 'Timberland Suppliers', dateOrdered: 'Jul 12, 2026', expDelivery: 'Jul 20, 2026', status: 'Ordered', remarks: 'Pending Supplier Confirmation' }
             ];
 
-            // DOM Elements
             const tableBody = document.getElementById('poTableBody');
             const searchInput = document.getElementById('searchInput');
             const statusFilter = document.getElementById('statusFilter');
@@ -316,7 +208,6 @@
             const btnSaveDraft = document.getElementById('btnSaveDraft');
             const confirmSubBtn = document.getElementById('confirmSubBtn');
 
-            // Render PO Table Function
             const renderPOTable = () => {
                 const searchTerm = searchInput.value.toLowerCase();
                 const filterStatus = statusFilter.value;
@@ -330,12 +221,11 @@
                 });
 
                 if (filteredData.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--color-text-muted); padding: 2rem;">No purchase orders match your criteria.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="6" class="empty-state-row">No purchase orders match your criteria.</td></tr>`;
                     return;
                 }
 
                 filteredData.forEach(po => {
-                    // Badge Styling Logic
                     let badgeClass = '';
                     if (po.status === 'Ordered') badgeClass = 'badge-info';
                     else if (po.status === 'Delivering') badgeClass = 'badge-warning';
@@ -348,28 +238,24 @@
                         <td>${po.dateOrdered}</td>
                         <td>${po.expDelivery}</td>
                         <td><span class="badge ${badgeClass}">${po.status}</span></td>
-                        <td style="color: var(--color-text-muted); font-size: 0.875rem;">${po.remarks}</td>
+                        <td class="text-muted-sm">${po.remarks}</td>
                     `;
                     tableBody.appendChild(tr);
                 });
             };
 
-            // Event Listeners for Filters
             searchInput.addEventListener('input', renderPOTable);
             statusFilter.addEventListener('change', renderPOTable);
 
-            // Export Button Logic
             btnExport.addEventListener('click', () => {
                 if(window.showToast) window.showToast('Export Started', 'Generating PO tracking report in CSV format...', 'primary');
             });
 
-            // Substitution Request Logic
             btnSaveDraft.addEventListener('click', () => {
                 if(window.showToast) window.showToast('Draft Saved', 'Substitution request draft has been saved locally.', 'info');
             });
 
             confirmSubBtn.addEventListener('click', () => {
-                // Basic HTML5 validation check bypass handling for custom modal trigger
                 const origMat = document.getElementById('origMaterial').value.trim();
                 const repMat = document.getElementById('repMaterial').value.trim();
                 const qty = document.getElementById('subQty').value;
@@ -380,12 +266,10 @@
                     return;
                 }
 
-                // Simulate successful submission
                 if(window.showToast) window.showToast('Request Submitted', 'Substitution Variance Request has been forwarded to Head Manager.', 'success');
                 substitutionForm.reset();
             });
 
-            // Initial Render
             renderPOTable();
         });
     </script>
