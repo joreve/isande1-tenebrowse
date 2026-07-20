@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - General Manager | Inventory Overview</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (General Manager Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('gm-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
+                        <i class="fas fa-box-open"></i> Material Requests
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-substitution-requests.html')">
+                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
+                        <i class="fas fa-file-invoice"></i> Purchase Orders
+                    </li>
+                     <li class="nav-item active">
+                        <i class="fas fa-boxes"></i> Inventory Overview
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    
+                    <!-- Global System Unified Search Engine Component -->
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search site materials, tracking codes, orders...">
+                    </div>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Low Stock Alert</div>
+                                    <div class="notif-desc">Portland Cement dropped below minimum threshold.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">GM</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Marcus Vance</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                            <i class="fas fa-chevron-down profile-trigger-icon"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="gm-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Inventory Overview</span>
+                </div>
+
+                <!-- Dashboard Summary Status Metrics Blocks -->
+                <div class="grid grid-cols-4 mb-3">
+                    
+                    <!-- Total Materials Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-cubes icon-info"></i> Total Materials
+                        </div>
+                        <div class="metric-block metric-border-info mb-0">
+                            <div class="metric-value">1,248</div>
+                            <div class="metric-label">Tracked SKUs</div>
+                        </div>
+                    </div>
+
+                    <!-- Available Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-check-circle icon-success"></i> Available Stock
+                        </div>
+                        <div class="metric-block metric-border-success mb-0">
+                            <div class="metric-value">1,102</div>
+                            <div class="metric-label">Optimal Levels</div>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-secondary"></i> Low Stock
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value">114</div>
+                            <div class="metric-label">Below Minimum</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Out of Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-times-circle icon-danger"></i> Out of Stock
+                        </div>
+                        <div class="metric-block metric-border-danger mb-0">
+                            <div class="metric-value">32</div>
+                            <div class="metric-label">Depleted</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Top Module Toolbar for Inventory Filtering -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Material ID or Name...">
+                        </div>
+                        <select id="categoryFilter" class="form-control filter-select">
+                            <option value="All">All Categories</option>
+                            <option value="Structural">Structural</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Finishing">Finishing</option>
+                        </select>
+                        <select id="warehouseFilter" class="form-control filter-select">
+                            <option value="All">All Warehouses</option>
+                            <option value="Zone A">Zone A</option>
+                            <option value="Zone B">Zone B</option>
+                            <option value="Zone C">Zone C</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
+                    </div>
+                </div>
+
+                <!-- Lower Layout Analytics Grid Split Block -->
+                <div class="dashboard-lower-grid">
+                    
+                    <!-- Inventory Table Layout Container -->
+                    <div class="chart-column">
+                        
+                        <!-- Inventory Data Table -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Master Inventory Registry (Read-Only)</h3>
+                            <div class="table-wrapper">
+                                <table class="table" id="inventoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Material ID</th>
+                                            <th>Material Name</th>
+                                            <th>Category</th>
+                                            <th>Warehouse</th>
+                                            <th>Available Qty</th>
+                                            <th>Min Qty</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventoryTableBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Inventory Alerts Panel Component -->
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-secondary"></i> Inventory Alerts</h3>
+                        
+                        <div class="notification-feed">
+                            
+                            <div class="feed-item warning">
+                                <div class="feed-icon"><i class="fas fa-arrow-down"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Low Stock Alert</div>
+                                    <div class="feed-meta">Portland Cement (Type I) dropped below minimum threshold (45/50 bags).</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item danger">
+                                <div class="feed-icon"><i class="fas fa-heart-broken"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Damaged Materials Logged</div>
+                                    <div class="feed-meta">12 units of Gypsum Board marked as water-damaged in Zone B.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item danger">
+                                <div class="feed-icon"><i class="fas fa-search-minus"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Missing Materials</div>
+                                    <div class="feed-meta">Discrepancy: 50m of 12mm Copper Wire missing during shift audit.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item info">
+                                <div class="feed-icon"><i class="fas fa-arrow-up"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Overstocked Materials</div>
+                                    <div class="feed-meta">PVC Pipes (4-inch) at 150% of maximum capacity in Zone C.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+    
+    <!-- Page Specific Vanilla JS Logic -->
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Realistic Construction Inventory Data
+            const inventoryData = [
+                { id: 'MAT-1045', name: 'Portland Cement Type I', category: 'Structural', warehouse: 'Zone A', available: 45, min: 50, status: 'Low Stock' },
+                { id: 'MAT-2099', name: 'Rebar 12mm Grade 40', category: 'Structural', warehouse: 'Zone B', available: 1200, min: 500, status: 'Optimal' },
+                { id: 'MAT-3012', name: 'PVC Pipe 4-inch', category: 'Plumbing', warehouse: 'Zone C', available: 450, min: 100, status: 'Overstocked' },
+                { id: 'MAT-4050', name: 'Copper Wire 12 AWG', category: 'Electrical', warehouse: 'Zone A', available: 0, min: 200, status: 'Out of Stock' },
+                { id: 'MAT-1088', name: 'Gypsum Board 1/2"', category: 'Finishing', warehouse: 'Zone B', available: 18, min: 20, status: 'Low Stock' },
+                { id: 'MAT-5022', name: 'Ceramic Tiles 60x60', category: 'Finishing', warehouse: 'Zone C', available: 850, min: 300, status: 'Optimal' },
+                { id: 'MAT-2130', name: 'Structural Timber 2x4', category: 'Structural', warehouse: 'Zone A', available: 320, min: 150, status: 'Optimal' }
+            ];
+
+            const tableBody = document.getElementById('inventoryTableBody');
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const warehouseFilter = document.getElementById('warehouseFilter');
+            const btnExport = document.getElementById('btnExport');
+
+            const renderInventoryTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterCategory = categoryFilter.value;
+                const filterWarehouse = warehouseFilter.value;
+
+                tableBody.innerHTML = '';
+
+                const filteredData = inventoryData.filter(item => {
+                    const matchesSearch = item.id.toLowerCase().includes(searchTerm) || item.name.toLowerCase().includes(searchTerm);
+                    const matchesCategory = filterCategory === 'All' || item.category === filterCategory;
+                    const matchesWarehouse = filterWarehouse === 'All' || item.warehouse === filterWarehouse;
+                    return matchesSearch && matchesCategory && matchesWarehouse;
+                });
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="empty-state-row">No inventory records match your criteria.</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    let badgeClass = '';
+                    if (item.status === 'Optimal') badgeClass = 'badge-success';
+                    else if (item.status === 'Low Stock') badgeClass = 'badge-warning';
+                    else if (item.status === 'Out of Stock') badgeClass = 'badge-danger';
+                    else if (item.status === 'Overstocked') badgeClass = 'badge-info';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${item.id}</strong></td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td>${item.warehouse}</td>
+                        <td class="font-semibold">${item.available}</td>
+                        <td class="text-muted-sm">${item.min}</td>
+                        <td><span class="badge ${badgeClass}">${item.status}</span></td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            };
+
+            // Event Listeners
+            searchInput.addEventListener('input', renderInventoryTable);
+            categoryFilter.addEventListener('change', renderInventoryTable);
+            warehouseFilter.addEventListener('change', renderInventoryTable);
+
+            btnExport.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Export Triggered', 'Generating Inventory Master Overview report in CSV format...', 'primary');
+            });
+
+            // Initial Render
+            renderInventoryTable();
+        });
+    </script>
+</body>
+</html>

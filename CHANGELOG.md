@@ -20,3 +20,7 @@
 - Refine transition for switching pages
 - Change logo in log-in page
 - Cleaned up the Code
+
+## v2.0
+- Updated Login Page to include Role Switching
+- Added Head Manager Interface

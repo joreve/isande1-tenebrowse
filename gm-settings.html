@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - System Settings</title>
+    <title>Tenebrowse - General Manager Settings</title>
     
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +15,7 @@
 
     <div class="app-wrapper">
         
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation (General Manager Scope) -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -25,14 +25,19 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('dashboard.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-dashboard.html')">
                         <i class="fas fa-chart-pie"></i> Dashboard
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('material-requests.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('purchase-orders.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-substitution-requests.html')">
+                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-inventory-overview.html')">
+                        <i class="fas fa-boxes"></i> Inventory Overview
                     </li>
                     <li class="nav-item active">
                         <i class="fas fa-cog"></i> Settings
@@ -56,7 +61,7 @@
                 
                 <div class="topbar-right">
                     <!-- Profile Placeholder -->
-                    <div class="profile-avatar">SH</div>
+                    <div class="profile-avatar">MV</div>
                 </div>
             </header>
 
@@ -64,7 +69,7 @@
                 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('dashboard.html')">Tenebrowse Control</a>
+                    <a href="javascript:transitionTo('gm-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Settings</span>
                 </div>
@@ -79,22 +84,26 @@
                             
                             <div class="form-group">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" id="profileName" class="form-control" value="Shaira Hadid" required>
+                                <input type="text" id="profileName" class="form-control" value="Marcus Vance" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" id="profileEmail" class="form-control" value="s.hadid@tenebrowse.com" required>
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" id="employeeId" class="form-control" value="EMP-GM-8821" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Role / Position</label>
-                                <input type="text" class="form-control" value="Project-in-Charge" disabled>
+                                <input type="text" class="form-control" value="General Manager" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-control" value="m.vance@tenebrowse.com" required>
                             </div>
                         </div>
 
                         <!-- Security Card -->
                         <div class="card">
-                            <h3 class="section-title mb-2"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Security</h3>
-                            <p class="section-description">Manage your account security and authentication.</p>
+                            <h3 class="section-title mb-2"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Account Security</h3>
+                            <p class="section-description">Manage your password and authentication settings.</p>
                             
                             <div class="form-group">
                                 <label class="form-label">Current Password</label>
@@ -113,37 +122,48 @@
                         <!-- Notification Preferences Card -->
                         <div class="card">
                             <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-info"></i> Notification Preferences</h3>
-                            <p class="section-description">Choose how you receive alerts and updates.</p>
+                            <p class="section-description">Choose how you receive alerts and enterprise summaries.</p>
                             
                             <div class="toggle-container">
                                 <div>
-                                    <div class="toggle-label">Email Notifications</div>
-                                    <div class="toggle-desc">Receive daily summaries and critical alerts via email.</div>
+                                    <div class="toggle-label">Material Requests</div>
+                                    <div class="toggle-desc">Alerts for new requisitions and site submissions.</div>
                                 </div>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="notifEmail" checked>
+                                    <input type="checkbox" id="notifMaterialReq" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
 
                             <div class="toggle-container">
                                 <div>
-                                    <div class="toggle-label">SMS Alerts</div>
-                                    <div class="toggle-desc">Urgent requisition approvals and delivery dispatch texts.</div>
+                                    <div class="toggle-label">Purchase Orders</div>
+                                    <div class="toggle-desc">Notifications regarding PO approvals, dispatches, and completions.</div>
                                 </div>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="notifSMS">
+                                    <input type="checkbox" id="notifPO" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
 
                             <div class="toggle-container">
                                 <div>
-                                    <div class="toggle-label">In-App Push Notifications</div>
-                                    <div class="toggle-desc">Real-time alerts while using the Tenebrowse dashboard.</div>
+                                    <div class="toggle-label">Inventory Alerts</div>
+                                    <div class="toggle-desc">Warnings on low stock thresholds, damages, and missing logs.</div>
                                 </div>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="notifPush" checked>
+                                    <input type="checkbox" id="notifInventory" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">System Notifications</div>
+                                    <div class="toggle-desc">Real-time alerts and system updates while on dashboard.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifSystem" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
@@ -152,7 +172,7 @@
                         <!-- Appearance & Language Card -->
                         <div class="card">
                             <h3 class="section-title mb-2"><i class="fas fa-paint-brush section-icon icon-success"></i> Appearance & Language</h3>
-                            <p class="section-description">Customize your interface experience.</p>
+                            <p class="section-description">Customize your workspace language and theme.</p>
                             
                             <div class="form-group">
                                 <label class="form-label">System Language</label>
@@ -166,7 +186,7 @@
 
                             <div class="toggle-container mt-3">
                                 <div>
-                                    <div class="toggle-label">Dark Mode</div>
+                                    <div class="toggle-label">Dark Theme</div>
                                     <div class="toggle-desc">Switch interface to a low-light visual theme.</div>
                                 </div>
                                 <label class="toggle-switch">
@@ -196,7 +216,7 @@
         <div class="modal">
             <div class="modal-header">Confirm Changes</div>
             <div class="modal-body">
-                Are you sure you want to apply these settings? Changes to security and notifications will take effect immediately.
+                Are you sure you want to apply these settings? Changes to security and notification rules will take effect immediately.
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" data-modal-close>Cancel</button>
@@ -250,7 +270,7 @@
                     }
                 }
 
-                if(window.showToast) window.showToast('Settings Saved', 'Your preferences and profile details have been successfully updated.', 'success');
+                if(window.showToast) window.showToast('Settings Saved', 'General Manager preferences and profile details updated successfully.', 'success');
                 
                 document.getElementById('currentPassword').value = '';
                 document.getElementById('newPassword').value = '';
@@ -260,11 +280,12 @@
             confirmResetBtn.addEventListener('click', () => {
                 settingsForm.reset();
                 
-                document.getElementById('profileName').value = 'Shaira Hadid';
-                document.getElementById('profileEmail').value = 's.hadid@tenebrowse.com';
-                document.getElementById('notifEmail').checked = true;
-                document.getElementById('notifSMS').checked = false;
-                document.getElementById('notifPush').checked = true;
+                document.getElementById('profileName').value = 'Marcus Vance';
+                document.getElementById('profileEmail').value = 'm.vance@tenebrowse.com';
+                document.getElementById('notifMaterialReq').checked = true;
+                document.getElementById('notifPO').checked = true;
+                document.getElementById('notifInventory').checked = true;
+                document.getElementById('notifSystem').checked = true;
                 document.getElementById('systemLang').value = 'en';
                 
                 if (themeToggle.checked) {
@@ -272,7 +293,7 @@
                     document.body.classList.remove('dark-theme');
                 }
 
-                if(window.showToast) window.showToast('Defaults Restored', 'All settings have been reverted to system defaults.', 'info');
+                if(window.showToast) window.showToast('Defaults Restored', 'All configuration settings have been reverted to system defaults.', 'info');
             });
 
             themeToggle.addEventListener('change', (e) => {

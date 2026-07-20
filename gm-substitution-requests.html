@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - GM Substitution Requests</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (General Manager Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('gm-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
+                        <i class="fas fa-box-open"></i> Material Requests
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
+                        <i class="fas fa-file-invoice"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-inventory-overview.html')">
+                        <i class="fas fa-boxes"></i> Inventory Overview
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Enterprise Substitution Assessment</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    <!-- Profile Placeholder -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">RV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Robert Vance</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                            <i class="fas fa-chevron-down profile-trigger-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('gm-dashboard.html')">Enterprise Command</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Substitution Requests Assessment</span>
+                </div>
+
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Request No, Material, Project, or PIC...">
+                        </div>
+                        <select id="statusFilter" class="form-control filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="Pending" selected>Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <select id="projectFilter" class="form-control filter-select">
+                            <option value="All">All Projects</option>
+                            <option value="Site Alpha">Site Alpha</option>
+                            <option value="Site Beta">Site Beta</option>
+                            <option value="Sector 4">Sector 4</option>
+                        </select>
+                        <select id="sortFilter" class="form-control filter-select">
+                            <option value="desc">Submission Date (Newest)</option>
+                            <option value="asc">Submission Date (Oldest)</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
+                    </div>
+                </div>
+
+                <!-- Data Table Component -->
+                <div class="card">
+                    <h3 class="section-title mb-2"><i class="fas fa-exchange-alt section-icon icon-primary"></i> Pending & Evaluated Substitution Requests</h3>
+                    <div class="table-wrapper">
+                        <table class="table" id="requestsTable">
+                            <thead>
+                                <tr>
+                                    <th>Request No.</th>
+                                    <th>Original Material</th>
+                                    <th>Suggested Replacement</th>
+                                    <th>Quantity</th>
+                                    <th>Reason</th>
+                                    <th>Requested By</th>
+                                    <th>Date Submitted</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination Module -->
+                    <div class="module-toolbar mt-3 mb-0" style="justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                        <div class="text-muted-sm" id="pageInfo">Showing 0 to 0 of 0 requests</div>
+                        <div class="toolbar-actions">
+                            <button class="btn btn-outline" id="prevPage" disabled><i class="fas fa-chevron-left"></i> Prev</button>
+                            <button class="btn btn-outline" id="nextPage" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">Substitution Detail Manifest <span class="badge badge-info ml-2" id="detSubNoBadge"></span></div>
+            <div class="modal-body">
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Project</div>
+                        <div id="detProject" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Requested By (PIC)</div>
+                        <div id="detPic" class="text-main"></div>
+                    </div>
+                </div>
+                
+                <h4 class="section-title mb-2" style="font-size: 0.875rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;">Material Substitution Specifications</h4>
+                <div class="grid grid-cols-2 mb-3">
+                    <div style="padding: 0.75rem; background-color: var(--color-background); border-radius: var(--radius-sm); border-left: 3px solid var(--color-text-muted);">
+                        <div class="text-muted-sm font-semibold">Original Material</div>
+                        <div id="detOriginal" class="font-semibold text-main"></div>
+                    </div>
+                    <div style="padding: 0.75rem; background-color: var(--color-background); border-radius: var(--radius-sm); border-left: 3px solid var(--color-primary);">
+                        <div class="text-muted-sm font-semibold">Suggested Replacement</div>
+                        <div id="detReplacement" class="font-semibold icon-primary"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Quantity & Unit</div>
+                        <div id="detQty" class="text-main font-semibold"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Date Submitted</div>
+                        <div id="detDate" class="text-main"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="text-muted-sm font-semibold">Substitution Reason</div>
+                    <div id="detReason" class="text-main" style="padding: 0.5rem; background-color: var(--color-background); border-radius: var(--radius-sm);"></div>
+                </div>
+
+                <div id="detManagerCommentWrapper" style="display: none;">
+                    <div class="text-muted-sm font-semibold">Manager Comment / Decision Notes</div>
+                    <div id="detManagerComment" class="text-main" style="padding: 0.5rem; background-color: var(--color-background); border-radius: var(--radius-sm); border-left: 3px solid var(--color-primary);"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close Manifest</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve Confirmation Modal -->
+    <div class="modal-overlay" id="approveModal">
+        <div class="modal">
+            <div class="modal-header">Approve Substitution Request</div>
+            <div class="modal-body">
+                You are about to approve substitution request <strong id="appReqNo" class="icon-primary"></strong>. This action will forward the request to the Purchasing Officer for supplier matching and purchase order updates.
+                
+                <div class="form-group mt-3 mb-0">
+                    <label class="form-label">Manager Comment (Optional)</label>
+                    <textarea id="appComment" class="form-control" placeholder="Leave instructions or comments for the Purchasing Officer or PIC..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmApproveBtn">Confirm & Forward</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Confirmation Modal -->
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal">
+            <div class="modal-header">Reject Substitution Request</div>
+            <div class="modal-body">
+                You are about to reject substitution request <strong id="rejReqNo" class="icon-danger"></strong>. The Project-in-Charge will be notified immediately.
+                
+                <div class="form-group mt-3 mb-0" id="rejReasonGroup">
+                    <label class="form-label">Rejection Reason (Required)</label>
+                    <textarea id="rejReason" class="form-control" placeholder="State reason for rejection (e.g., specification mismatch, safety non-compliance)..."></textarea>
+                    <div class="error-message" id="rejError">A rejection reason is strictly required to proceed.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-danger" id="confirmRejectBtn">Confirm Rejection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Logic (Vanilla JS) -->
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // GM Substitution Requests Scope Mock Data
+            let requestsData = [
+                { 
+                    subNo: 'SUB-2026-0801', originalMaterial: 'Portland Cement Type 1', suggestedMaterial: 'High Early Strength Cement', qty: 450, unit: 'Bags', reason: 'Supplier stockout on Type 1; need to avoid site delay.', pic: 'Salma Hadid', project: 'Site Alpha', date: '2026-07-20', status: 'Pending', comment: ''
+                },
+                { 
+                    subNo: 'SUB-2026-0802', originalMaterial: 'Deformed Rebar 16mm', suggestedMaterial: 'Deformed Rebar 18mm Grade 60', qty: 600, unit: 'Pieces', reason: 'Structural revision requested by lead structural engineer.', pic: 'James Holden', project: 'Sector 4', date: '2026-07-19', status: 'Pending', comment: ''
+                },
+                { 
+                    subNo: 'SUB-2026-0799', originalMaterial: 'THHN Copper Wire 3.5mm', suggestedMaterial: 'XHHW Copper Wire 3.5mm', qty: 40, unit: 'Rolls', reason: 'Lead time delay on THHN electrical specification.', pic: 'Amos Burton', project: 'Site Beta', date: '2026-07-18', status: 'Approved', comment: 'Approved. Forwarded to Purchasing Officer for supplier matching.'
+                },
+                { 
+                    subNo: 'SUB-2026-0795', originalMaterial: 'Marine Plywood 3/4"', suggestedMaterial: 'Phenolic Board 3/4"', qty: 100, unit: 'Sheets', reason: 'Cost optimization for formworks.', pic: 'Salma Hadid', project: 'Site Alpha', date: '2026-07-16', status: 'Rejected', comment: 'Phenolic board does not meet moisture rating requirements for Alpha exterior works.'
+                },
+                { 
+                    subNo: 'SUB-2026-0790', originalMaterial: 'PVC Pipe 4" Series 1000', suggestedMaterial: 'HDPE Pipe 4" PN10', qty: 75, unit: 'Lengths', reason: 'Higher durability needed for underground drainage line.', pic: 'James Holden', project: 'Sector 4', date: '2026-07-15', status: 'Approved', comment: 'Approved HDPE grade substitute.'
+                }
+            ];
+
+            // Pagination State
+            let currentPage = 1;
+            const itemsPerPage = 3;
+            let filteredRequests = [];
+            let activeSubNo = null;
+
+            // DOM Elements
+            const tableBody = document.getElementById('tableBody');
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const projectFilter = document.getElementById('projectFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            
+            const btnExport = document.getElementById('btnExport');
+            const prevPageBtn = document.getElementById('prevPage');
+            const nextPageBtn = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+
+            // Render Logic
+            const renderTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const fStatus = statusFilter.value;
+                const fProject = projectFilter.value;
+                const fSort = sortFilter.value;
+
+                // 1. Filter
+                filteredRequests = requestsData.filter(req => {
+                    const matchesSearch = req.subNo.toLowerCase().includes(searchTerm) || 
+                                          req.originalMaterial.toLowerCase().includes(searchTerm) || 
+                                          req.suggestedMaterial.toLowerCase().includes(searchTerm) || 
+                                          req.project.toLowerCase().includes(searchTerm) || 
+                                          req.pic.toLowerCase().includes(searchTerm) ||
+                                          req.reason.toLowerCase().includes(searchTerm);
+                    const matchesStatus = fStatus === 'All' || req.status === fStatus;
+                    const matchesProject = fProject === 'All' || req.project === fProject;
+                    return matchesSearch && matchesStatus && matchesProject;
+                });
+
+                // 2. Sort
+                filteredRequests.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return fSort === 'desc' ? dateB - dateA : dateA - dateB;
+                });
+
+                // 3. Paginate
+                const totalItems = filteredRequests.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+                
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const paginatedData = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+
+                // 4. Update DOM
+                tableBody.innerHTML = '';
+
+                if (paginatedData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="9" class="empty-state-row">No substitution requests found matching your criteria.</td></tr>`;
+                    pageInfo.textContent = `Showing 0 to 0 of 0 requests`;
+                    prevPageBtn.disabled = true;
+                    nextPageBtn.disabled = true;
+                    return;
+                }
+
+                paginatedData.forEach(req => {
+                    let badgeClass = 'badge-warning';
+                    if(req.status === 'Approved') badgeClass = 'badge-success';
+                    if(req.status === 'Rejected') badgeClass = 'badge-danger';
+
+                    // Row actions dynamic based on status
+                    let actionHtml = `<button class="action-btn" onclick="viewDetails('${req.subNo}')" title="View Details"><i class="fas fa-eye"></i></button>`;
+                    
+                    if (req.status === 'Pending') {
+                        actionHtml += `
+                            <button class="action-btn edit" onclick="openApprove('${req.subNo}')" title="Approve Request"><i class="fas fa-check-circle"></i></button>
+                            <button class="action-btn delete" onclick="openReject('${req.subNo}')" title="Reject Request"><i class="fas fa-times-circle"></i></button>
+                        `;
+                    }
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${req.subNo}</strong></td>
+                        <td>${req.originalMaterial}</td>
+                        <td class="icon-primary font-semibold">${req.suggestedMaterial}</td>
+                        <td class="font-semibold">${req.qty} ${req.unit}</td>
+                        <td class="text-muted-sm" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${req.reason}">${req.reason}</td>
+                        <td>${req.pic}</td>
+                        <td>${req.date}</td>
+                        <td><span class="badge ${badgeClass}">${req.status}</span></td>
+                        <td class="text-right">${actionHtml}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                // Update Pagination Controls
+                const endItem = Math.min(startIndex + itemsPerPage, totalItems);
+                pageInfo.textContent = `Showing ${startIndex + 1} to ${endItem} of ${totalItems} requests`;
+                
+                prevPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage === totalPages;
+            };
+
+            // Pagination Events
+            prevPageBtn.addEventListener('click', () => { if(currentPage > 1) { currentPage--; renderTable(); } });
+            nextPageBtn.addEventListener('click', () => { 
+                const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+                if(currentPage < totalPages) { currentPage++; renderTable(); } 
+            });
+
+            // Filtering Events
+            searchInput.addEventListener('input', () => { currentPage = 1; renderTable(); });
+            statusFilter.addEventListener('change', () => { currentPage = 1; renderTable(); });
+            projectFilter.addEventListener('change', () => { currentPage = 1; renderTable(); });
+            sortFilter.addEventListener('change', () => { currentPage = 1; renderTable(); });
+
+            btnExport.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Report Export Initiated', 'Substitution evaluation manifest downloading as CSV...', 'primary');
+            });
+
+            // Action Functions attached to window for inline onclick
+            window.viewDetails = (subNo) => {
+                const req = requestsData.find(r => r.subNo === subNo);
+                if (!req) return;
+
+                document.getElementById('detSubNoBadge').textContent = req.subNo;
+                document.getElementById('detProject').textContent = req.project;
+                document.getElementById('detPic').textContent = req.pic;
+                document.getElementById('detOriginal').textContent = req.originalMaterial;
+                document.getElementById('detReplacement').textContent = req.suggestedMaterial;
+                document.getElementById('detQty').textContent = `${req.qty} ${req.unit}`;
+                document.getElementById('detDate').textContent = req.date;
+                document.getElementById('detReason').textContent = req.reason;
+
+                const commentWrapper = document.getElementById('detManagerCommentWrapper');
+                if (req.comment) {
+                    commentWrapper.style.display = 'block';
+                    document.getElementById('detManagerComment').textContent = req.comment;
+                } else {
+                    commentWrapper.style.display = 'none';
+                }
+
+                document.getElementById('detailsModal').classList.add('active');
+            };
+
+            window.openApprove = (subNo) => {
+                activeSubNo = subNo;
+                document.getElementById('appReqNo').textContent = subNo;
+                document.getElementById('appComment').value = '';
+                document.getElementById('approveModal').classList.add('active');
+            };
+
+            window.openReject = (subNo) => {
+                activeSubNo = subNo;
+                document.getElementById('rejReqNo').textContent = subNo;
+                document.getElementById('rejReason').value = '';
+                document.getElementById('rejReasonGroup').classList.remove('has-error');
+                document.getElementById('rejError').style.display = 'none';
+                document.getElementById('rejectModal').classList.add('active');
+            };
+
+            // Workflow Confirmations
+            document.getElementById('confirmApproveBtn').addEventListener('click', () => {
+                const req = requestsData.find(r => r.subNo === activeSubNo);
+                if(req) {
+                    req.status = 'Approved';
+                    req.comment = document.getElementById('appComment').value.trim();
+                    document.getElementById('approveModal').classList.remove('active');
+                    renderTable();
+                    if(window.showToast) window.showToast('Substitution Approved', `Substitution request ${req.subNo} approved & forwarded to Purchasing Officer. PIC ${req.pic} notified.`, 'success');
+                }
+            });
+
+            document.getElementById('confirmRejectBtn').addEventListener('click', () => {
+                const reason = document.getElementById('rejReason').value.trim();
+                const group = document.getElementById('rejReasonGroup');
+                const err = document.getElementById('rejError');
+                
+                if (!reason) {
+                    group.classList.add('has-error');
+                    err.style.display = 'block';
+                    return;
+                }
+
+                const req = requestsData.find(r => r.subNo === activeSubNo);
+                if(req) {
+                    req.status = 'Rejected';
+                    req.comment = reason;
+                    document.getElementById('rejectModal').classList.remove('active');
+                    renderTable();
+                    if(window.showToast) window.showToast('Substitution Rejected', `Rejection finalized for ${req.subNo}. PIC ${req.pic} notified.`, 'danger');
+                }
+            });
+
+            // Initial Load
+            renderTable();
+        });
+    </script>
+</body>
+</html>

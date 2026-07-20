@@ -129,3 +129,119 @@ function showToast(title, message, type = 'primary') {
 
 // Expose toast function for demo buttons
 window.showToast = showToast;
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --------------------------------------------------------
+    // LOGIN PAGE SPECIFIC LOGIC
+    // --------------------------------------------------------
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const roleSelect = document.getElementById('role');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    
+    // Reusable Error Parsing Utilities
+    const clearErrors = () => {
+        document.querySelectorAll('.form-group').forEach(group => group.classList.remove('has-error'));
+        document.querySelectorAll('.error-message').forEach(err => err.style.display = 'none');
+    };
+
+    // Interactive Password Visibility Engine Toggle
+    if (passwordToggle && passwordInput) {
+        passwordToggle.addEventListener('click', () => {
+            const typeAttribute = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', typeAttribute);
+            
+            // Icon Variant Management Sync
+            const iconElement = passwordToggle.querySelector('i');
+            if (typeAttribute === 'text') {
+                iconElement.className = 'far fa-eye-slash';
+            } else {
+                iconElement.className = 'far fa-eye';
+            }
+        });
+    }
+
+    // Forgot Password Enterprise Notice Overide
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Enterprise Notice: Password restoration structures must be executed directly via internal Helpdesk systems.');
+        });
+    }
+
+    // Client Validation Form Controller & Routing Logic
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearErrors();
+
+            let clientFormIsValid = true;
+            const usernameVal = usernameInput.value.trim();
+            const passwordVal = passwordInput.value.trim();
+            const roleVal = roleSelect.value;
+
+            // Static Context Processing Validation Checks
+            if (!usernameVal) {
+                document.getElementById('usernameGroup').classList.add('has-error');
+                document.getElementById('usernameError').style.display = 'block';
+                clientFormIsValid = false;
+            }
+
+            if (!passwordVal) {
+                document.getElementById('passwordGroup').classList.add('has-error');
+                document.getElementById('passwordError').style.display = 'block';
+                clientFormIsValid = false;
+            }
+
+            if (!roleVal) {
+                document.getElementById('roleGroup').classList.add('has-error');
+                document.getElementById('roleError').style.display = 'block';
+                clientFormIsValid = false;
+            }
+
+            // Execution Branch Path Forward Redirect Mapping Strategy
+            if (clientFormIsValid) {
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Validation Verified', 'Authorization criteria processed successfully. Mounting internal desktop application metrics...', 'success');
+                }
+                
+                // Route mapping based on the selected persona role
+                let targetDashboard = '';
+                switch (roleVal) {
+                    case 'pic':
+                        targetDashboard = 'pic-dashboard.html';
+                        break;
+                    case 'gm':
+                        targetDashboard = 'gm-dashboard.html';
+                        break;
+                    case 'po':
+                        targetDashboard = 'po-dashboard.html';
+                        break;
+                    case 'ws':
+                        targetDashboard = 'ws-dashboard.html';
+                        break;
+                    case 'admin':
+                        targetDashboard = 'admin-dashboard.html';
+                        break;
+                    default:
+                        targetDashboard = 'index.html'; // Fallback failsafe
+                }
+
+                // Execute page transition exit effect before routing to the defined dashboard
+                setTimeout(() => {
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = targetDashboard;
+                    }, 300);
+                }, 500);
+            } else {
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Authentication Interrupted', 'Please resolve highlighted configuration compliance inputs.', 'danger');
+                }
+            }
+        });
+    }
+});

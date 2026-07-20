@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Project-in-Charge Dashboard</title>
+    <title>Tenebrowse - General Manager Dashboard</title>
     
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +15,7 @@
 
     <div class="app-wrapper">
         
-        <!-- Sidebar Navigation (Project-in-Charge Scope Only) -->
+        <!-- Sidebar Navigation (General Manager Scope) -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -28,13 +28,19 @@
                     <li class="nav-item active">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="transitionTo('material-requests.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('purchase-orders.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-substitution-requests.html')">
+                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
                     </li>
-                    <li class="nav-item" onclick="transitionTo('settings.html')">
+                    <li class="nav-item" onclick="transitionTo('gm-inventory-overview.html')">
+                        <i class="fas fa-boxes"></i> Inventory Overview
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('gm-settings.html')">
                         <i class="fas fa-cog"></i> Settings
                     </li>
                     <li class="nav-item logout-item" onclick="transitionTo('index.html')">
@@ -55,7 +61,7 @@
                     <!-- Global System Unified Search Engine Component -->
                     <div class="search-container">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search site materials, tracking codes, orders...">
+                        <input type="text" placeholder="Search enterprise materials, tracking codes, global orders...">
                     </div>
                 </div>
                 
@@ -69,12 +75,12 @@
                         </button>
                         
                         <div class="dropdown-menu" id="notifMenu">
-                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-header">Enterprise Broadcast Notifications</div>
                             <div class="dropdown-item">
-                                <i class="fas fa-check-circle icon-success"></i>
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
                                 <div>
-                                    <div class="notif-title">Material Request Approved</div>
-                                    <div class="notif-desc">REQ-2026-089 structural concrete clearance generated.</div>
+                                    <div class="notif-title">Inventory Alert</div>
+                                    <div class="notif-desc">Global structural steel stock below 15% threshold.</div>
                                 </div>
                             </div>
                         </div>
@@ -83,10 +89,10 @@
                     <!-- Enterprise Segment Profile Dropdown -->
                     <div class="profile-menu-container">
                         <button class="profile-trigger">
-                            <div class="profile-avatar">SH</div>
+                            <div class="profile-avatar">RV</div>
                             <div class="profile-info">
-                                <div class="profile-name">Shaira Hadid</div>
-                                <div class="profile-role">Project-in-Charge</div>
+                                <div class="profile-name">Robert Vance</div>
+                                <div class="profile-role">General Manager</div>
                             </div>
                             <i class="fas fa-chevron-down profile-trigger-icon"></i>
                         </button>
@@ -102,20 +108,20 @@
                 <div class="breadcrumb">
                     <a href="#">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Dashboard Metrics</span>
+                    <span>Enterprise Dashboard</span>
                 </div>
 
                 <!-- Role Isolated Welcome Card -->
                 <div class="card welcome-card mb-3">
-                    <span class="welcome-badge">Active Site Operations Command</span>
-                    <h1 class="welcome-title">Welcome Back, Engineer Hadid</h1>
+                    <span class="welcome-badge">Enterprise Operations Command</span>
+                    <h1 class="welcome-title">Welcome Back, General Manager Vance</h1>
                     <p class="welcome-text">
-                        Monitoring Site Alpha Logistics Profile. Track material requisitions, oversee incoming supplier purchase fulfillments, and manage resource variation processes.
+                        Monitoring Global Enterprise Logistics Profile. Review enterprise-wide material requisitions, track large-scale purchase fulfillments, and oversee overall inventory health.
                     </p>
                 </div>
 
-                <!-- Dashboard Summary Status Metrics Blocks -->
-                <div class="grid grid-cols-3 mb-3">
+                <!-- Dashboard Summary Status Metrics Blocks (Adapted to 2x2 Grid) -->
+                <div class="grid grid-cols-2 mb-3">
                     
                     <!-- Material Requests Aggregate Summary Block -->
                     <div class="card">
@@ -124,16 +130,16 @@
                         </div>
                         <div class="metric-sub-grid">
                             <div class="metric-block metric-border-secondary">
-                                <div class="metric-value">14</div>
+                                <div class="metric-value">34</div>
                                 <div class="metric-label">Pending</div>
                             </div>
                             <div class="metric-block metric-border-success">
-                                <div class="metric-value">89</div>
-                                <div class="metric-label">Approved</div>
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">Approved Today</div>
                             </div>
                             <div class="metric-block metric-border-danger">
-                                <div class="metric-value">3</div>
-                                <div class="metric-label">Rejected</div>
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Rejected Today</div>
                             </div>
                         </div>
                     </div>
@@ -145,37 +151,66 @@
                         </div>
                         <div class="metric-sub-grid">
                             <div class="metric-block metric-border-muted">
-                                <div class="metric-value">8</div>
+                                <div class="metric-value">18</div>
                                 <div class="metric-label">Ordered</div>
                             </div>
                             <div class="metric-block metric-border-info">
-                                <div class="metric-value">22</div>
+                                <div class="metric-value">45</div>
                                 <div class="metric-label">Delivering</div>
                             </div>
                             <div class="metric-block metric-border-success">
-                                <div class="metric-value">146</div>
+                                <div class="metric-value">320</div>
                                 <div class="metric-label">Received</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Substitution Variance Tracking Request Block -->
+                    <!-- Inventory Summary Block -->
                     <div class="card">
                         <div class="summary-card-title">
-                            <i class="fas fa-exchange-alt icon-secondary"></i> Substitution Requests
+                            <i class="fas fa-boxes icon-success"></i> Inventory Summary
                         </div>
-                        <div class="metric-sub-grid">
-                            <div class="metric-block metric-border-secondary">
-                                <div class="metric-value">5</div>
-                                <div class="metric-label">Pending</div>
+                        <div class="grid grid-cols-2">
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">12.5k</div>
+                                <div class="metric-label">Total Materials</div>
                             </div>
                             <div class="metric-block metric-border-success">
-                                <div class="metric-value">19</div>
-                                <div class="metric-label">Approved</div>
+                                <div class="metric-value">9.8k</div>
+                                <div class="metric-label">Available Stock</div>
+                            </div>
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">145</div>
+                                <div class="metric-label">Low Stock</div>
                             </div>
                             <div class="metric-block metric-border-danger">
-                                <div class="metric-value">2</div>
-                                <div class="metric-label">Rejected</div>
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Out of Stock</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Issues Tracking Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-danger"></i> Inventory Issues
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">145</div>
+                                <div class="metric-label">Low Stock</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">38</div>
+                                <div class="metric-label">Damaged Items</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">9</div>
+                                <div class="metric-label">Missing Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">210</div>
+                                <div class="metric-label">Overstocked Materials</div>
                             </div>
                         </div>
                     </div>
@@ -188,55 +223,55 @@
                     <!-- Analytic Chart Layout Container -->
                     <div class="chart-column">
                         
-                        <!-- Chart 1: Material Deployment Volume Allocation Graph -->
+                        <!-- Chart 1: Global Enterprise Material Deployment Volume -->
                         <div class="card">
-                            <h3 class="section-title mb-2"><i class="fas fa-poll-h section-icon icon-primary"></i> Material Deployment Velocity (Tons/Units)</h3>
+                            <h3 class="section-title mb-2"><i class="fas fa-poll-h section-icon icon-primary"></i> Enterprise Material Deployment (Tons/Units)</h3>
                             <div class="chart-container">
                                 <div class="bar-chart-row">
                                     <div class="bar-label">Reinforcement Bars</div>
-                                    <div class="bar-track"><div class="bar-fill" style="width: 82%;"></div></div>
-                                    <div class="bar-value">820</div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 88%;"></div></div>
+                                    <div class="bar-value">8.2k</div>
                                 </div>
                                 <div class="bar-chart-row">
                                     <div class="bar-label">Ready-Mix Concrete</div>
-                                    <div class="bar-track"><div class="bar-fill bar-fill-secondary" style="width: 64%;"></div></div>
-                                    <div class="bar-value">640</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-secondary" style="width: 72%;"></div></div>
+                                    <div class="bar-value">6.8k</div>
                                 </div>
                                 <div class="bar-chart-row">
                                     <div class="bar-label">Structural Timber</div>
-                                    <div class="bar-track"><div class="bar-fill bar-fill-info" style="width: 41%;"></div></div>
-                                    <div class="bar-value">410</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-info" style="width: 45%;"></div></div>
+                                    <div class="bar-value">4.5k</div>
                                 </div>
                                 <div class="bar-chart-row">
                                     <div class="bar-label">PVC Conduit Pipelines</div>
-                                    <div class="bar-track"><div class="bar-fill bar-fill-success" style="width: 29%;"></div></div>
-                                    <div class="bar-value">290</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-success" style="width: 32%;"></div></div>
+                                    <div class="bar-value">3.2k</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Chart 2: Request vs Material Fulfillment Pipeline Efficiency Matrix -->
+                        <!-- Chart 2: Global Pipeline Efficiency Matrix -->
                         <div class="card">
-                            <h3 class="section-title mb-2"><i class="fas fa-chart-area section-icon icon-info"></i> Logistical Cycle Lead Efficiency Variance (Days)</h3>
+                            <h3 class="section-title mb-2"><i class="fas fa-chart-area section-icon icon-info"></i> Global Logistical Pipeline Efficiency Matrix (Days)</h3>
                             <div class="line-graph-simulated">
                                 <div class="graph-column">
-                                    <div class="graph-pillar" style="height: 40%;"></div>
+                                    <div class="graph-pillar" style="height: 35%;"></div>
                                     <div class="graph-label">WK 23</div>
                                 </div>
                                 <div class="graph-column">
-                                    <div class="graph-pillar graph-pillar-secondary" style="height: 65%;"></div>
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 60%;"></div>
                                     <div class="graph-label">WK 24</div>
                                 </div>
                                 <div class="graph-column">
-                                    <div class="graph-pillar" style="height: 55%;"></div>
+                                    <div class="graph-pillar" style="height: 50%;"></div>
                                     <div class="graph-label">WK 25</div>
                                 </div>
                                 <div class="graph-column">
-                                    <div class="graph-pillar graph-pillar-secondary" style="height: 85%;"></div>
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 80%;"></div>
                                     <div class="graph-label">WK 26</div>
                                 </div>
                                 <div class="graph-column">
-                                    <div class="graph-pillar" style="height: 95%;"></div>
+                                    <div class="graph-pillar" style="height: 92%;"></div>
                                     <div class="graph-label">Current</div>
                                 </div>
                             </div>
@@ -244,41 +279,33 @@
 
                     </div>
 
-                    <!-- Explicit Required Recent Activity Notification Feed Panel Component -->
+                    <!-- Enterprise Recent Activity Notification Feed Panel Component -->
                     <div class="card">
-                        <h3 class="section-title mb-2"><i class="fas fa-bolt section-icon icon-secondary"></i> Recent Operational Logs</h3>
+                        <h3 class="section-title mb-2"><i class="fas fa-bolt section-icon icon-secondary"></i> Global Operational Logs</h3>
                         
                         <div class="notification-feed">
                             
+                            <div class="feed-item info">
+                                <div class="feed-icon"><i class="fas fa-box-open"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Newly Submitted Request</div>
+                                    <div class="feed-meta">REQ-2026-1052 submitted by PIC Hadid (Site Alpha).</div>
+                                </div>
+                            </div>
+
                             <div class="feed-item success">
                                 <div class="feed-icon"><i class="fas fa-check"></i></div>
                                 <div class="feed-body">
-                                    <div class="feed-title">Material Request Approved</div>
-                                    <div class="feed-meta">REQ-2026-904 cleared by procurement engine.</div>
-                                </div>
-                            </div>
-
-                            <div class="feed-item danger">
-                                <div class="feed-icon"><i class="fas fa-times"></i></div>
-                                <div class="feed-body">
-                                    <div class="feed-title">Material Request Rejected</div>
-                                    <div class="feed-meta">REQ-2026-811 failed verification constraints.</div>
-                                </div>
-                            </div>
-
-                            <div class="feed-item info">
-                                <div class="feed-icon"><i class="fas fa-plus"></i></div>
-                                <div class="feed-body">
-                                    <div class="feed-title">Purchase Order Created</div>
-                                    <div class="feed-meta">PO-2026-770 dispatched to Global Logistics Foundry.</div>
+                                    <div class="feed-title">Recently Approved Request</div>
+                                    <div class="feed-meta">REQ-2026-1048 cleared by GM Vance.</div>
                                 </div>
                             </div>
 
                             <div class="feed-item warning">
                                 <div class="feed-icon"><i class="fas fa-truck"></i></div>
                                 <div class="feed-body">
-                                    <div class="feed-title">Purchase Order Delivering</div>
-                                    <div class="feed-meta">Transit track established for PO-2026-619 cargo line.</div>
+                                    <div class="feed-title">Purchase Order Update</div>
+                                    <div class="feed-meta">PO-2026-880 transit track established. Delivering to Sector 4.</div>
                                 </div>
                             </div>
 
@@ -286,23 +313,31 @@
                                 <div class="feed-icon"><i class="fas fa-boxes"></i></div>
                                 <div class="feed-body">
                                     <div class="feed-title">Purchase Order Received</div>
-                                    <div class="feed-meta">PO-2026-440 offloaded and logged at Site Cargo Dock A.</div>
+                                    <div class="feed-meta">PO-2026-845 offloaded and logged at Central Depot.</div>
                                 </div>
                             </div>
 
-                            <div class="feed-item success">
-                                <div class="feed-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="feed-item warning">
+                                <div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div>
                                 <div class="feed-body">
-                                    <div class="feed-title">Substitution Request Approved</div>
-                                    <div class="feed-meta">SUB-2026-044 Structural alloy alternative authorized.</div>
+                                    <div class="feed-title">Inventory Alert: Low Stock</div>
+                                    <div class="feed-meta">Alert: Structural Timber falling below 15% minimum threshold.</div>
                                 </div>
                             </div>
 
                             <div class="feed-item danger">
+                                <div class="feed-icon"><i class="fas fa-times"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Inventory Alert: Damaged Items</div>
+                                    <div class="feed-meta">Audit: 12 units of PVC Conduit reported damaged at Site Beta.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="feed-item danger">
                                 <div class="feed-icon"><i class="fas fa-ban"></i></div>
                                 <div class="feed-body">
-                                    <div class="feed-title">Substitution Request Rejected</div>
-                                    <div class="feed-meta">SUB-2026-012 Grade performance baseline mismatch.</div>
+                                    <div class="feed-title">Inventory Alert: Out of Stock</div>
+                                    <div class="feed-meta">Critical: Ready-Mix Concrete grade 40 unavailable at Site Delta.</div>
                                 </div>
                             </div>
 

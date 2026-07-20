@@ -53,13 +53,29 @@
                     <div class="error-message" id="passwordError">Security protocol passcode context missing.</div>
                 </div>
 
+                <!-- Role Selection Field -->
+                <div class="form-group" id="roleGroup">
+                    <label class="form-label" for="role">Role</label>
+                    <div class="input-wrapper">
+                        <select class="form-control" id="role" required>
+                            <option value="" disabled selected>Select persona...</option>
+                            <option value="pic">Project-in-Charge</option>
+                            <option value="gm">General Manager</option>
+                            <option value="po">Purchasing Officer</option>
+                            <option value="ws">Warehouse Staff</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="error-message" id="roleError">Role authorization context missing.</div>
+                </div>
+
                 <!-- Remember Me / Forgot Password Configuration Actions -->
                 <div class="form-options">
                     <label class="remember-me-label">
                         <input type="checkbox" id="rememberMe">
                         <span>Remember access profile</span>
                     </label>
-                    <a href="#" class="forgot-password-link" onclick="event.preventDefault(); alert('Enterprise Notice: Password restoration structures must be executed directly via internal Helpdesk systems.');">Forgot credentials?</a>
+                    <a href="#" class="forgot-password-link" id="forgotPasswordLink">Forgot credentials?</a>
                 </div>
 
                 <!-- Form Action Event Driver -->
@@ -78,79 +94,5 @@
 
     <!-- Core Functional Application Scripts Insertion Framework -->
     <script src="js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('loginForm');
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const passwordToggle = document.getElementById('passwordToggle');
-            
-            // Reusable Error Parsing Utilities
-            const clearErrors = () => {
-                document.querySelectorAll('.form-group').forEach(group => group.classList.remove('has-error'));
-                document.querySelectorAll('.error-message').forEach(err => err.style.display = 'none');
-            };
-
-            // Interactive Password Visibility Engine Toggle
-            if (passwordToggle && passwordInput) {
-                passwordToggle.addEventListener('click', () => {
-                    const typeAttribute = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', typeAttribute);
-                    
-                    // Icon Variant Management Sync
-                    const iconElement = passwordToggle.querySelector('i');
-                    if (typeAttribute === 'text') {
-                        iconElement.className = 'far fa-eye-slash';
-                    } else {
-                        iconElement.className = 'far fa-eye';
-                    }
-                });
-            }
-
-            // Client Validation Form Controller Link Execution Rules
-            if (loginForm) {
-                loginForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    clearErrors();
-
-                    let clientFormIsValid = true;
-                    const usernameVal = usernameInput.value.trim();
-                    const passwordVal = passwordInput.value.trim();
-
-                    // Static Context Processing Validation Checks
-                    if (!usernameVal) {
-                        document.getElementById('usernameGroup').classList.add('has-error');
-                        document.getElementById('usernameError').style.display = 'block';
-                        clientFormIsValid = false;
-                    }
-
-                    if (!passwordVal) {
-                        document.getElementById('passwordGroup').classList.add('has-error');
-                        document.getElementById('passwordError').style.display = 'block';
-                        clientFormIsValid = false;
-                    }
-
-                    // Execution Branch Path Forward Redirect Mapping Strategy
-                    if (clientFormIsValid) {
-                        if (typeof window.showToast === 'function') {
-                            window.showToast('Validation Verified', 'Authorization criteria processed successfully. Mounting internal desktop application metrics...', 'success');
-                        }
-                        
-                        // Added page transition exit effect before routing
-                        setTimeout(() => {
-                            document.body.classList.add('page-exit');
-                            setTimeout(() => {
-                                window.location.href = 'dashboard.html';
-                            }, 300);
-                        }, 500);
-                    } else {
-                        if (typeof window.showToast === 'function') {
-                            window.showToast('Authentication Interrupted', 'Please resolve highlighted configuration compliance inputs.', 'danger');
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
