@@ -32,3 +32,11 @@
 
 ## v3.0 Warehouse Staff
 - Added Warehouse Staff Interface
+
+## v3.1 Guided Access and Fixes
+- Added Dashboard Guided Access
+- Added Deliveries Guided Access
+- Added Inventory Guided Access
+- Added Warehouse Facilities Guided Access
+- Cleaned up code to match coding standards
+- Fixed some overflowing elements

@@ -98,7 +98,7 @@ ul { list-style: none; }
 
 .dashboard-lower-grid {
     display: grid; 
-    grid-template-columns: 2fr 1fr; 
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); 
     gap: 1.5rem;
 }
 
@@ -106,6 +106,7 @@ ul { list-style: none; }
     display: flex; 
     flex-direction: column; 
     gap: 1.5rem;
+    min-width: 0;
 }
 
 /* Grid System */
@@ -582,10 +583,11 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .table td { padding: 1rem; border-bottom: 1px solid var(--color-border); color: var(--color-text-main); vertical-align: middle; }
 .table tr:last-child td { border-bottom: none; }
 .table tbody tr:hover { background-color: #F8FAFC55; }
+.table th:last-child {text-align: left;}
 .empty-state-row { text-align: center; color: var(--color-text-muted); padding: 2rem; }
 
 /* Status Badges */
-.badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;}
 .badge-success { background-color: var(--color-success-light); color: var(--color-success); }
 .badge-warning { background-color: var(--color-secondary-light); color: var(--color-secondary); }
 .badge-danger { background-color: var(--color-danger-light); color: var(--color-danger); }
@@ -621,6 +623,37 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .action-btn { background: none; border: none; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); transition: all var(--transition-fast); color: var(--color-text-muted); }
 .action-btn.edit:hover { color: var(--color-info); background-color: var(--color-info-light); }
 .action-btn.delete:hover { color: var(--color-danger); background-color: var(--color-danger-light); }
+
+/* ==========================================================================
+   Normal Mode vs Guided Access Action Button Modes
+   ========================================================================== */
+
+/* Hide button text labels in Normal Mode (Guided Access OFF) */
+body:not(.guided-access-enabled) .action-label {
+    display: none !important;
+}
+
+/* Format action buttons as a horizontal icon row in Normal Mode */
+body:not(.guided-access-enabled) .action-list {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+body:not(.guided-access-enabled) .action-item-btn {
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+}
+
+body:not(.guided-access-enabled) .action-item-btn:hover {
+    background-color: var(--color-background);
+}
+
+/* Deliveries Guided Access components (no page-specific JS yet — shown purely via body class) */
+body:not(.guided-access-enabled) #guidedAccessBanner,
+body:not(.guided-access-enabled) #guidedStepsProgress {
+    display: none;
+}
 
 /* ==========================================================================
    Modals
@@ -684,6 +717,65 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .toast-icon { color: var(--color-primary); font-size: 1.25rem; }
 .toast-content .title { font-weight: 600; font-size: 0.875rem; }
 .toast-content .message { font-size: 0.75rem; color: var(--color-text-muted); }
+
+/* ==========================================================================
+   Warehouse Card Selected State Top Indicator
+   ========================================================================== */
+.warehouse-select-card {
+    position: relative;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Orange indicator bar along the top edge of the selected card */
+.warehouse-select-card.active {
+    border-top: 4px solid #e06d3b; /* Orange highlight indicator */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ==========================================================================
+   Actions Column Icon & Label List Styling
+   ========================================================================== */
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.action-item-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 3px 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #5a6a85; /* Matching slate blue color from reference image */
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.action-item-btn:hover {
+    background-color: #f1f5f9;
+    color: #e06d3b;
+}
+
+.action-item-btn i {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    color: #5a6a85; /* Consistent icon color and weight */
+}
+
+.action-item-btn:hover i {
+    color: #e06d3b;
+}
 
 /* ==========================================================================
    Utility Classes

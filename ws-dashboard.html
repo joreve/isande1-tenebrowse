@@ -28,22 +28,22 @@
                     <li class="nav-item active">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                    <li class="nav-item" data-url="ws-inventory.html">
                         <i class="fas fa-boxes"></i> Inventory
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                    <li class="nav-item" data-url="ws-warehouse-facilities.html">
                         <i class="fas fa-warehouse"></i> Warehouse Facilities
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                    <li class="nav-item" data-url="ws-deliveries.html">
                         <i class="fas fa-truck"></i> Deliveries
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                    <li class="nav-item" data-url="ws-inventory-activity.html">
                         <i class="fas fa-clipboard-list"></i> Inventory Activity
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                    <li class="nav-item" data-url="ws-settings.html">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -141,7 +141,7 @@
                 
                 <!-- System Structural Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="#">Tenebrowse Control</a>
+                    <a href="#" data-url="ws-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Warehouse Dashboard</span>
                 </div>
@@ -153,6 +153,23 @@
                     <p class="welcome-text">
                         Here is today's snapshot of your warehouse. Monitor stock levels, verify incoming deliveries, update material quantities, and record any damaged or missing items across your facilities.
                     </p>
+                </div>
+
+                <!-- Guided Access Assistance Panel -->
+                <div class="card card-highlight-secondary mb-3 guided-access-element" id="dashboardGuidancePanel">
+                    <div class="flex-between">
+                        <div>
+                            <h3 class="section-title mb-1">
+                                <i class="fas fa-hands-helping section-icon icon-primary"></i> Guided Access Assistance
+                            </h3>
+                            <p class="section-description mb-0">
+                                This dashboard shows your current inventory, incoming deliveries, and warehouse issues. Review urgent alerts first, then check deliveries awaiting verification.
+                            </p>
+                        </div>
+                        <button type="button" class="action-btn" id="dismissGuidanceBtn" title="Dismiss Notice">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Dashboard Summary Status Metrics Blocks -->
@@ -175,6 +192,7 @@
                             <div class="metric-block metric-border-secondary">
                                 <div class="metric-value">62</div>
                                 <div class="metric-label">Low-Stock Items</div>
+                                <span class="badge badge-warning guided-access-element mt-1">Attention</span>
                             </div>
                             <div class="metric-block metric-border-danger">
                                 <div class="metric-value">9</div>
@@ -206,8 +224,9 @@
 
                     <!-- Incoming Deliveries Block -->
                     <div class="card">
-                        <div class="summary-card-title">
-                            <i class="fas fa-truck icon-info"></i> Incoming Deliveries
+                        <div class="summary-card-title flex-between">
+                            <span><i class="fas fa-truck icon-info"></i> Incoming Deliveries</span>
+                            <span class="badge badge-info guided-access-element">Recommended Priority</span>
                         </div>
                         <div class="metric-sub-grid">
                             <div class="metric-block metric-border-secondary">
@@ -217,23 +236,29 @@
                             <div class="metric-block metric-border-info">
                                 <div class="metric-value">3</div>
                                 <div class="metric-label">Awaiting Verification</div>
+                                <span class="badge badge-info guided-access-element mt-1">Priority</span>
                             </div>
                             <div class="metric-block metric-border-success">
                                 <div class="metric-value">12</div>
                                 <div class="metric-label">Recently Received</div>
                             </div>
                         </div>
+                        <div class="guided-access-element text-muted-sm mt-3">
+                            <i class="fas fa-info-circle icon-info"></i> Deliveries Awaiting Verification: Check these deliveries before adding materials to inventory.
+                        </div>
                     </div>
 
                     <!-- Inventory Issues Block -->
                     <div class="card">
-                        <div class="summary-card-title">
-                            <i class="fas fa-exclamation-triangle icon-secondary"></i> Inventory Issues
+                        <div class="summary-card-title flex-between">
+                            <span><i class="fas fa-exclamation-triangle icon-secondary"></i> Inventory Issues</span>
+                            <span class="badge badge-warning guided-access-element">Recommended Priority</span>
                         </div>
                         <div class="grid grid-cols-2">
                             <div class="metric-block metric-border-secondary">
                                 <div class="metric-value">62</div>
                                 <div class="metric-label">Low-Stock Materials</div>
+                                <span class="badge badge-warning guided-access-element mt-1">Low-Stock Alert</span>
                             </div>
                             <div class="metric-block metric-border-danger">
                                 <div class="metric-value">18</div>
@@ -246,7 +271,14 @@
                             <div class="metric-block metric-border-muted">
                                 <div class="metric-value">7</div>
                                 <div class="metric-label">Stock Discrepancies</div>
+                                <span class="badge badge-info guided-access-element mt-1">Discrepancy</span>
                             </div>
+                        </div>
+                        <div class="guided-access-element text-muted-sm mt-3 mb-1">
+                            <i class="fas fa-exclamation-circle icon-secondary"></i> Low-Stock Alerts: Review materials that may need replenishment.
+                        </div>
+                        <div class="guided-access-element text-muted-sm">
+                            <i class="fas fa-info-circle icon-info"></i> Inventory Discrepancies: Check records where the physical count may not match the system.
                         </div>
                     </div>
 
@@ -316,7 +348,10 @@
 
                     <!-- Recent Inventory Updates Feed Panel Component -->
                     <div class="card">
-                        <h3 class="section-title mb-2"><i class="fas fa-bolt section-icon icon-secondary"></i> Recent Inventory Updates</h3>
+                        <div class="flex-between mb-2">
+                            <h3 class="section-title mb-0"><i class="fas fa-bolt section-icon icon-secondary"></i> Recent Inventory Updates</h3>
+                            <span class="badge badge-info guided-access-element">Recommended Priority</span>
+                        </div>
                         
                         <div class="notification-feed">
                             
@@ -387,11 +422,6 @@
 
     <!-- Core Interactions Application Scripts Hook -->
     <script src="js/app.js"></script>
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-    </script>
+    <script src="js/ws-dashboard.js"></script>
 </body>
 </html>

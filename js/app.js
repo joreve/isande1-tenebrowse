@@ -3,10 +3,22 @@
  * Connect. Complete. Construct.
  */
 
+// Navigation Transition Helper
+function transitionTo(url) {
+    document.body.classList.add('page-exit');
+    setTimeout(() => {
+        window.location.href = url;
+    }, 300);
+}
+window.transitionTo = transitionTo;
+
 document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
     initDropdowns();
     initModals();
+    initGuidedAccess();
+    initNavigation();
+    initLoginPage();
 });
 
 // ==========================================
@@ -30,6 +42,22 @@ function initSidebar() {
             }
         });
     }
+}
+
+// ==========================================
+// Navigation Event Listener (Replaces inline onclick)
+// ==========================================
+function initNavigation() {
+    document.addEventListener('click', (e) => {
+        const navItem = e.target.closest('[data-url]');
+        if (navItem) {
+            e.preventDefault();
+            const url = navItem.getAttribute('data-url');
+            if (url) {
+                transitionTo(url);
+            }
+        }
+    });
 }
 
 // ==========================================
@@ -127,14 +155,26 @@ function showToast(title, message, type = 'primary') {
     }, 3000);
 }
 
-// Expose toast function for demo buttons
+// Expose toast function for app-wide use
 window.showToast = showToast;
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // --------------------------------------------------------
-    // LOGIN PAGE SPECIFIC LOGIC
-    // --------------------------------------------------------
+// ==========================================
+// Guided Access Initialization Helper
+// ==========================================
+function initGuidedAccess() {
+    const isGuidedAccess = localStorage.getItem('tenebrowseWarehouseGuidedAccess') === 'true';
+    if (isGuidedAccess) {
+        document.body.classList.add('guided-access-enabled');
+    } else {
+        document.body.classList.remove('guided-access-enabled');
+    }
+}
+window.initGuidedAccess = initGuidedAccess;
+
+// ==========================================
+// Login Page Specific Logic
+// ==========================================
+function initLoginPage() {
     const loginForm = document.getElementById('loginForm');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
@@ -232,10 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Execute page transition exit effect before routing to the defined dashboard
                 setTimeout(() => {
-                    document.body.classList.add('page-exit');
-                    setTimeout(() => {
-                        window.location.href = targetDashboard;
-                    }, 300);
+                    transitionTo(targetDashboard);
                 }, 500);
             } else {
                 if (typeof window.showToast === 'function') {
@@ -244,4 +281,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+}

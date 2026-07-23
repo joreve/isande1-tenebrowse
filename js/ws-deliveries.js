@@ -3,11 +3,6 @@
  * Deliveries Page Logic
  */
 
-function transitionTo(url) {
-    document.body.classList.add('page-exit');
-    setTimeout(() => window.location.href = url, 300);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================
@@ -62,6 +57,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activityFeed = document.getElementById('activityFeed');
 
+    const verifyReceivedGroup = document.getElementById('verifyReceivedGroup');
+    const verifyDamagedGroup = document.getElementById('verifyDamagedGroup');
+    const verifyMissingGroup = document.getElementById('verifyMissingGroup');
+    const verifyAcceptedGroup = document.getElementById('verifyAcceptedGroup');
+    const verifyWarehouseGroup = document.getElementById('verifyWarehouseGroup');
+    const verifyRemarksGroup = document.getElementById('verifyRemarksGroup');
+
+    const verifyReceivedError = document.getElementById('verifyReceivedError');
+    const verifyDamagedError = document.getElementById('verifyDamagedError');
+    const verifyMissingError = document.getElementById('verifyMissingError');
+    const verifyAcceptedError = document.getElementById('verifyAcceptedError');
+    const verifyWarehouseError = document.getElementById('verifyWarehouseError');
+    const verifyRemarksError = document.getElementById('verifyRemarksError');
+
+    const guidedAccessBanner = document.getElementById('guidedAccessBanner');
+    const guidedStepsProgress = document.getElementById('guidedStepsProgress');
+    const confirmReviewCheckbox = document.getElementById('confirmReviewCheckbox');
+    const btnVerifyBack = document.getElementById('btnVerifyBack');
+    const btnVerifyCancel = document.getElementById('btnVerifyCancel');
     // ==========================================
     // Helpers
     // ==========================================
@@ -94,6 +108,44 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `).join('');
     };
+
+    // ==========================================
+    // Guided Access — State & Progress
+    // ==========================================
+    const isGuidedAccessMode = () => {
+        return localStorage.getItem('tenebrowseWarehouseGuidedAccess') === 'true' ||
+            document.body.classList.contains('guided-access-enabled');
+    };
+
+    const updateGuidedAccessUI = () => {
+        const guided = isGuidedAccessMode();
+        if (guidedAccessBanner) guidedAccessBanner.style.display = guided ? 'block' : 'none';
+        if (guidedStepsProgress) guidedStepsProgress.style.display = guided ? 'block' : 'none';
+    };
+
+    const updateProgressSteps = (stepNum) => {
+        if (!isGuidedAccessMode()) return;
+
+        const steps = [
+            document.getElementById('step1Badge'),
+            document.getElementById('step2Badge'),
+            document.getElementById('step3Badge'),
+            document.getElementById('step4Badge'),
+            document.getElementById('step5Badge'),
+            document.getElementById('step6Badge')
+        ];
+
+        steps.forEach((badge, index) => {
+            if (!badge) return;
+            const num = index + 1;
+            badge.className = 'badge';
+            if (num < stepNum) badge.classList.add('badge-success');
+            else if (num === stepNum) badge.classList.add('badge-warning');
+            else badge.classList.add('badge-info');
+        });
+    };
+
+    const resetProgressSteps = () => updateProgressSteps(1);
 
     // ==========================================
     // Filters (populated from data)
@@ -220,12 +272,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     let verifyTargetId = null;
 
-    const recalcAccepted = () => {
-        const received = parseInt(document.getElementById('verifyReceivedQty').value, 10) || 0;
-        const damaged = parseInt(document.getElementById('verifyDamagedQty').value, 10) || 0;
-        const missing = parseInt(document.getElementById('verifyMissingQty').value, 10) || 0;
-        const suggested = Math.max(0, received - damaged - missing);
-        document.getElementById('verifyAcceptedQty').value = suggested;
+    // ==========================================
+    // Derived Quantity Calculations (Missing & Accepted)
+    // ==========================================
+    const recalcDerivedQuantities = () => {
+        const d = deliveryData.find(x => x.id === verifyTargetId);
+        if (!d) return;
+
+        const received = parseInt(document.getElementById('verifyReceivedQty').value, 10);
+        const damaged = parseInt(document.getElementById('verifyDamagedQty').value, 10);
+
+        const safeReceived = isNaN(received) || received < 0 ? 0 : received;
+        const safeDamaged = isNaN(damaged) || damaged < 0 ? 0 : damaged;
+
+        document.getElementById('verifyMissingQty').value = Math.max(0, d.orderedQty - safeReceived);
+        document.getElementById('verifyAcceptedQty').value = Math.max(0, safeReceived - safeDamaged);
+    };
+
+    // ==========================================
+    // Verification Confirmation Message Builder
+    // ==========================================
+    const buildVerificationConfirmMessage = (d) => {
+        return `You are verifying delivery ${d.id} from ${d.supplier}. Accepted materials will be added to inventory and all discrepancies will be recorded. Continue?`;
     };
 
     window.openVerify = (id) => {
@@ -240,22 +308,39 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('verifyOrderedQty').value = `${d.orderedQty.toLocaleString()} ${d.unit}`;
         document.getElementById('verifyReceivedQty').value = d.receivedQty !== null ? d.receivedQty : d.orderedQty;
         document.getElementById('verifyDamagedQty').value = d.damagedQty !== null ? d.damagedQty : 0;
-        document.getElementById('verifyMissingQty').value = d.missingQty !== null ? d.missingQty : 0;
-        document.getElementById('verifyAcceptedQty').value = d.acceptedQty !== null ? d.acceptedQty : d.orderedQty;
         document.getElementById('verifyWarehouse').value = d.warehouse;
         document.getElementById('verifyRemarks').value = d.remarks || '';
+
+        clearVerifyErrors();
+        recalcDerivedQuantities();
+
+        updateGuidedAccessUI();
+        updateProgressSteps(2); // Step 1 (Select Delivery) complete, now on Step 2 (Compare Ordered Items)
 
         document.getElementById('verifyModal').classList.add('active');
     };
 
-    ['verifyReceivedQty', 'verifyDamagedQty', 'verifyMissingQty'].forEach(fieldId => {
-        document.getElementById(fieldId).addEventListener('input', recalcAccepted);
+    document.getElementById('verifyReceivedQty').addEventListener('input', () => {
+        recalcDerivedQuantities();
+        validateVerifyForm(false);
+        updateProgressSteps(3);
     });
+
+    document.getElementById('verifyDamagedQty').addEventListener('input', () => {
+        recalcDerivedQuantities();
+        validateVerifyForm(false);
+        updateProgressSteps(4);
+    });
+    
+    document.getElementById('verifyWarehouse').addEventListener('change', () => validateVerifyForm(false));
+    document.getElementById('verifyRemarks').addEventListener('input', () => validateVerifyForm(false));
 
     document.getElementById('verifyForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const d = deliveryData.find(x => x.id === verifyTargetId);
         if (!d) return;
+
+        if (!validateVerifyForm(true)) return;
 
         const received = parseInt(document.getElementById('verifyReceivedQty').value, 10);
         const damaged = parseInt(document.getElementById('verifyDamagedQty').value, 10);
@@ -263,19 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const accepted = parseInt(document.getElementById('verifyAcceptedQty').value, 10);
         const warehouse = document.getElementById('verifyWarehouse').value;
         const remarks = document.getElementById('verifyRemarks').value.trim();
-
-        if ([received, damaged, missing, accepted].some(v => isNaN(v) || v < 0)) {
-            window.showToast('Invalid Entry', 'Quantities cannot be negative or blank.', 'danger');
-            return;
-        }
-        if (accepted > received) {
-            window.showToast('Invalid Accepted Quantity', 'Accepted quantity cannot exceed received quantity.', 'danger');
-            return;
-        }
-        if ((damaged > 0 || missing > 0) && !remarks) {
-            window.showToast('Remarks Required', 'Please describe the damaged or missing items in the remarks field.', 'danger');
-            return;
-        }
 
         let newStatus;
         if (damaged > 0 || missing > 0) newStatus = 'Discrepancy Reported';
@@ -286,27 +358,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('confirmVerifySummary').innerHTML = `
             <div class="sub-form-grid">
+                <div><span class="text-muted-sm">Supplier</span><div class="font-semibold">${d.supplier}</div></div>
+                <div><span class="text-muted-sm">Purchase Order Number</span><div class="font-semibold">${d.po}</div></div>
                 <div><span class="text-muted-sm">Delivery Reference</span><div class="font-semibold">${d.id}</div></div>
                 <div><span class="text-muted-sm">Material</span><div class="font-semibold">${d.material}</div></div>
-                <div><span class="text-muted-sm">Ordered</span><div class="font-semibold">${d.orderedQty.toLocaleString()} ${d.unit}</div></div>
-                <div><span class="text-muted-sm">Received</span><div class="font-semibold">${received.toLocaleString()} ${d.unit}</div></div>
-                <div><span class="text-muted-sm">Damaged</span><div class="font-semibold">${damaged.toLocaleString()} ${d.unit}</div></div>
-                <div><span class="text-muted-sm">Missing</span><div class="font-semibold">${missing.toLocaleString()} ${d.unit}</div></div>
-                <div><span class="text-muted-sm">Accepted</span><div class="font-semibold">${accepted.toLocaleString()} ${d.unit}</div></div>
+                <div><span class="text-muted-sm">Ordered Quantity</span><div class="font-semibold">${d.orderedQty.toLocaleString()} ${d.unit}</div></div>
+                <div><span class="text-muted-sm">Received Quantity</span><div class="font-semibold">${received.toLocaleString()} ${d.unit}</div></div>
+                <div><span class="text-muted-sm">Accepted Quantity</span><div class="font-semibold">${accepted.toLocaleString()} ${d.unit}</div></div>
+                <div><span class="text-muted-sm">Damaged Quantity</span><div class="font-semibold">${damaged.toLocaleString()} ${d.unit}</div></div>
+                <div><span class="text-muted-sm">Missing Quantity</span><div class="font-semibold">${missing.toLocaleString()} ${d.unit}</div></div>
                 <div><span class="text-muted-sm">Assigned Warehouse</span><div class="font-semibold">${warehouse}</div></div>
+                <div class="full-width"><span class="text-muted-sm">Remarks</span><div class="font-semibold">${remarks || '-'}</div></div>
                 <div class="full-width"><span class="text-muted-sm">New Status</span><div><span class="badge ${badgeClassFor(newStatus)}">${newStatus}</span></div></div>
             </div>
             ${damaged > 0 || missing > 0 ? '<div class="feed-item danger mt-3"><div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="feed-body"><div class="feed-title">Discrepancy Detected</div><div class="feed-meta">This delivery has damaged or missing items. The Purchasing Officer and General Manager will be notified.</div></div></div>' : ''}
         `;
 
+        if (confirmReviewCheckbox) confirmReviewCheckbox.checked = false;
+        const confirmBtn = document.getElementById('confirmVerifyBtn');
+        if (confirmBtn) confirmBtn.disabled = true;
+
         document.getElementById('verifyModal').classList.remove('active');
         document.getElementById('verifyConfirmModal').classList.add('active');
+
+        updateProgressSteps(5); // Step 5: Review Verification
     });
 
+    // ==========================================
+    // Review Screen Controls (Back / Cancel / Checkbox Gate)
+    // ==========================================
+    if (confirmReviewCheckbox) {
+        confirmReviewCheckbox.addEventListener('change', () => {
+            const confirmBtn = document.getElementById('confirmVerifyBtn');
+            if (confirmBtn) confirmBtn.disabled = !confirmReviewCheckbox.checked;
+        });
+    }
+
+    if (btnVerifyBack) {
+        btnVerifyBack.addEventListener('click', () => {
+            // Return to the form without re-populating fields, so entered values are preserved
+            document.getElementById('verifyConfirmModal').classList.remove('active');
+            document.getElementById('verifyModal').classList.add('active');
+            updateProgressSteps(4);
+        });
+    }
+
+    if (btnVerifyCancel) {
+        btnVerifyCancel.addEventListener('click', () => {
+            document.getElementById('verifyConfirmModal').classList.remove('active');
+            window.pendingVerification = null;
+            verifyTargetId = null;
+            resetProgressSteps();
+        });
+    }
+
     document.getElementById('confirmVerifyBtn').addEventListener('click', () => {
+        if (confirmReviewCheckbox && !confirmReviewCheckbox.checked) return;
+
         const d = deliveryData.find(x => x.id === verifyTargetId);
         const pending = window.pendingVerification;
         if (!d || !pending) return;
+
+        // Final confirmation prompt referencing the actual delivery reference and supplier
+        if (!window.confirm(buildVerificationConfirmMessage(d))) return;
+
+        updateProgressSteps(6); // Step 6: Confirm Delivery
 
         d.receivedQty = pending.received;
         d.damagedQty = pending.damaged;
@@ -317,19 +433,34 @@ document.addEventListener('DOMContentLoaded', () => {
         d.status = pending.newStatus;
         if (d.actualDate === '-') d.actualDate = TODAY_LABEL;
 
+        // Close verification modals
         document.getElementById('verifyConfirmModal').classList.remove('active');
+        document.getElementById('verifyModal').classList.remove('active');
 
         // Simulate downstream effects
-        logActivity('fa-boxes', 'info', 'Inventory Updated', `${pending.accepted.toLocaleString()} ${d.unit} of ${d.material} added to ${pending.warehouse}.`);
+        logActivity('fa-boxes', 'info', 'Inventory Updated', `${pending.accepted.toLocaleString()} ${d.unit} of ${d.material} added to inventory at ${pending.warehouse}.`);
+
+        if (pending.damaged > 0) {
+            logActivity('fa-dolly', 'danger', 'Damaged Materials Relocated', `${pending.damaged.toLocaleString()} ${d.unit} of ${d.material} moved to Warehouse 3 (Damaged & Quarantined).`);
+        }
+
+        logActivity('fa-clipboard-list', 'info', 'Inventory Activity Recorded', `Inventory Activity record created for ${d.id} (${d.po}).`);
         logActivity('fa-clipboard-check', pending.newStatus === 'Discrepancy Reported' ? 'danger' : 'success', `Delivery ${pending.newStatus}`, `${d.id} (${d.po}) marked as ${pending.newStatus}.`);
         logActivity('fa-bell', 'info', 'Purchasing Officer Notified', `Verification results for ${d.id} sent to the Purchasing Officer.`);
         logActivity('fa-bell', 'info', 'General Manager Notified', `Verification results for ${d.id} sent to the General Manager.`);
 
-        window.showToast('Delivery Verified', `${d.id} has been recorded as ${pending.newStatus}.`, pending.newStatus === 'Discrepancy Reported' ? 'danger' : 'success');
+        // Existing shared toast helper (window.showToast from app.js)
+        window.showToast('Delivery Verified', 'Delivery verification completed successfully.', 'success');
         window.pendingVerification = null;
+
+        // Reset the delivery verification form for next use
+        const verifyFormEl = document.getElementById('verifyForm');
+        if (verifyFormEl) verifyFormEl.reset();
+        clearVerifyErrors();
 
         renderSummary();
         renderTable();
+        resetProgressSteps(); // Reset Guided Access progress back to Step 1
     });
 
     // ==========================================
@@ -397,10 +528,92 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
+    // Verify Form Validation
+    // ==========================================
+    const clearVerifyErrors = () => {
+        const groups = [verifyReceivedGroup, verifyDamagedGroup, verifyMissingGroup, verifyAcceptedGroup, verifyWarehouseGroup, verifyRemarksGroup];
+        const errors = [verifyReceivedError, verifyDamagedError, verifyMissingError, verifyAcceptedError, verifyWarehouseError, verifyRemarksError];
+
+        groups.forEach(g => g && g.classList.remove('has-error'));
+        errors.forEach(e => {
+            if (e) {
+                e.textContent = '';
+                e.style.display = 'none';
+            }
+        });
+    };
+
+    const showVerifyFieldError = (group, errorEl, message) => {
+        if (group) group.classList.add('has-error');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+    };
+
+    const validateVerifyForm = (showErrors = false) => {
+        const d = deliveryData.find(x => x.id === verifyTargetId);
+        if (!d) return false;
+
+        let isValid = true;
+        clearVerifyErrors();
+
+        const received = parseInt(document.getElementById('verifyReceivedQty').value, 10);
+        const damaged = parseInt(document.getElementById('verifyDamagedQty').value, 10);
+        const missing = parseInt(document.getElementById('verifyMissingQty').value, 10);
+        const accepted = parseInt(document.getElementById('verifyAcceptedQty').value, 10);
+        const warehouse = document.getElementById('verifyWarehouse').value;
+        const remarks = document.getElementById('verifyRemarks').value.trim();
+
+        if (isNaN(received) || received < 0) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyReceivedGroup, verifyReceivedError, 'Enter a received quantity of zero or more.');
+        }
+
+        if (isNaN(damaged) || damaged < 0) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyDamagedGroup, verifyDamagedError, 'Damaged quantity cannot be negative.');
+        } else if (!isNaN(received) && damaged > received) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyDamagedGroup, verifyDamagedError, 'Damaged quantity cannot exceed received quantity.');
+        }
+
+        if (!isNaN(missing) && missing > d.orderedQty) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyMissingGroup, verifyMissingError, 'Missing quantity cannot exceed the ordered quantity.');
+        }
+
+        if (!isNaN(accepted) && !isNaN(received) && accepted > received) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyAcceptedGroup, verifyAcceptedError, 'Accepted quantity cannot exceed received quantity.');
+        }
+
+        if (accepted > 0 && !warehouse) {
+            isValid = false;
+            if (showErrors) showVerifyFieldError(verifyWarehouseGroup, verifyWarehouseError, 'Assigned warehouse is required when accepted quantity is greater than zero.');
+        }
+
+        const remarksNeeded = damaged > 0 || missing > 0 || (!isNaN(received) && received !== d.orderedQty);
+        if (remarksNeeded && !remarks) {
+            isValid = false;
+            if (showErrors) {
+                let reason = 'Remarks are required when received quantity differs from ordered quantity.';
+                if (damaged > 0) reason = 'Remarks are required when damaged quantity is greater than zero.';
+                else if (missing > 0) reason = 'Remarks are required when missing quantity is greater than zero.';
+                showVerifyFieldError(verifyRemarksGroup, verifyRemarksError, reason);
+            }
+        }
+
+        return isValid;
+    };
+
+    // ==========================================
     // Initial Render
     // ==========================================
     populateSupplierFilter();
     renderActivityFeed();
     renderSummary();
     renderTable();
+    updateGuidedAccessUI();
+    resetProgressSteps();
 });

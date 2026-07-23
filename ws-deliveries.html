@@ -104,6 +104,34 @@
                     <span>Deliveries</span>
                 </div>
 
+                <!-- Guided Access Contextual Guidance Alert -->
+                <div class="card mb-3 entry-form-card" id="guidedAccessBanner">
+                    <div class="feed-item info mb-0">
+                        <div class="feed-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <div class="feed-body">
+                            <div class="feed-title">Delivery Verification Guide</div>
+                            <div class="feed-meta">Follow each step to verify deliveries accurately before adding accepted materials to inventory.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guided Workflow Progress Indicator -->
+                <div class="card mb-3" id="guidedStepsProgress">
+                    <div class="summary-card-title mb-1">
+                        <i class="fas fa-list-ol icon-primary"></i> Guided Workflow Progress
+                    </div>
+                    <div class="metric-sub-grid">
+                        <span class="badge" id="step1Badge">1. Select Delivery</span>
+                        <span class="badge" id="step2Badge">2. Compare Ordered Items</span>
+                        <span class="badge" id="step3Badge">3. Record Received Quantities</span>
+                        <span class="badge" id="step4Badge">4. Record Damaged or Missing Items</span>
+                        <span class="badge" id="step5Badge">5. Review Verification</span>
+                        <span class="badge" id="step6Badge">6. Confirm Delivery</span>
+                    </div>
+                </div>
+
                 <!-- Delivery Summary -->
                 <div class="grid grid-cols-3 mb-3">
 
@@ -285,61 +313,75 @@
                     </div>
 
                     <div class="sub-form-grid">
-                        <div class="form-group">
+                        <div class="form-group" id="verifyReceivedGroup">
                             <label class="form-label">Quantity Received</label>
-                            <input type="number" id="verifyReceivedQty" class="form-control" min="0" required>
+                            <input type="number" id="verifyReceivedQty" class="form-control" min="0">
+                            <div class="error-message" id="verifyReceivedError"></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="verifyDamagedGroup">
                             <label class="form-label">Damaged Quantity</label>
-                            <input type="number" id="verifyDamagedQty" class="form-control" min="0" required>
+                            <input type="number" id="verifyDamagedQty" class="form-control" min="0">
+                            <div class="error-message" id="verifyDamagedError"></div>
                         </div>
                     </div>
 
                     <div class="sub-form-grid">
-                        <div class="form-group">
+                        <div class="form-group" id="verifyMissingGroup">
                             <label class="form-label">Missing Quantity</label>
-                            <input type="number" id="verifyMissingQty" class="form-control" min="0" required>
+                            <input type="number" id="verifyMissingQty" class="form-control" readonly>
+                            <div class="error-message" id="verifyMissingError"></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="verifyAcceptedGroup">
                             <label class="form-label">Accepted Quantity</label>
-                            <input type="number" id="verifyAcceptedQty" class="form-control" min="0" required>
+                            <input type="number" id="verifyAcceptedQty" class="form-control" readonly>
+                            <div class="error-message" id="verifyAcceptedError"></div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="verifyWarehouseGroup">
                         <label class="form-label">Assigned Warehouse</label>
-                        <select id="verifyWarehouse" class="form-control" required>
+                        <select id="verifyWarehouse" class="form-control">
                             <option value="Warehouse 1">Warehouse 1 - Small Items</option>
                             <option value="Warehouse 2">Warehouse 2 - Large Materials</option>
                             <option value="Warehouse 3">Warehouse 3 - Damaged &amp; Quarantined</option>
                         </select>
+                        <div class="error-message" id="verifyWarehouseError"></div>
                     </div>
 
-                    <div class="form-group mb-0">
+                    <div class="form-group mb-0" id="verifyRemarksGroup">
                         <label class="form-label">Remarks</label>
                         <textarea id="verifyRemarks" class="form-control" placeholder="Required if damaged or missing quantities are recorded..."></textarea>
+                        <div class="error-message" id="verifyRemarksError"></div>
                     </div>
 
                     <div class="modal-footer mt-3">
                         <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
-                        <button type="submit" class="btn btn-primary">Review Verification</button>
+                        <button type="submit" class="btn btn-primary" id="btnReviewVerification">Review Verification</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Verify Confirmation Modal -->
+    <!-- Delivery Review Screen (Guided Access Step 5-6) -->
     <div class="modal-overlay" id="verifyConfirmModal">
         <div class="modal">
-            <div class="modal-header">Confirm Delivery Verification</div>
+            <div class="modal-header">Review Verification</div>
             <div class="modal-body">
                 <p class="mb-2">Please review the recorded quantities before completing verification. This will update inventory and notify the Purchasing Officer and General Manager.</p>
                 <div id="confirmVerifySummary"></div>
+
+                <div class="form-group mb-0 mt-3">
+                    <label class="form-label" for="confirmReviewCheckbox">
+                        <input type="checkbox" id="confirmReviewCheckbox">
+                        I have reviewed the received quantities and all delivery discrepancies.
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Back</button>
-                <button class="btn btn-primary" id="confirmVerifyBtn" data-modal-close>Confirm &amp; Complete</button>
+                <button class="btn btn-outline" id="btnVerifyBack">Back</button>
+                <button class="btn btn-outline" id="btnVerifyCancel">Cancel</button>
+                <button class="btn btn-primary" id="confirmVerifyBtn" data-modal-close disabled>Confirm Delivery</button>
             </div>
         </div>
     </div>
