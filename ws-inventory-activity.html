@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff | Inventory Activity</title>
+
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+
+        <!-- Sidebar Navigation (Warehouse Staff Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                        <i class="fas fa-truck"></i> Deliveries
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Inventory Activity</h2>
+                </div>
+
+                <div class="topbar-right">
+
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">Warehouse Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-clipboard-list icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Inventory Correction Logged</div>
+                                    <div class="notif-desc">PVC Pipe 4-inch count corrected in Warehouse 1.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Inventory Activity</span>
+                </div>
+
+                <!-- Activity Summary -->
+                <div class="grid grid-cols-4 mb-3">
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-calendar-day icon-info"></i> Updates Today
+                        </div>
+                        <div class="metric-block metric-border-info mb-0">
+                            <div class="metric-value" id="summaryUpdatesToday">0</div>
+                            <div class="metric-label">Logged Activities</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-truck-loading icon-success"></i> Stock Received
+                        </div>
+                        <div class="metric-block metric-border-success mb-0">
+                            <div class="metric-value" id="summaryStockReceived">0</div>
+                            <div class="metric-label">Received Entries</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exchange-alt icon-secondary"></i> Material Transfers
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value" id="summaryTransfers">0</div>
+                            <div class="metric-label">Transfer Entries</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-danger"></i> Corrections &amp; Discrepancies
+                        </div>
+                        <div class="metric-block metric-border-danger mb-0">
+                            <div class="metric-value" id="summaryDiscrepancies">0</div>
+                            <div class="metric-label">Flagged Entries</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Activity ID, Material, or Reference...">
+                        </div>
+                        <select id="activityTypeFilter" class="form-control filter-select">
+                            <option value="All">All Activity Types</option>
+                            <option value="Stock Received">Stock Received</option>
+                            <option value="Quantity Updated">Quantity Updated</option>
+                            <option value="Material Transferred">Material Transferred</option>
+                            <option value="Damaged Material Recorded">Damaged Material Recorded</option>
+                            <option value="Missing Material Reported">Missing Material Reported</option>
+                            <option value="Inventory Correction">Inventory Correction</option>
+                            <option value="Delivery Verified">Delivery Verified</option>
+                        </select>
+                        <select id="warehouseFilter" class="form-control filter-select">
+                            <option value="All">All Warehouses</option>
+                            <option value="Warehouse 1">Warehouse 1</option>
+                            <option value="Warehouse 2">Warehouse 2</option>
+                            <option value="Warehouse 3">Warehouse 3</option>
+                        </select>
+                        <input type="date" id="dateFilter" class="form-control filter-select">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Activity Report</button>
+                    </div>
+                </div>
+
+                <!-- Inventory Activity Table -->
+                <div class="card">
+                    <h3 class="section-title mb-2"><i class="fas fa-clipboard-list section-icon icon-primary"></i> Activity History</h3>
+                    <p class="text-muted-sm mb-2">This is a read-only record. Inventory activity entries cannot be edited or deleted from this view.</p>
+                    <div class="table-wrapper">
+                        <table class="table" id="activityTable">
+                            <thead>
+                                <tr>
+                                    <th>Activity ID</th>
+                                    <th>Material</th>
+                                    <th>Activity Type</th>
+                                    <th>Previous Qty</th>
+                                    <th>Updated Qty</th>
+                                    <th>Warehouse</th>
+                                    <th>Updated By</th>
+                                    <th>Date &amp; Time</th>
+                                    <th>Reference No.</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex-between mt-3">
+                        <span class="text-muted-sm" id="paginationInfo">Showing 0-0 of 0 records</span>
+                        <div class="toolbar-actions">
+                            <button class="btn btn-outline" id="prevPageBtn"><i class="fas fa-chevron-left"></i> Prev</button>
+                            <button class="btn btn-outline" id="nextPageBtn">Next <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- View Activity Details Modal (Read-Only) -->
+    <div class="modal-overlay" id="viewActivityModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">Activity Record <span class="badge badge-info ml-2" id="detActivityIdBadge"></span></div>
+            <div class="modal-body">
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Material</div>
+                        <div id="detMaterial" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Activity Type</div>
+                        <div id="detActivityType" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Previous Quantity</div>
+                        <div id="detPrevQty" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Updated Quantity</div>
+                        <div id="detUpdatedQty" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Warehouse</div>
+                        <div id="detWarehouse" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Updated By</div>
+                        <div id="detUpdatedBy" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Date &amp; Time</div>
+                        <div id="detDateTime" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Reference Number</div>
+                        <div id="detReference" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="text-muted-sm font-semibold">Remarks</div>
+                    <div id="detRemarks" class="text-main" style="padding: 0.5rem; background-color: var(--color-background); border-radius: var(--radius-sm); border-left: 3px solid var(--color-primary);"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Logic (External Script) -->
+    <script src="js/ws-inventory-activity.js"></script>
+</body>
+</html>

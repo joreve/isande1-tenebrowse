@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff Dashboard</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Warehouse Staff Scope Only) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                        <i class="fas fa-truck"></i> Deliveries
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Dashboard</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">Warehouse Notifications</div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-check-circle icon-success"></i>
+                                <div>
+                                    <div class="notif-title">Approved Material Request</div>
+                                    <div class="notif-desc">REQ-2026-1102 approved and ready for stock release.</div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-truck icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Incoming Delivery</div>
+                                    <div class="notif-desc">PO-2026-902 arriving today at Warehouse 2 loading bay.</div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-sync-alt icon-primary"></i>
+                                <div>
+                                    <div class="notif-title">Inventory Update</div>
+                                    <div class="notif-desc">Steel Reinforcement Bar quantity adjusted after recount.</div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-exchange-alt icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Stock Transfer</div>
+                                    <div class="notif-desc">Electrical supplies moved from receiving dock to Warehouse 1.</div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Low-Stock Alert</div>
+                                    <div class="notif-desc">PVC Pipe (4-inch) is running low at Warehouse 1.</div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <i class="fas fa-times-circle icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Damaged Material Report</div>
+                                    <div class="notif-desc">Marine Plywood batch flagged and moved to Warehouse 3.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="#">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Warehouse Dashboard</span>
+                </div>
+
+                <!-- Role Isolated Welcome Card -->
+                <div class="card welcome-card mb-3">
+                    <span class="welcome-badge">Warehouse Operations Command</span>
+                    <h1 class="welcome-title">Welcome Back, Arnie</h1>
+                    <p class="welcome-text">
+                        Here is today's snapshot of your warehouse. Monitor stock levels, verify incoming deliveries, update material quantities, and record any damaged or missing items across your facilities.
+                    </p>
+                </div>
+
+                <!-- Dashboard Summary Status Metrics Blocks -->
+                <div class="grid grid-cols-2 mb-3">
+
+                    <!-- Live Inventory Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-boxes icon-success"></i> Live Inventory Stock
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">8,240</div>
+                                <div class="metric-label">Total Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">6,150</div>
+                                <div class="metric-label">Available Stock</div>
+                            </div>
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">62</div>
+                                <div class="metric-label">Low-Stock Items</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">9</div>
+                                <div class="metric-label">Out-of-Stock Items</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warehouse Facility Summary Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-warehouse icon-primary"></i> Warehouse Facility Summary
+                        </div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">2,480</div>
+                                <div class="metric-label">Warehouse 1 – Small Items</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">1,150</div>
+                                <div class="metric-label">Warehouse 2 – Large Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">76</div>
+                                <div class="metric-label">Warehouse 3 – Damaged &amp; Quarantined</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incoming Deliveries Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-truck icon-info"></i> Incoming Deliveries
+                        </div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">5</div>
+                                <div class="metric-label">Expected Today</div>
+                            </div>
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">3</div>
+                                <div class="metric-label">Awaiting Verification</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Recently Received</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Issues Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-secondary"></i> Inventory Issues
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">62</div>
+                                <div class="metric-label">Low-Stock Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">18</div>
+                                <div class="metric-label">Damaged Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">4</div>
+                                <div class="metric-label">Missing Materials</div>
+                            </div>
+                            <div class="metric-block metric-border-muted">
+                                <div class="metric-value">7</div>
+                                <div class="metric-label">Stock Discrepancies</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Lower Layout Analytics Grid Split Block -->
+                <div class="dashboard-lower-grid">
+                    
+                    <!-- Analytic Chart Layout Container -->
+                    <div class="chart-column">
+                        
+                        <!-- Chart 1: Stock Levels by Material Category -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-poll-h section-icon icon-primary"></i> Stock Levels by Material Category (Units)</h3>
+                            <div class="chart-container">
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Portland Cement</div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 74%;"></div></div>
+                                    <div class="bar-value">2,220</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Steel Reinforcement Bar</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-secondary" style="width: 58%;"></div></div>
+                                    <div class="bar-value">1,740</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Marine Plywood</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-info" style="width: 33%;"></div></div>
+                                    <div class="bar-value">990</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">PVC Pipe (4-inch)</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-success" style="width: 18%;"></div></div>
+                                    <div class="bar-value">540</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: Weekly Deliveries Received -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-chart-area section-icon icon-info"></i> Weekly Deliveries Received</h3>
+                            <div class="line-graph-simulated">
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 45%;"></div>
+                                    <div class="graph-label">WK 23</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 60%;"></div>
+                                    <div class="graph-label">WK 24</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 50%;"></div>
+                                    <div class="graph-label">WK 25</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 78%;"></div>
+                                    <div class="graph-label">WK 26</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 90%;"></div>
+                                    <div class="graph-label">Current</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Recent Inventory Updates Feed Panel Component -->
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-bolt section-icon icon-secondary"></i> Recent Inventory Updates</h3>
+                        
+                        <div class="notification-feed">
+                            
+                            <div class="feed-item success">
+                                <div class="feed-icon"><i class="fas fa-boxes"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Delivery Received</div>
+                                    <div class="feed-meta">150 bags of Portland Cement received at Warehouse 2.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item info">
+                                <div class="feed-icon"><i class="fas fa-sync-alt"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Stock Quantity Updated</div>
+                                    <div class="feed-meta">Steel Reinforcement Bar count adjusted after physical recount.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item warning">
+                                <div class="feed-icon"><i class="fas fa-exchange-alt"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Damaged Stock Transferred</div>
+                                    <div class="feed-meta">Damaged Marine Plywood moved to Warehouse 3 for quarantine.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item danger">
+                                <div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Missing Material Reported</div>
+                                    <div class="feed-meta">PVC Pipe (4-inch) quantity shortfall logged at Warehouse 1.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item info">
+                                <div class="feed-icon"><i class="fas fa-truck-loading"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Stock Transfer Completed</div>
+                                    <div class="feed-meta">Electrical supplies transferred to Warehouse 1 storage racks.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item success">
+                                <div class="feed-icon"><i class="fas fa-check"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Delivery Verified</div>
+                                    <div class="feed-meta">PO-2026-887 checked against manifest, no discrepancies found.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item warning">
+                                <div class="feed-icon"><i class="fas fa-clipboard-list"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Stock Discrepancy Logged</div>
+                                    <div class="feed-meta">Count mismatch on Structural Timber flagged for review.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+    </script>
+</body>
+</html>

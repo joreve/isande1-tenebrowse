@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff | Inventory</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Warehouse Staff Scope Only) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                        <i class="fas fa-truck"></i> Deliveries
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Inventory</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">Warehouse Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Low-Stock Alert</div>
+                                    <div class="notif-desc">Steel Reinforcement Bar is running low at Warehouse 2.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Inventory</span>
+                </div>
+
+                <!-- Inventory Summary Status Metrics Blocks -->
+                <div class="grid grid-cols-4 mb-3">
+
+                    <!-- Total Materials Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-cubes icon-info"></i> Total Materials
+                        </div>
+                        <div class="metric-block metric-border-info mb-0">
+                            <div class="metric-value">8</div>
+                            <div class="metric-label">Tracked Materials</div>
+                        </div>
+                    </div>
+
+                    <!-- Available Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-check-circle icon-success"></i> Available Stock
+                        </div>
+                        <div class="metric-block metric-border-success mb-0">
+                            <div class="metric-value">4</div>
+                            <div class="metric-label">In Stock</div>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">Below Minimum</div>
+                        </div>
+                    </div>
+
+                    <!-- Out of Stock Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items
+                        </div>
+                        <div class="metric-block metric-border-danger mb-0">
+                            <div class="metric-value">1</div>
+                            <div class="metric-label">Depleted</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Top Module Toolbar for Inventory Filtering -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Material ID or Name...">
+                        </div>
+                        <select id="categoryFilter" class="form-control filter-select">
+                            <option value="All">All Categories</option>
+                            <option value="Structural">Structural</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Finishing">Finishing</option>
+                        </select>
+                        <select id="warehouseFilter" class="form-control filter-select">
+                            <option value="All">All Warehouses</option>
+                            <option value="Warehouse 1">Warehouse 1</option>
+                            <option value="Warehouse 2">Warehouse 2</option>
+                            <option value="Warehouse 3">Warehouse 3</option>
+                        </select>
+                        <select id="statusFilter" class="form-control filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                            <option value="Overstocked">Overstocked</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Inventory Report</button>
+                    </div>
+                </div>
+
+                <!-- Inventory Data Table -->
+                <div class="card">
+                    <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory</h3>
+                    <p class="text-muted-sm mb-2">Tip: Use "Update Quantity" for simple stock changes, or the quick actions to record received or damaged stock.</p>
+                    <div class="table-wrapper">
+                        <table class="table" id="inventoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Material ID</th>
+                                    <th>Material Name</th>
+                                    <th>Category</th>
+                                    <th>Current Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Warehouse Location</th>
+                                    <th>Min. Stock Level</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- View Material Details Modal Component -->
+    <div class="modal-overlay" id="viewMaterialModal">
+        <div class="modal">
+            <div class="modal-header">Material Details</div>
+            <div class="modal-body">
+                <div class="form-group mb-0">
+                    <label class="form-label">Material</label>
+                    <input type="text" id="viewName" class="form-control" disabled>
+                </div>
+                <div class="sub-form-grid">
+                    <div class="form-group mb-0">
+                        <label class="form-label">Material ID</label>
+                        <input type="text" id="viewId" class="form-control" disabled>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Category</label>
+                        <input type="text" id="viewCategory" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="sub-form-grid">
+                    <div class="form-group mb-0">
+                        <label class="form-label">Current Quantity</label>
+                        <input type="text" id="viewQty" class="form-control" disabled>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Minimum Stock Level</label>
+                        <input type="text" id="viewMin" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="sub-form-grid">
+                    <div class="form-group mb-0">
+                        <label class="form-label">Warehouse Location</label>
+                        <input type="text" id="viewWarehouse" class="form-control" disabled>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Status</label>
+                        <input type="text" id="viewStatus" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group mb-0">
+                    <label class="form-label">Last Updated</label>
+                    <input type="text" id="viewLastUpdated" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Quantity Modal Component (Form Step + Review Step) -->
+    <div class="modal-overlay" id="updateQtyModal">
+        <div class="modal">
+            <div class="modal-header">Update Material Quantity</div>
+            <div class="modal-body">
+
+                <!-- Step 1: Update Form -->
+                <div id="updateFormSection">
+                    <p class="text-muted-sm mb-2">Choose what changed, enter the amount, then review before saving. Quantity cannot be reduced below zero.</p>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label">Selected Material</label>
+                        <input type="text" id="updateMaterialName" class="form-control" disabled>
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group mb-0">
+                            <label class="form-label">Current Quantity</label>
+                            <input type="text" id="updateCurrentQty" class="form-control" disabled>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Update Type</label>
+                            <select id="updateType" class="form-control">
+                                <option value="Add Received Stock">Add Received Stock</option>
+                                <option value="Reduce Stock">Reduce Stock</option>
+                                <option value="Correct Inventory Count">Correct Inventory Count</option>
+                                <option value="Record Damaged Stock">Record Damaged Stock</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0" id="correctionReasonGroup">
+                        <label class="form-label">Reason for Correction</label>
+                        <input type="text" id="correctionReason" class="form-control" placeholder="e.g., Physical recount, data entry error...">
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group mb-0">
+                            <label class="form-label">Quantity to Add or Remove</label>
+                            <input type="number" id="qtyChange" class="form-control" min="0" placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Warehouse Location</label>
+                            <select id="updateWarehouse" class="form-control">
+                                <option value="Warehouse 1">Warehouse 1</option>
+                                <option value="Warehouse 2">Warehouse 2</option>
+                                <option value="Warehouse 3">Warehouse 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group mb-0">
+                            <label class="form-label">Reference Number</label>
+                            <input type="text" id="refNumber" class="form-control" placeholder="e.g., DR-2026-045">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Remarks</label>
+                            <input type="text" id="updateRemarks" class="form-control" placeholder="Optional notes...">
+                        </div>
+                    </div>
+
+                    <div class="metric-sub-grid">
+                        <div class="metric-block metric-border-muted">
+                            <div class="metric-value" id="previewPrevQty">0</div>
+                            <div class="metric-label">Previous Quantity</div>
+                        </div>
+                        <div class="metric-block metric-border-info">
+                            <div class="metric-value" id="previewChangeQty">0</div>
+                            <div class="metric-label">Quantity Change</div>
+                        </div>
+                        <div class="metric-block metric-border-success">
+                            <div class="metric-value" id="previewNewQty">0</div>
+                            <div class="metric-label">New Quantity</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Confirmation Review -->
+                <div id="updateConfirmSection">
+                    <p class="text-muted-sm mb-2">Please confirm this inventory update. This action will be recorded in Inventory Activity.</p>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Material</label>
+                        <input type="text" id="confirmMaterialName" class="form-control" disabled>
+                    </div>
+                    <div class="sub-form-grid">
+                        <div class="form-group mb-0">
+                            <label class="form-label">Update Type</label>
+                            <input type="text" id="confirmUpdateType" class="form-control" disabled>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label">Warehouse Location</label>
+                            <input type="text" id="confirmWarehouse" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="metric-sub-grid">
+                        <div class="metric-block metric-border-muted">
+                            <div class="metric-value" id="confirmPrevQty">0</div>
+                            <div class="metric-label">Previous Quantity</div>
+                        </div>
+                        <div class="metric-block metric-border-info">
+                            <div class="metric-value" id="confirmChangeQty">0</div>
+                            <div class="metric-label">Quantity Change</div>
+                        </div>
+                        <div class="metric-block metric-border-success">
+                            <div class="metric-value" id="confirmNewQty">0</div>
+                            <div class="metric-label">New Quantity</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" id="updateFormFooter">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="btnReviewUpdate">Review Update</button>
+            </div>
+            <div class="modal-footer" id="updateConfirmFooter">
+                <button class="btn btn-outline" id="btnGoBack">Go Back</button>
+                <button class="btn btn-primary" id="btnConfirmUpdate">Confirm &amp; Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Logic (Vanilla JS) -->
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Realistic Warehouse Inventory Data
+            let inventoryData = [
+                { id: 'MAT-1001', name: 'Portland Cement (Type I)', category: 'Structural', qty: 1240, unit: 'Bags (40kg)', warehouse: 'Warehouse 2', min: 500, status: 'In Stock', lastUpdated: '2026-07-20' },
+                { id: 'MAT-1002', name: 'Steel Reinforcement Bar 12mm', category: 'Structural', qty: 85, unit: 'Pieces', warehouse: 'Warehouse 2', min: 300, status: 'Low Stock', lastUpdated: '2026-07-21' },
+                { id: 'MAT-1003', name: 'Marine Plywood 3/4"', category: 'Finishing', qty: 0, unit: 'Sheets', warehouse: 'Warehouse 2', min: 50, status: 'Out of Stock', lastUpdated: '2026-07-19' },
+                { id: 'MAT-1004', name: 'PVC Pipe 4-inch', category: 'Plumbing', qty: 620, unit: 'Lengths', warehouse: 'Warehouse 1', min: 100, status: 'Overstocked', lastUpdated: '2026-07-22' },
+                { id: 'MAT-1005', name: 'Concrete Hollow Blocks 6"', category: 'Structural', qty: 3400, unit: 'Pieces', warehouse: 'Warehouse 2', min: 1000, status: 'In Stock', lastUpdated: '2026-07-18' },
+                { id: 'MAT-1006', name: 'Electrical Wire THHN 3.5mm', category: 'Electrical', qty: 210, unit: 'Rolls', warehouse: 'Warehouse 1', min: 250, status: 'Low Stock', lastUpdated: '2026-07-21' },
+                { id: 'MAT-1007', name: 'Roofing Sheets (Corrugated)', category: 'Finishing', qty: 480, unit: 'Sheets', warehouse: 'Warehouse 2', min: 150, status: 'In Stock', lastUpdated: '2026-07-17' },
+                { id: 'MAT-1008', name: 'Structural Bolts M16', category: 'Structural', qty: 15, unit: 'Boxes', warehouse: 'Warehouse 1', min: 40, status: 'Low Stock', lastUpdated: '2026-07-22' }
+            ];
+
+            // Simulated Inventory Activity Log
+            let inventoryActivityLog = [];
+
+            const tableBody = document.getElementById('inventoryTableBody');
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const warehouseFilter = document.getElementById('warehouseFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const btnExport = document.getElementById('btnExport');
+
+            const getBadgeClass = (status) => {
+                if (status === 'In Stock') return 'badge-success';
+                if (status === 'Low Stock') return 'badge-warning';
+                if (status === 'Out of Stock') return 'badge-danger';
+                if (status === 'Overstocked') return 'badge-info';
+                return 'badge-info';
+            };
+
+            const renderInventoryTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterCategory = categoryFilter.value;
+                const filterWarehouse = warehouseFilter.value;
+                const filterStatus = statusFilter.value;
+
+                tableBody.innerHTML = '';
+
+                const filteredData = inventoryData.filter(item => {
+                    const matchesSearch = item.id.toLowerCase().includes(searchTerm) || item.name.toLowerCase().includes(searchTerm);
+                    const matchesCategory = filterCategory === 'All' || item.category === filterCategory;
+                    const matchesWarehouse = filterWarehouse === 'All' || item.warehouse === filterWarehouse;
+                    const matchesStatus = filterStatus === 'All' || item.status === filterStatus;
+                    return matchesSearch && matchesCategory && matchesWarehouse && matchesStatus;
+                });
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="10" class="empty-state-row">No inventory records match your criteria.</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${item.id}</strong></td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td class="font-semibold">${item.qty.toLocaleString()}</td>
+                        <td>${item.unit}</td>
+                        <td>${item.warehouse}</td>
+                        <td class="text-muted-sm">${item.min.toLocaleString()}</td>
+                        <td><span class="badge ${getBadgeClass(item.status)}">${item.status}</span></td>
+                        <td class="text-muted-sm">${item.lastUpdated}</td>
+                        <td class="text-right">
+                            <button class="action-btn" onclick="viewMaterial('${item.id}')" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn edit" onclick="openUpdateModal('${item.id}', 'Correct Inventory Count')" title="Update Quantity"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" onclick="openUpdateModal('${item.id}', 'Add Received Stock')" title="Record Received Stock"><i class="fas fa-inbox"></i></button>
+                            <button class="action-btn delete" onclick="openUpdateModal('${item.id}', 'Record Damaged Stock')" title="Record Damaged Stock"><i class="fas fa-heart-broken"></i></button>
+                            <button class="action-btn" onclick="openUpdateModal('${item.id}', 'Reduce Stock')" title="Transfer Material"><i class="fas fa-exchange-alt"></i></button>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            };
+
+            // --------------------------------------------------------
+            // VIEW MATERIAL MODAL
+            // --------------------------------------------------------
+            window.viewMaterial = (id) => {
+                const item = inventoryData.find(m => m.id === id);
+                if (!item) return;
+
+                document.getElementById('viewName').value = item.name;
+                document.getElementById('viewId').value = item.id;
+                document.getElementById('viewCategory').value = item.category;
+                document.getElementById('viewQty').value = `${item.qty.toLocaleString()} ${item.unit}`;
+                document.getElementById('viewMin').value = `${item.min.toLocaleString()} ${item.unit}`;
+                document.getElementById('viewWarehouse').value = item.warehouse;
+                document.getElementById('viewStatus').value = item.status;
+                document.getElementById('viewLastUpdated').value = item.lastUpdated;
+
+                document.getElementById('viewMaterialModal').classList.add('active');
+            };
+
+            // --------------------------------------------------------
+            // UPDATE QUANTITY MODAL
+            // --------------------------------------------------------
+            const updateModal = document.getElementById('updateQtyModal');
+            const updateFormSection = document.getElementById('updateFormSection');
+            const updateConfirmSection = document.getElementById('updateConfirmSection');
+            const updateFormFooter = document.getElementById('updateFormFooter');
+            const updateConfirmFooter = document.getElementById('updateConfirmFooter');
+
+            const updateType = document.getElementById('updateType');
+            const correctionReasonGroup = document.getElementById('correctionReasonGroup');
+            const correctionReason = document.getElementById('correctionReason');
+            const qtyChange = document.getElementById('qtyChange');
+            const updateWarehouse = document.getElementById('updateWarehouse');
+            const refNumber = document.getElementById('refNumber');
+            const updateRemarks = document.getElementById('updateRemarks');
+
+            let activeMaterialId = null;
+
+            const showFormStep = () => {
+                updateFormSection.style.display = 'block';
+                updateConfirmSection.style.display = 'none';
+                updateFormFooter.style.display = 'flex';
+                updateConfirmFooter.style.display = 'none';
+            };
+
+            const showConfirmStep = () => {
+                updateFormSection.style.display = 'none';
+                updateConfirmSection.style.display = 'block';
+                updateFormFooter.style.display = 'none';
+                updateConfirmFooter.style.display = 'flex';
+            };
+
+            const toggleCorrectionReason = () => {
+                if (updateType.value === 'Correct Inventory Count') {
+                    correctionReasonGroup.style.display = 'block';
+                } else {
+                    correctionReasonGroup.style.display = 'none';
+                    correctionReason.value = '';
+                }
+            };
+
+            const isReduction = (type) => type === 'Reduce Stock' || type === 'Record Damaged Stock';
+
+            const updatePreview = () => {
+                const item = inventoryData.find(m => m.id === activeMaterialId);
+                if (!item) return;
+
+                const change = parseInt(qtyChange.value, 10) || 0;
+                let newQty = item.qty;
+
+                if (updateType.value === 'Add Received Stock') {
+                    newQty = item.qty + change;
+                } else if (isReduction(updateType.value)) {
+                    newQty = item.qty - change;
+                } else if (updateType.value === 'Correct Inventory Count') {
+                    newQty = item.qty + change;
+                }
+
+                if (newQty < 0) newQty = 0;
+
+                document.getElementById('previewPrevQty').textContent = item.qty.toLocaleString();
+                document.getElementById('previewChangeQty').textContent = (newQty - item.qty >= 0 ? '+' : '') + (newQty - item.qty).toLocaleString();
+                document.getElementById('previewNewQty').textContent = newQty.toLocaleString();
+            };
+
+            window.openUpdateModal = (id, presetType) => {
+                const item = inventoryData.find(m => m.id === id);
+                if (!item) return;
+
+                activeMaterialId = id;
+                document.getElementById('updateMaterialName').value = `${item.name} (${item.id})`;
+                document.getElementById('updateCurrentQty').value = `${item.qty.toLocaleString()} ${item.unit}`;
+                updateType.value = presetType;
+                updateWarehouse.value = item.warehouse;
+                qtyChange.value = '';
+                refNumber.value = '';
+                updateRemarks.value = '';
+                correctionReason.value = '';
+
+                toggleCorrectionReason();
+                updatePreview();
+                showFormStep();
+
+                updateModal.classList.add('active');
+            };
+
+            updateType.addEventListener('change', () => {
+                toggleCorrectionReason();
+                updatePreview();
+            });
+            qtyChange.addEventListener('input', updatePreview);
+
+            document.getElementById('btnReviewUpdate').addEventListener('click', () => {
+                const item = inventoryData.find(m => m.id === activeMaterialId);
+                if (!item) return;
+
+                const change = parseInt(qtyChange.value, 10) || 0;
+
+                if (change <= 0) {
+                    if (window.showToast) window.showToast('Missing Quantity', 'Please enter a quantity greater than zero.', 'danger');
+                    return;
+                }
+
+                if (updateType.value === 'Correct Inventory Count' && correctionReason.value.trim() === '') {
+                    if (window.showToast) window.showToast('Reason Required', 'Please explain why this correction is needed.', 'danger');
+                    return;
+                }
+
+                let newQty = item.qty;
+                if (updateType.value === 'Add Received Stock') newQty = item.qty + change;
+                else if (isReduction(updateType.value)) newQty = item.qty - change;
+                else if (updateType.value === 'Correct Inventory Count') newQty = item.qty + change;
+
+                if (newQty < 0) {
+                    if (window.showToast) window.showToast('Quantity Too Low', 'This change would make the stock quantity negative.', 'danger');
+                    return;
+                }
+
+                // Populate confirmation review step
+                document.getElementById('confirmMaterialName').value = `${item.name} (${item.id})`;
+                document.getElementById('confirmUpdateType').value = updateType.value;
+                document.getElementById('confirmWarehouse').value = updateWarehouse.value;
+                document.getElementById('confirmPrevQty').textContent = item.qty.toLocaleString();
+                document.getElementById('confirmChangeQty').textContent = (newQty - item.qty >= 0 ? '+' : '') + (newQty - item.qty).toLocaleString();
+                document.getElementById('confirmNewQty').textContent = newQty.toLocaleString();
+
+                showConfirmStep();
+            });
+
+            document.getElementById('btnGoBack').addEventListener('click', () => {
+                showFormStep();
+            });
+
+            document.getElementById('btnConfirmUpdate').addEventListener('click', () => {
+                const item = inventoryData.find(m => m.id === activeMaterialId);
+                if (!item) return;
+
+                const change = parseInt(qtyChange.value, 10) || 0;
+                let newQty = item.qty;
+                if (updateType.value === 'Add Received Stock') newQty = item.qty + change;
+                else if (isReduction(updateType.value)) newQty = item.qty - change;
+                else if (updateType.value === 'Correct Inventory Count') newQty = item.qty + change;
+                if (newQty < 0) newQty = 0;
+
+                const today = new Date().toISOString().split('T')[0];
+
+                item.qty = newQty;
+                item.warehouse = updateWarehouse.value;
+                item.lastUpdated = today;
+
+                if (newQty === 0) item.status = 'Out of Stock';
+                else if (newQty < item.min) item.status = 'Low Stock';
+                else if (newQty > item.min * 3) item.status = 'Overstocked';
+                else item.status = 'In Stock';
+
+                // Simulate recording the transaction in Inventory Activity
+                inventoryActivityLog.push({
+                    materialId: item.id,
+                    materialName: item.name,
+                    updateType: updateType.value,
+                    reference: refNumber.value.trim(),
+                    remarks: updateRemarks.value.trim(),
+                    reason: correctionReason.value.trim(),
+                    date: today
+                });
+
+                updateModal.classList.remove('active');
+                renderInventoryTable();
+
+                if (window.showToast) window.showToast('Inventory Updated', `${item.name} quantity saved and logged in Inventory Activity.`, 'success');
+            });
+
+            // --------------------------------------------------------
+            // FILTERS & EXPORT
+            // --------------------------------------------------------
+            searchInput.addEventListener('input', renderInventoryTable);
+            categoryFilter.addEventListener('change', renderInventoryTable);
+            warehouseFilter.addEventListener('change', renderInventoryTable);
+            statusFilter.addEventListener('change', renderInventoryTable);
+
+            btnExport.addEventListener('click', () => {
+                if (window.showToast) window.showToast('Export Started', 'Generating your Inventory Report in CSV format...', 'primary');
+            });
+
+            // Initial Render
+            renderInventoryTable();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff | Deliveries</title>
+
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+
+        <!-- Sidebar Navigation (Warehouse Staff Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-truck-loading"></i> Deliveries
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+
+            <!-- Top Navigation -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Deliveries</h2>
+                </div>
+
+                <div class="topbar-right">
+
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-truck-loading icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Delivery Arriving</div>
+                                    <div class="notif-desc">DEL-3298 from Global Logistics Foundry expected today.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <div class="page-container">
+
+                <!-- Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Deliveries</span>
+                </div>
+
+                <!-- Delivery Summary -->
+                <div class="grid grid-cols-3 mb-3">
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-calendar-day icon-info"></i> Expected Today
+                        </div>
+                        <div class="metric-block metric-border-info mb-0">
+                            <div class="metric-value" id="summaryExpectedToday">0</div>
+                            <div class="metric-label">Scheduled Arrivals</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-clipboard-check icon-secondary"></i> Awaiting Verification
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value" id="summaryAwaitingVerification">0</div>
+                            <div class="metric-label">Arrived, Not Verified</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-dolly icon-secondary"></i> Partially Received
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value" id="summaryPartiallyReceived">0</div>
+                            <div class="metric-label">Incomplete Shipments</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-check-circle icon-success"></i> Verified Deliveries
+                        </div>
+                        <div class="metric-block metric-border-success mb-0">
+                            <div class="metric-value" id="summaryVerified">0</div>
+                            <div class="metric-label">Confirmed Complete</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-danger"></i> With Discrepancies
+                        </div>
+                        <div class="metric-block metric-border-danger mb-0">
+                            <div class="metric-value" id="summaryDiscrepancies">0</div>
+                            <div class="metric-label">Flagged for Review</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Delivery Ref or PO Number...">
+                        </div>
+                        <select id="statusFilter" class="form-control filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="Expected">Expected</option>
+                            <option value="Arrived">Arrived</option>
+                            <option value="Partially Received">Partially Received</option>
+                            <option value="Verified">Verified</option>
+                            <option value="Discrepancy Reported">Discrepancy Reported</option>
+                        </select>
+                        <select id="supplierFilter" class="form-control filter-select">
+                            <option value="All">All Suppliers</option>
+                        </select>
+                        <input type="date" id="dateFilter" class="form-control filter-select">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export</button>
+                    </div>
+                </div>
+
+                <!-- Lower Layout Analytics Grid Split Block -->
+                <div class="dashboard-lower-grid">
+
+                    <!-- Deliveries Table Layout Container -->
+                    <div class="chart-column">
+
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-truck-loading section-icon icon-primary"></i> Incoming Deliveries</h3>
+                            <div class="table-wrapper">
+                                <table class="table" id="deliveriesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Delivery Ref.</th>
+                                            <th>PO Number</th>
+                                            <th>Supplier</th>
+                                            <th>Expected Date</th>
+                                            <th>Actual Date</th>
+                                            <th># Materials</th>
+                                            <th>Status</th>
+                                            <th class="text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="deliveriesTableBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="flex-between mt-3">
+                                <span class="text-muted-sm" id="paginationInfo">Showing 0-0 of 0 records</span>
+                                <div class="toolbar-actions">
+                                    <button class="btn btn-outline" id="prevPageBtn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                    <button class="btn btn-outline" id="nextPageBtn">Next <i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Delivery Activity Panel Component -->
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-secondary"></i> Delivery Activity</h3>
+                        <div class="notification-feed" id="activityFeed">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- View Delivery Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header">Delivery Details</div>
+            <div class="modal-body" id="viewBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verify Delivery Modal -->
+    <div class="modal-overlay" id="verifyModal">
+        <div class="modal">
+            <div class="modal-header">Verify Delivery</div>
+            <div class="modal-body">
+                <p class="section-description mb-2">Record what actually arrived. Warehouse Staff cannot edit the original purchase order.</p>
+                <form id="verifyForm">
+
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Purchase Order Number</label>
+                            <input type="text" id="verifyPoNumber" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Supplier</label>
+                            <input type="text" id="verifySupplier" class="form-control" disabled>
+                        </div>
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Delivery Reference Number</label>
+                            <input type="text" id="verifyRefNumber" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Material Name</label>
+                            <input type="text" id="verifyMaterialName" class="form-control" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Quantity Ordered</label>
+                        <input type="text" id="verifyOrderedQty" class="form-control" disabled>
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Quantity Received</label>
+                            <input type="number" id="verifyReceivedQty" class="form-control" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Damaged Quantity</label>
+                            <input type="number" id="verifyDamagedQty" class="form-control" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Missing Quantity</label>
+                            <input type="number" id="verifyMissingQty" class="form-control" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Accepted Quantity</label>
+                            <input type="number" id="verifyAcceptedQty" class="form-control" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Assigned Warehouse</label>
+                        <select id="verifyWarehouse" class="form-control" required>
+                            <option value="Warehouse 1">Warehouse 1 - Small Items</option>
+                            <option value="Warehouse 2">Warehouse 2 - Large Materials</option>
+                            <option value="Warehouse 3">Warehouse 3 - Damaged &amp; Quarantined</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label">Remarks</label>
+                        <textarea id="verifyRemarks" class="form-control" placeholder="Required if damaged or missing quantities are recorded..."></textarea>
+                    </div>
+
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                        <button type="submit" class="btn btn-primary">Review Verification</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verify Confirmation Modal -->
+    <div class="modal-overlay" id="verifyConfirmModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Delivery Verification</div>
+            <div class="modal-body">
+                <p class="mb-2">Please review the recorded quantities before completing verification. This will update inventory and notify the Purchasing Officer and General Manager.</p>
+                <div id="confirmVerifySummary"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Back</button>
+                <button class="btn btn-primary" id="confirmVerifyBtn" data-modal-close>Confirm &amp; Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Discrepancy Modal -->
+    <div class="modal-overlay" id="discrepancyModal">
+        <div class="modal">
+            <div class="modal-header">Report Discrepancy</div>
+            <div class="modal-body">
+                <form id="discrepancyForm">
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Delivery Reference Number</label>
+                            <input type="text" id="discrepancyRefNumber" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Purchase Order Number</label>
+                            <input type="text" id="discrepancyPoNumber" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Issue Type</label>
+                        <select id="discrepancyType" class="form-control" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Damaged Goods">Damaged Goods</option>
+                            <option value="Missing Items">Missing Items</option>
+                            <option value="Wrong Material Delivered">Wrong Material Delivered</option>
+                            <option value="Quantity Mismatch">Quantity Mismatch</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Description</label>
+                        <textarea id="discrepancyDesc" class="form-control" placeholder="Describe what you observed..." required></textarea>
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                        <button type="submit" class="btn btn-danger">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Logic (External Script) -->
+    <script src="js/ws-deliveries.js"></script>
+</body>
+</html>

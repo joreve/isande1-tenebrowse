@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff | Warehouse Facilities</title>
+
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+
+        <!-- Sidebar Navigation (Warehouse Staff Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                        <i class="fas fa-truck"></i> Deliveries
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Warehouse Facilities</h2>
+                </div>
+
+                <div class="topbar-right">
+
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Low Stock Alert</div>
+                                    <div class="notif-desc">Circuit Breaker 20A running low in Warehouse 1.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Warehouse Facilities</span>
+                </div>
+
+                <!-- Warehouse Selection -->
+                <h3 class="section-title mb-2"><i class="fas fa-map-marker-alt section-icon icon-primary"></i> Select Warehouse</h3>
+                <div class="grid grid-cols-3 mb-3">
+
+                    <div class="card warehouse-select-card" data-warehouse="W1">
+                        <div class="summary-card-title">
+                            <i class="fas fa-toolbox icon-info"></i> Warehouse 1 &mdash; Small Items
+                        </div>
+                        <p class="text-muted-sm">Screws, Nails, Electrical Components, Hand Tools, Plumbing Fittings, Safety Equipment</p>
+                    </div>
+
+                    <div class="card warehouse-select-card" data-warehouse="W2">
+                        <div class="summary-card-title">
+                            <i class="fas fa-warehouse icon-info"></i> Warehouse 2 &mdash; Large Materials
+                        </div>
+                        <p class="text-muted-sm">Portland Cement, Steel Reinforcement Bars, Marine Plywood, Roofing Sheets, PVC Pipes, Concrete Hollow Blocks</p>
+                    </div>
+
+                    <div class="card warehouse-select-card" data-warehouse="W3">
+                        <div class="summary-card-title">
+                            <i class="fas fa-ban icon-danger"></i> Warehouse 3 &mdash; Damaged &amp; Quarantined
+                        </div>
+                        <p class="text-muted-sm">Damaged Materials, Defective Materials, Materials Awaiting Inspection, Materials Awaiting Supplier Return</p>
+                    </div>
+
+                </div>
+
+                <!-- Non-Usable Stock Notice (Warehouse 3 only) -->
+                <div class="feed-item danger mb-3" id="warehouseBanner">
+                    <div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="feed-body">
+                        <div class="feed-title">Not Part of Usable Inventory</div>
+                        <div class="feed-meta">Materials in Warehouse 3 are damaged, defective, or under quarantine and are excluded from available stock counts.</div>
+                    </div>
+                </div>
+
+                <!-- Warehouse Summary -->
+                <div class="grid grid-cols-4 mb-3">
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-cubes icon-info"></i> Total Materials
+                        </div>
+                        <div class="metric-block metric-border-info mb-0">
+                            <div class="metric-value" id="summaryTotalMaterials">0</div>
+                            <div class="metric-label">Tracked SKUs</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-layer-group icon-success"></i> Total Quantity
+                        </div>
+                        <div class="metric-block metric-border-success mb-0">
+                            <div class="metric-value" id="summaryTotalQuantity">0</div>
+                            <div class="metric-label">Units on Hand</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items
+                        </div>
+                        <div class="metric-block metric-border-secondary mb-0">
+                            <div class="metric-value" id="summaryLowStock">0</div>
+                            <div class="metric-label">Below Minimum</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-heart-broken icon-danger"></i> Damaged / Quarantined
+                        </div>
+                        <div class="metric-block metric-border-danger mb-0">
+                            <div class="metric-value" id="summaryDamaged">0</div>
+                            <div class="metric-label">Not Usable</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Top Module Toolbar for Inventory Filtering -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Material ID or Name...">
+                        </div>
+                        <select id="categoryFilter" class="form-control filter-select">
+                            <option value="All">All Categories</option>
+                        </select>
+                        <select id="statusFilter" class="form-control filter-select">
+                            <option value="All">All Status</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Warehouse Report</button>
+                    </div>
+                </div>
+
+                <!-- Lower Layout Analytics Grid Split Block -->
+                <div class="dashboard-lower-grid">
+
+                    <!-- Inventory Table Layout Container -->
+                    <div class="chart-column">
+
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> <span id="tableTitle">Warehouse Inventory</span></h3>
+                            <div class="table-wrapper">
+                                <table class="table" id="warehouseTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Material ID</th>
+                                            <th>Material Name</th>
+                                            <th>Category</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                            <th class="text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="warehouseTableBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="flex-between mt-3">
+                                <span class="text-muted-sm" id="paginationInfo">Showing 0-0 of 0 records</span>
+                                <div class="toolbar-actions">
+                                    <button class="btn btn-outline" id="prevPageBtn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                    <button class="btn btn-outline" id="nextPageBtn">Next <i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Inventory Activity Panel Component -->
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-secondary"></i> Inventory Activity</h3>
+                        <div class="notification-feed" id="activityFeed">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- View Material Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header">Material Details</div>
+            <div class="modal-body" id="viewBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Stock Modal -->
+    <div class="modal-overlay" id="updateStockModal">
+        <div class="modal">
+            <div class="modal-header">Update Stock</div>
+            <div class="modal-body">
+                <p class="font-semibold mb-2" id="updateStockMaterialName"></p>
+                <form id="updateStockForm">
+                    <div class="form-group">
+                        <label class="form-label">Current Quantity</label>
+                        <input type="text" class="form-control" id="updateStockCurrentQty" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Quantity</label>
+                        <input type="number" id="updateStockNewQty" class="form-control" min="0" required>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Reason</label>
+                        <select id="updateStockReason" class="form-control" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Stock Count Adjustment">Stock Count Adjustment</option>
+                            <option value="Received Stock">Received Stock</option>
+                            <option value="Correction">Correction</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Material Transfer Modal -->
+    <div class="modal-overlay" id="transferModal">
+        <div class="modal">
+            <div class="modal-header">Transfer Material</div>
+            <div class="modal-body">
+                <form id="transferForm">
+                    <div class="form-group">
+                        <label class="form-label">Material</label>
+                        <input type="text" id="transferMaterialName" class="form-control" disabled>
+                    </div>
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Current Warehouse</label>
+                            <input type="text" id="transferCurrentWarehouse" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Destination Warehouse</label>
+                            <select id="transferDestination" class="form-control" required></select>
+                        </div>
+                    </div>
+                    <div class="sub-form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Available Quantity</label>
+                            <input type="text" id="transferAvailableQty" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Transfer Quantity</label>
+                            <input type="number" id="transferQty" class="form-control" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reason</label>
+                        <select id="transferReason" class="form-control" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Stock Rebalancing">Stock Rebalancing</option>
+                            <option value="Project Requirement">Project Requirement</option>
+                            <option value="Damage Relocation">Damage Relocation</option>
+                            <option value="Quarantine">Quarantine</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Remarks</label>
+                        <input type="text" id="transferRemarks" class="form-control" placeholder="Optional notes...">
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                        <button type="submit" class="btn btn-primary">Review Transfer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Confirmation Modal -->
+    <div class="modal-overlay" id="transferConfirmModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Material Transfer</div>
+            <div class="modal-body">
+                <p class="mb-2">Please review the transfer details before saving. This action will update warehouse quantities and record the movement in Inventory Activity.</p>
+                <div id="confirmSummary"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Back</button>
+                <button class="btn btn-primary" id="confirmTransferBtn" data-modal-close>Confirm &amp; Transfer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Damage Modal -->
+    <div class="modal-overlay" id="damageModal">
+        <div class="modal">
+            <div class="modal-header">Record Damage</div>
+            <div class="modal-body">
+                <p class="font-semibold mb-2" id="damageMaterialName"></p>
+                <form id="damageForm">
+                    <div class="form-group">
+                        <label class="form-label">Available Quantity</label>
+                        <input type="text" id="damageAvailableQty" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Damaged Quantity</label>
+                        <input type="number" id="damageQty" class="form-control" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reason</label>
+                        <select id="damageReason" class="form-control" required>
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Water Damage">Water Damage</option>
+                            <option value="Physical Damage / Breakage">Physical Damage / Breakage</option>
+                            <option value="Manufacturing Defect">Manufacturing Defect</option>
+                            <option value="Awaiting Inspection">Awaiting Inspection</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">Remarks</label>
+                        <input type="text" id="damageRemarks" class="form-control" placeholder="Optional notes...">
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                        <button type="submit" class="btn btn-danger">Record Damage</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Logic (External Script) -->
+    <script src="js/ws-warehouse-facilities.js"></script>
+</body>
+</html>

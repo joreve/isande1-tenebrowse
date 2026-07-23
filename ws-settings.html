@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Warehouse Staff Settings</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Warehouse Staff Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
+                        <i class="fas fa-warehouse"></i> Warehouse Facilities
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-deliveries.html')">
+                        <i class="fas fa-truck"></i> Deliveries
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Top Navigation -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">System Configurations</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">Warehouse Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Low-Stock Alert</div>
+                                    <div class="notif-desc">Rebar 12mm below reorder threshold in Warehouse 2.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">AV</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Arnie Velasco</div>
+                                <div class="profile-role">Warehouse Staff</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <div class="page-container">
+                
+                <!-- Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Settings</span>
+                </div>
+
+                <form id="settingsForm">
+                    <div class="settings-grid">
+                        
+                        <!-- Profile Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-user-circle section-icon icon-primary"></i> Profile</h3>
+                            <p class="section-description">Update your personal information and contact details.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="profileName" class="form-control" value="Arnie Velasco" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" id="employeeId" class="form-control" value="EMP-WS-4417" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role / Position</label>
+                                <input type="text" class="form-control" value="Warehouse Staff" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Assigned Warehouse</label>
+                                <input type="text" id="assignedWarehouse" class="form-control" value="Warehouse 2 - North Yard" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-control" value="a.velasco@tenebrowse.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Security Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Account Security</h3>
+                            <p class="section-description">Manage your password and authentication settings.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="newPassword" class="form-control" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-info"></i> Notification Preferences</h3>
+                            <p class="section-description">Choose how you receive warehouse alerts and updates.</p>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Approved Material Requests</div>
+                                    <div class="toggle-desc">Alerts when submitted material requests are approved.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifApprovedRequests" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Incoming Deliveries</div>
+                                    <div class="toggle-desc">Notifications when new deliveries arrive or are scheduled.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifDeliveries" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Inventory Updates</div>
+                                    <div class="toggle-desc">Alerts on changes to stock counts and item records.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifInventoryUpdates" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Stock Transfers</div>
+                                    <div class="toggle-desc">Notifications for transfers moving in or out of your warehouse.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifStockTransfers" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Low-Stock Alerts</div>
+                                    <div class="toggle-desc">Warnings when items fall below reorder thresholds.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifLowStock" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Damaged or Missing Material Alerts</div>
+                                    <div class="toggle-desc">Alerts for reported damages or missing inventory logs.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifDamagedMissing" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Appearance & Language Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-paint-brush section-icon icon-success"></i> Appearance & Language</h3>
+                            <p class="section-description">Customize your interface experience.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">System Language</label>
+                                <select id="systemLang" class="form-control">
+                                    <option value="en" selected>English (US)</option>
+                                    <option value="es">Español</option>
+                                    <option value="tl">Tagalog (PH)</option>
+                                    <option value="zh">Mandarin (ZH)</option>
+                                </select>
+                            </div>
+
+                            <div class="toggle-container mt-3">
+                                <div>
+                                    <div class="toggle-label">Dark Mode</div>
+                                    <div class="toggle-desc">Switch interface to a low-light visual theme.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="themeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Guided Mode Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-hands-helping section-icon icon-primary"></i> Guided Mode</h3>
+                            <p class="section-description">Get extra support while completing warehouse tasks.</p>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Enable Guided Mode</div>
+                                    <div class="toggle-desc">Adds extra instructions, tooltips, step-by-step guidance for inventory updates, additional confirmation messages, and simpler explanations of inventory terms.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="guidedModeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Global Action Buttons -->
+                    <div class="settings-actions card">
+                        <button type="button" class="btn btn-outline" data-modal-target="resetModal">Reset to Defaults</button>
+                        <button type="button" class="btn btn-primary" data-modal-target="saveModal">Save Changes</button>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Save Confirmation Modal -->
+    <div class="modal-overlay" id="saveModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Changes</div>
+            <div class="modal-body">
+                Are you sure you want to apply these settings? Changes to security and notifications will take effect immediately.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmSaveBtn" data-modal-close>Apply Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">Reset Settings</div>
+            <div class="modal-body">
+                Warning: This will discard any unsaved changes and revert all preferences back to system defaults. Proceed?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-danger" id="confirmResetBtn" data-modal-close>Reset Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
+    <script src="js/app.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const settingsForm = document.getElementById('settingsForm');
+            const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+            const confirmResetBtn = document.getElementById('confirmResetBtn');
+            const themeToggle = document.getElementById('themeToggle');
+
+            confirmSaveBtn.addEventListener('click', () => {
+                const newPass = document.getElementById('newPassword').value;
+                const confPass = document.getElementById('confirmPassword').value;
+
+                if (newPass || confPass) {
+                    if (newPass !== confPass) {
+                        if(window.showToast) window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
+                        return;
+                    }
+                }
+
+                if(window.showToast) window.showToast('Settings Saved', 'Your preferences and profile details have been successfully updated.', 'success');
+                
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            });
+
+            confirmResetBtn.addEventListener('click', () => {
+                settingsForm.reset();
+                
+                document.getElementById('profileName').value = 'Jorge Dizon';
+                document.getElementById('profileEmail').value = 'j.dizon@tenebrowse.com';
+                document.getElementById('notifApprovedRequests').checked = true;
+                document.getElementById('notifDeliveries').checked = true;
+                document.getElementById('notifInventoryUpdates').checked = true;
+                document.getElementById('notifStockTransfers').checked = true;
+                document.getElementById('notifLowStock').checked = true;
+                document.getElementById('notifDamagedMissing').checked = true;
+                document.getElementById('systemLang').value = 'en';
+                document.getElementById('guidedModeToggle').checked = false;
+                
+                if (themeToggle.checked) {
+                    themeToggle.checked = false;
+                    document.body.classList.remove('dark-theme');
+                }
+
+                if(window.showToast) window.showToast('Defaults Restored', 'All settings have been reverted to system defaults.', 'info');
+            });
+
+            themeToggle.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    if(window.showToast) window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
