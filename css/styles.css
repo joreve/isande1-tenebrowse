@@ -620,33 +620,80 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .btn-block { width: 100%; height: 42px; }
 .btn-login { width: 100%; padding: 0.875rem; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
-.action-btn { background: none; border: none; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); transition: all var(--transition-fast); color: var(--color-text-muted); }
+/* ==========================================================================
+   Table Action Buttons (shared across all Warehouse Staff pages)
+   ========================================================================== */
+.action-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+}
+
+.action-item-btn,
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.action-item-btn i,
+.action-btn i {
+    flex-shrink: 0;
+    width: 1em;
+    text-align: center;
+}
+
+.action-item-btn:hover,
+.action-btn:hover {
+    background-color: var(--color-background);
+}
+
 .action-btn.edit:hover { color: var(--color-info); background-color: var(--color-info-light); }
 .action-btn.delete:hover { color: var(--color-danger); background-color: var(--color-danger-light); }
+
+.action-label {
+    font-size: 0.8125rem;
+    line-height: 1;
+}
 
 /* ==========================================================================
    Normal Mode vs Guided Access Action Button Modes
    ========================================================================== */
 
-/* Hide button text labels in Normal Mode (Guided Access OFF) */
+/* Normal Mode (Guided Access OFF): icon-only, compact, stacked vertically */
 body:not(.guided-access-enabled) .action-label {
     display: none !important;
 }
 
-/* Format action buttons as a horizontal icon row in Normal Mode */
 body:not(.guided-access-enabled) .action-list {
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 4px;
+    gap: 2px;
 }
 
-body:not(.guided-access-enabled) .action-item-btn {
-    padding: 6px 8px;
-    border-radius: var(--radius-sm);
+body:not(.guided-access-enabled) .action-item-btn,
+body:not(.guided-access-enabled) .action-btn {
+    padding: 6px;
+    justify-content: center;
 }
 
-body:not(.guided-access-enabled) .action-item-btn:hover {
-    background-color: var(--color-background);
+/* Guided Access Mode (ON): icon + label, roomier, no clipping or squishing */
+body.guided-access-enabled .action-list {
+    gap: 6px;
+}
+
+body.guided-access-enabled .action-item-btn,
+body.guided-access-enabled .action-btn {
+    padding: 8px 12px;
+    justify-content: flex-start;
+    min-width: 128px;
 }
 
 /* Deliveries Guided Access components (no page-specific JS yet — shown purely via body class) */

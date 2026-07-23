@@ -40,3 +40,8 @@
 - Added Warehouse Facilities Guided Access
 - Cleaned up code to match coding standards
 - Fixed some overflowing elements
+
+## v3.2 Fixes
+- Standardized Guided Access Card
+- Standardized Action Buttons
+- Next: Fix Deliveries Action Buttons in Guided Access, Left-Align Action Column in Deliveries, Add Inventory Activities Guided Access
