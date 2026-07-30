@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenebrowse - Accountant Settings</title>
     
+    <!-- Enterprise System Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -47,18 +52,18 @@
             </nav>
         </aside>
 
-        <!-- Main Workspace Frame -->
+        <!-- Main Workspace -->
         <main class="main-content">
             
-            <!-- Top Navigation Bar -->
+            <!-- Top Navigation -->
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Settings</h2>
+                    <h2 class="page-title">System Configurations</h2>
                 </div>
                 
                 <div class="topbar-right">
-                    
+                    <!-- Notification Bell Component Structure -->
                     <div class="notification-wrapper">
                         <button class="icon-btn" id="notifBtn">
                             <i class="far fa-bell"></i>
@@ -66,17 +71,18 @@
                         </button>
                         
                         <div class="dropdown-menu" id="notifMenu">
-                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-header">Enterprise Broadcast Notifications</div>
                             <div class="dropdown-item">
-                                <i class="fas fa-sliders-h icon-info"></i>
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
                                 <div>
-                                    <div class="notif-title">Profile Synchronized</div>
-                                    <div class="notif-desc">Accountant permissions up to date.</div>
+                                    <div class="notif-title">Inventory Alert</div>
+                                    <div class="notif-desc">Global structural steel stock below 15% threshold.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- Enterprise Segment Profile Dropdown -->
                     <div class="profile-menu-container">
                         <button class="profile-trigger">
                             <div class="profile-avatar">CH</div>
@@ -90,49 +96,244 @@
                 </div>
             </header>
 
-            <!-- Page Workspace Wrapper -->
             <div class="page-container">
                 
+                <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <a href="javascript:transitionTo('ac-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Profile & System Settings</span>
+                    <span>Settings</span>
                 </div>
 
-                <!-- Settings Form Card -->
-                <div class="card form-card">
-                    <h3 class="section-title mb-3"><i class="fas fa-user-cog section-icon icon-primary"></i> Profile Information</h3>
-                    <form id="settings-form">
-                        <div class="form-group mb-2">
-                            <label for="user-fullname" class="form-label">Full Name</label>
-                            <input type="text" id="user-fullname" class="form-input full-width" value="Clairo Hade">
-                        </div>
-                        <div class="form-group mb-2">
-                            <label for="user-email" class="form-label">Email Address</label>
-                            <input type="email" id="user-email" class="form-input full-width" value="clairo.hade@company.com">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Notification Preferences</label>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="email-notif" checked>
-                                <label for="email-notif">Email alerts for Discrepancy Claims</label>
+                <form id="settingsForm">
+                    <div class="settings-grid">
+                        
+                        <!-- Profile Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-user-circle section-icon icon-primary"></i> Profile</h3>
+                            <p class="section-description">Update your personal information and contact details.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="profileName" class="form-control" value="Clairo Hade" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" id="employeeId" class="form-control" value="EMP-AC-4409" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role / Position</label>
+                                <input type="text" class="form-control" value="Accountant" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-control" value="c.hade@tenebrowse.com" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
-                    </form>
-                </div>
+
+                        <!-- Security Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Account Security</h3>
+                            <p class="section-description">Manage your password and authentication settings.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="newPassword" class="form-control" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-info"></i> Notification Preferences</h3>
+                            <p class="section-description">Choose how you receive financial alerts and enterprise summaries.</p>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Discrepancy Claims</div>
+                                    <div class="toggle-desc">Alerts for short shipments, damaged items, and loss flags.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifDiscrepancy" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Purchase Orders & Invoices</div>
+                                    <div class="toggle-desc">Notifications regarding PO payment status and vendor invoices.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifPO" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Tax & Audit Exports</div>
+                                    <div class="toggle-desc">Warnings on quarterly filing deadlines and scheduled reports.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifAudit" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">System Notifications</div>
+                                    <div class="toggle-desc">Real-time alerts and system updates while on dashboard.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifSystem" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Appearance & Language Card -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-paint-brush section-icon icon-success"></i> Appearance & Language</h3>
+                            <p class="section-description">Customize your workspace language and theme.</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">System Language</label>
+                                <select id="systemLang" class="form-control">
+                                    <option value="en" selected>English (US)</option>
+                                    <option value="es">Español</option>
+                                    <option value="tl">Tagalog (PH)</option>
+                                    <option value="zh">Mandarin (ZH)</option>
+                                </select>
+                            </div>
+
+                            <div class="toggle-container mt-3">
+                                <div>
+                                    <div class="toggle-label">Dark Theme</div>
+                                    <div class="toggle-desc">Switch interface to a low-light visual theme.</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="themeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Global Action Buttons -->
+                    <div class="settings-actions card">
+                        <button type="button" class="btn btn-outline" data-modal-target="resetModal">Reset to Defaults</button>
+                        <button type="button" class="btn btn-primary" data-modal-target="saveModal">Save Changes</button>
+                    </div>
+                </form>
 
             </div>
         </main>
     </div>
 
+    <!-- Modals -->
+
+    <!-- Save Confirmation Modal -->
+    <div class="modal-overlay" id="saveModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Changes</div>
+            <div class="modal-body">
+                Are you sure you want to apply these settings? Changes to security and notification rules will take effect immediately.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmSaveBtn" data-modal-close>Apply Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">Reset Settings</div>
+            <div class="modal-body">
+                Warning: This will discard any unsaved changes and revert all preferences back to system defaults. Proceed?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-danger" id="confirmResetBtn" data-modal-close>Reset Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
     <script src="js/app.js"></script>
-    <script src="js/ac-settings.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
     <script>
         function transitionTo(url) {
             document.body.classList.add('page-exit');
             setTimeout(() => window.location.href = url, 300);
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const settingsForm = document.getElementById('settingsForm');
+            const confirmSaveBtn = document.getElementById('confirmSaveBtn');
+            const confirmResetBtn = document.getElementById('confirmResetBtn');
+            const themeToggle = document.getElementById('themeToggle');
+
+            confirmSaveBtn.addEventListener('click', () => {
+                const newPass = document.getElementById('newPassword').value;
+                const confPass = document.getElementById('confirmPassword').value;
+
+                if (newPass || confPass) {
+                    if (newPass !== confPass) {
+                        if(window.showToast) window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
+                        return;
+                    }
+                }
+
+                if(window.showToast) window.showToast('Settings Saved', 'Accountant preferences and profile details updated successfully.', 'success');
+                
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            });
+
+            confirmResetBtn.addEventListener('click', () => {
+                settingsForm.reset();
+                
+                document.getElementById('profileName').value = 'Clairo Hade';
+                document.getElementById('profileEmail').value = 'c.hade@tenebrowse.com';
+                document.getElementById('notifDiscrepancy').checked = true;
+                document.getElementById('notifPO').checked = true;
+                document.getElementById('notifAudit').checked = true;
+                document.getElementById('notifSystem').checked = true;
+                document.getElementById('systemLang').value = 'en';
+                
+                if (themeToggle.checked) {
+                    themeToggle.checked = false;
+                    document.body.classList.remove('dark-theme');
+                }
+
+                if(window.showToast) window.showToast('Defaults Restored', 'All configuration settings have been reverted to system defaults.', 'info');
+            });
+
+            themeToggle.addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    if(window.showToast) window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
+                }
+            });
+
+        });
     </script>
 </body>
 </html>
