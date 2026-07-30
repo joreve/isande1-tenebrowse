@@ -161,7 +161,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Variance Amount ($)</label>
+                                <label class="form-label">Variance Amount (₱ PHP)</label>
                                 <input type="number" id="varianceAmt" class="form-control" placeholder="0.00" step="0.01" required>
                             </div>
 
@@ -224,11 +224,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             const poData = [
-                { id: 'PO-2026-089', supplier: 'Acme Industrial Supplies', dateOrdered: 'Jul 28, 2026', amount: '$12,450.00', status: 'Approved', remarks: 'Cleared for disbursement' },
-                { id: 'PO-2026-088', supplier: 'Apex Logistics Corp', dateOrdered: 'Jul 27, 2026', amount: '$3,100.00', status: 'Archived', remarks: 'Paid & filed in ledger' },
-                { id: 'PO-2026-087', supplier: 'Global Tech Manufacturing', dateOrdered: 'Jul 25, 2026', amount: '$45,800.00', status: 'Under Review', remarks: 'Pending cost variance check' },
-                { id: 'PO-2026-085', supplier: 'Metro Steel Alloys', dateOrdered: 'Jul 20, 2026', amount: '$22,150.00', status: 'Approved', remarks: 'Tax clearance verified' },
-                { id: 'PO-2026-081', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 15, 2026', amount: '$8,900.00', status: 'Archived', remarks: 'Reconciled fully' }
+                { id: 'PO-2026-089', supplier: 'Acme Industrial Supplies', dateOrdered: 'Jul 28, 2026', amount: '₱12,450.00', status: 'Approved', remarks: 'Cleared for disbursement' },
+                { id: 'PO-2026-088', supplier: 'Apex Logistics Corp', dateOrdered: 'Jul 27, 2026', amount: '₱3,100.00', status: 'Archived', remarks: 'Paid & filed in ledger' },
+                { id: 'PO-2026-087', supplier: 'Global Tech Manufacturing', dateOrdered: 'Jul 25, 2026', amount: '₱45,800.00', status: 'Under Review', remarks: 'Pending cost variance check' },
+                { id: 'PO-2026-085', supplier: 'Metro Steel Alloys', dateOrdered: 'Jul 20, 2026', amount: '₱22,150.00', status: 'Approved', remarks: 'Tax clearance verified' },
+                { id: 'PO-2026-081', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 15, 2026', amount: '₱8,900.00', status: 'Archived', remarks: 'Reconciled fully' }
             ];
 
             const tableBody = document.getElementById('poTableBody');
