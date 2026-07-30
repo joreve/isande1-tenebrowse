@@ -3,254 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse | Accountant Dashboard</title>
-
+    <title>Tenebrowse - Accountant Dashboard</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body class="page-transition">
 
-<div class="app-layout">
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-
-        <div class="sidebar-header">
-            <img src="assets/logo.png" class="sidebar-logo">
-            <h2>Tenebrowse</h2>
-        </div>
-
-        <nav class="sidebar-nav">
-
-            <ul class="nav-list">
-
-                <li class="nav-item active" onclick="transitionTo('ac-dashboard.html')">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span>
-                </li>
-
-                <li class="nav-item" onclick="transitionTo('ac-purchase-orders.html')">
-                    <i class="fas fa-file-invoice"></i>
-                    <span>Purchase Orders</span>
-                </li>
-
-                <li class="nav-item" onclick="transitionTo('ac-material-reports.html')">
-                    <i class="fas fa-box-open"></i>
-                    <span>Material Reports</span>
-                </li>
-
-                <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
-                    <i class="fas fa-file-export"></i>
-                    <span>Compliance Reports</span>
-                </li>
-
-                <li class="nav-item" onclick="transitionTo('ac-settings.html')">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </li>
-
-            </ul>
-
-        </nav>
-
-    </aside>
-
-    <!-- Main -->
-    <main class="main-content">
-
-        <!-- Header -->
-        <header class="topbar">
-
-            <button id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <h2>Accountant Dashboard</h2>
-
-            <div class="topbar-right">
-
-                <button id="notifBtn">
-                    <i class="fas fa-bell"></i>
-                </button>
-
-                <div class="user-profile">
-
-                    <i class="fas fa-user-circle"></i>
-
-                    <span>Accountant</span>
-
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Accountant Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
                 </div>
-
             </div>
-
-        </header>
-
-        <!-- Dashboard Cards -->
-
-        <section class="dashboard-grid">
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    <i class="fas fa-file-invoice"></i>
-                </div>
-
-                <div class="card-content">
-                    <h3>Total Purchase Orders</h3>
-                    <h1>185</h1>
-                </div>
-
-            </div>
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-
-                <div class="card-content">
-                    <h3>Material Discrepancies</h3>
-                    <h1>12</h1>
-                </div>
-
-            </div>
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-
-                <div class="card-content">
-                    <h3>Recent Purchase Orders</h3>
-                    <h1>26</h1>
-                </div>
-
-            </div>
-
-            <div class="dashboard-card">
-
-                <div class="card-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-
-                <div class="card-content">
-                    <h3>Compliance Reports</h3>
-                    <h1>8</h1>
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Purchase Orders -->
-
-        <section class="content-card">
-
-            <div class="card-header">
-
-                <h3>Recent Purchase Orders</h3>
-
-            </div>
-
-            <table class="data-table">
-
-                <thead>
-
-                <tr>
-                    <th>PO Number</th>
-                    <th>Supplier</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                <tr>
-                    <td>PO-1001</td>
-                    <td>ABC Steel Supply</td>
-                    <td>July 30, 2026</td>
-                    <td><span class="status approved">Approved</span></td>
-                </tr>
-
-                <tr>
-                    <td>PO-1002</td>
-                    <td>Prime Cement</td>
-                    <td>July 29, 2026</td>
-                    <td><span class="status approved">Approved</span></td>
-                </tr>
-
-                <tr>
-                    <td>PO-1003</td>
-                    <td>Metro Hardware</td>
-                    <td>July 28, 2026</td>
-                    <td><span class="status pending">Pending</span></td>
-                </tr>
-
-                </tbody>
-
-            </table>
-
-        </section>
-
-        <!-- Bottom Section -->
-
-        <section class="dashboard-bottom">
-
-            <!-- Compliance -->
-
-            <div class="content-card">
-
-                <div class="card-header">
-                    <h3>Compliance Report Status</h3>
-                </div>
-
-                <ul class="activity-list">
-
-                    <li>✔ Material Fulfillment Report Ready</li>
-                    <li>✔ Purchase Order Report Ready</li>
-                    <li>⏳ Inventory Report Processing</li>
-                    <li>✔ Tax Compliance Complete</li>
-
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-purchase-orders.html')">
+                        <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-material-reports.html')">
+                        <i class="fas fa-exclamation-triangle"></i> Material Discrepancies
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
+                        <i class="fas fa-file-contract"></i> Compliance Reports
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
                 </ul>
+            </nav>
+        </aside>
 
-            </div>
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Financial Dashboard</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <!-- Notification Bell Component Structure -->
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-check-circle icon-success"></i>
+                                <div>
+                                    <div class="notif-title">PO Invoice Approved</div>
+                                    <div class="notif-desc">PO-2026-089 structural concrete clearance logged.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enterprise Segment Profile Dropdown -->
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">CH</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Clairo Hade</div>
+                                <div class="profile-role">Accountant</div>
+                            </div>
+                        </button>
+                    </div>
 
-            <!-- Notifications -->
+                </div>
+            </header>
 
-            <div class="content-card">
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <!-- System Structural Breadcrumbs -->
+                <div class="breadcrumb">
+                    <a href="#">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Financial Metrics Overview</span>
+                </div>
 
-                <div class="card-header">
+                <!-- Role Isolated Welcome Card -->
+                <div class="card welcome-card mb-3">
+                    <span class="welcome-badge">Financial Command & Fiscal Oversight</span>
+                    <h1 class="welcome-title">Welcome Back, Accountant Hade</h1>
+                    <p class="welcome-text">
+                        Monitoring corporate expenditure and site logistics invoices. Reconcile purchase commitments, track material discrepancy claims, and manage compliance export documentation.
+                    </p>
+                </div>
 
-                    <h3>Recent Notifications</h3>
+                <!-- Dashboard Summary Status Metrics Blocks -->
+                <div class="grid grid-cols-3 mb-3">
+                    
+                    <!-- Purchase Orders Aggregate Summary Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-file-invoice-dollar icon-primary"></i> Purchase Orders Sync
+                        </div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Review</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">128</div>
+                                <div class="metric-label">Approved</div>
+                            </div>
+                            <div class="metric-block metric-border-muted">
+                                <div class="metric-value">45</div>
+                                <div class="metric-label">Archived</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Discrepancies Summary Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-exclamation-triangle icon-info"></i> Material Discrepancies
+                        </div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">4</div>
+                                <div class="metric-label">Damaged</div>
+                            </div>
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">7</div>
+                                <div class="metric-label">Shortages</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">18</div>
+                                <div class="metric-label">Resolved</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compliance Export Audits Block -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-file-contract icon-secondary"></i> Tax & Compliance Status
+                        </div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">100%</div>
+                                <div class="metric-label">Audited</div>
+                            </div>
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">24</div>
+                                <div class="metric-label">Reports</div>
+                            </div>
+                            <div class="metric-block metric-border-secondary">
+                                <div class="metric-value">2</div>
+                                <div class="metric-label">Pending</div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
-                <ul class="activity-list">
+                <!-- Lower Layout Analytics Grid Split Block -->
+                <div class="dashboard-lower-grid">
+                    
+                    <!-- Analytic Chart Layout Container -->
+                    <div class="chart-column">
+                        
+                        <!-- Chart 1: Expenditure Allocation Graph -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-chart-bar section-icon icon-primary"></i> Quarterly Supplier Commitments ($k USD)</h3>
+                            <div class="chart-container">
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Acme Industrial Supplies</div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 78%;"></div></div>
+                                    <div class="bar-value">$780k</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Global Tech Manufacturing</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-secondary" style="width: 62%;"></div></div>
+                                    <div class="bar-value">$620k</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Apex Logistics Corp</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-info" style="width: 35%;"></div></div>
+                                    <div class="bar-value">$350k</div>
+                                </div>
+                                <div class="bar-chart-row">
+                                    <div class="bar-label">Metro Steel Alloys</div>
+                                    <div class="bar-track"><div class="bar-fill bar-fill-success" style="width: 22%;"></div></div>
+                                    <div class="bar-value">$220k</div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <li>Purchase Order PO-1003 Approved</li>
+                        <!-- Chart 2: Disbursement Cycle Lead Efficiency -->
+                        <div class="card">
+                            <h3 class="section-title mb-2"><i class="fas fa-chart-line section-icon icon-info"></i> Audit Settlement Cycle Lead (Days)</h3>
+                            <div class="line-graph-simulated">
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 30%;"></div>
+                                    <div class="graph-label">WK 23</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 50%;"></div>
+                                    <div class="graph-label">WK 24</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 45%;"></div>
+                                    <div class="graph-label">WK 25</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar graph-pillar-secondary" style="height: 75%;"></div>
+                                    <div class="graph-label">WK 26</div>
+                                </div>
+                                <div class="graph-column">
+                                    <div class="graph-pillar" style="height: 90%;"></div>
+                                    <div class="graph-label">Current</div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <li>Shipment Update Received</li>
+                    </div>
 
-                    <li>Inventory Discrepancy Detected</li>
+                    <!-- Explicit Required Recent Activity Notification Feed Panel Component -->
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-bolt section-icon icon-secondary"></i> Recent Financial Activity Logs</h3>
+                        
+                        <div class="notification-feed">
+                            
+                            <div class="feed-item success">
+                                <div class="feed-icon"><i class="fas fa-check"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Purchase Order Approved</div>
+                                    <div class="feed-meta">PO-2026-089 invoice matched and verified.</div>
+                                </div>
+                            </div>
 
-                    <li>Compliance Report Export Complete</li>
+                            <div class="feed-item danger">
+                                <div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Discrepancy Claim Flagged</div>
+                                    <div class="feed-meta">DISC-104 isolated at Warehouse 3 for damaged goods.</div>
+                                </div>
+                            </div>
 
-                </ul>
+                            <div class="feed-item info">
+                                <div class="feed-icon"><i class="fas fa-file-export"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Compliance Export Generated</div>
+                                    <div class="feed-meta">Q3 Material Fulfillment export compiled.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item warning">
+                                <div class="feed-icon"><i class="fas fa-search-dollar"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">PO Under Review</div>
+                                    <div class="feed-meta">PO-2026-087 pending cost variance clearance.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item success">
+                                <div class="feed-icon"><i class="fas fa-box-archive"></i></div>
+                                <div class="feed-body">
+                                    <div class="feed-title">Order Archived</div>
+                                    <div class="feed-meta">PO-2026-088 closed and logged to audit storage.</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
 
             </div>
+        </main>
+    </div>
 
-        </section>
-
-    </main>
-
-</div>
-
-<script src="js/app.js"></script>
-
+    <!-- Core Interactions Application Scripts Hook -->
+    <script src="js/app.js"></script>
+    <script src="js/ac-dashboard.js"></script>
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+    </script>
 </body>
 </html>
