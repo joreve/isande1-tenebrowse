@@ -59,6 +59,7 @@
                 
                 <div class="topbar-right">
                     
+                    <!-- Notification Bell Component Structure -->
                     <div class="notification-wrapper">
                         <button class="icon-btn" id="notifBtn">
                             <i class="far fa-bell"></i>
@@ -77,6 +78,7 @@
                         </div>
                     </div>
                     
+                    <!-- Enterprise Segment Profile Dropdown -->
                     <div class="profile-menu-container">
                         <button class="profile-trigger">
                             <div class="profile-avatar">CH</div>
@@ -90,87 +92,218 @@
                 </div>
             </header>
 
-            <!-- Page Workspace Wrapper -->
             <div class="page-container">
                 
+                <!-- System Structural Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <a href="javascript:transitionTo('ac-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Purchase Orders Audit</span>
                 </div>
 
-                <!-- Controls & Search Toolbar -->
-                <div class="card mb-3">
-                    <div class="controls-bar">
-                        <div class="search-input-wrapper">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" id="po-search" class="form-input" placeholder="Search PO # or Supplier...">
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search PO number or supplier...">
                         </div>
-                        <select id="po-filter" class="form-select">
-                            <option value="ALL">All Suppliers</option>
-                            <option value="Acme Industrial Supplies">Acme Industrial Supplies</option>
-                            <option value="Apex Logistics Corp">Apex Logistics Corp</option>
-                            <option value="Global Tech Manufacturing">Global Tech Manufacturing</option>
+                        <select id="statusFilter" class="form-control filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Under Review">Under Review</option>
+                            <option value="Archived">Archived</option>
                         </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
                     </div>
                 </div>
 
-                <!-- Purchase Orders Table Card -->
-                <div class="card">
-                    <h3 class="section-title mb-2"><i class="fas fa-list section-icon icon-primary"></i> Recorded Invoices & Requisitions</h3>
-                    <div class="table-responsive">
-                        <table class="data-table">
+                <!-- PO Tracking Table -->
+                <div class="card mb-3">
+                    <h3 class="section-title mb-2"><i class="fas fa-file-invoice-dollar section-icon icon-primary"></i> Recorded Invoices & Requisitions</h3>
+                    <div class="table-wrapper">
+                        <table class="table" id="poTable">
                             <thead>
                                 <tr>
                                     <th>PO Number</th>
                                     <th>Supplier</th>
-                                    <th>Date</th>
+                                    <th>Date Ordered</th>
                                     <th>Total Amount</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Remarks</th>
                                 </tr>
                             </thead>
-                            <tbody id="po-table-body">
-                                <tr>
-                                    <td>PO-2026-089</td>
-                                    <td>Acme Industrial Supplies</td>
-                                    <td>2026-07-28</td>
-                                    <td>$12,450.00</td>
-                                    <td><span class="status-tag status-ok">Approved</span></td>
-                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-089"><i class="fas fa-search"></i> Review</button></td>
-                                </tr>
-                                <tr>
-                                    <td>PO-2026-088</td>
-                                    <td>Apex Logistics Corp</td>
-                                    <td>2026-07-27</td>
-                                    <td>$3,100.00</td>
-                                    <td><span class="status-tag status-muted">Archived</span></td>
-                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-088"><i class="fas fa-search"></i> Review</button></td>
-                                </tr>
-                                <tr>
-                                    <td>PO-2026-087</td>
-                                    <td>Global Tech Manufacturing</td>
-                                    <td>2026-07-25</td>
-                                    <td>$45,800.00</td>
-                                    <td><span class="status-tag status-warn">Under Review</span></td>
-                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-087"><i class="fas fa-search"></i> Review</button></td>
-                                </tr>
+                            <tbody id="poTableBody">
+                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <!-- Financial Variance Request Form Component -->
+                <div class="card card-highlight-secondary">
+                    <h3 class="section-title mb-2"><i class="fas fa-calculator section-icon icon-secondary"></i> Invoice Variance Adjustment</h3>
+                    <p class="section-description">File an adjustment request when cost variations, tax discrepancies, or price shifts occur during invoice reconciliation.</p>
+                    
+                    <form id="varianceForm">
+                        <div class="sub-form-grid">
+                            
+                            <div class="form-group">
+                                <label class="form-label">Target PO Number</label>
+                                <input type="text" id="poNumber" class="form-control" placeholder="e.g., PO-2026-087" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Supplier Name</label>
+                                <input type="text" id="supplierName" class="form-control" placeholder="e.g., Global Tech Manufacturing" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Variance Amount ($)</label>
+                                <input type="number" id="varianceAmt" class="form-control" placeholder="0.00" step="0.01" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Reason for Adjustment</label>
+                                <select id="varianceReason" class="form-control" required>
+                                    <option value="" disabled selected>Select reason...</option>
+                                    <option value="Supplier Price Shift">Supplier Price Shift</option>
+                                    <option value="Freight / Logistics Surcharge">Freight / Logistics Surcharge</option>
+                                    <option value="Tax Rate Recalibration">Tax Rate Recalibration</option>
+                                    <option value="Quantity Discrepancy Adjustment">Quantity Discrepancy Adjustment</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Supporting Financial Notes & Audit Details</label>
+                                <textarea id="varianceNotes" class="form-control" placeholder="Detail any tax modifications, price changes, or line-item adjustments..."></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="btnSaveDraft">Save Draft</button>
+                            <button type="button" class="btn btn-primary" data-modal-target="varianceModal">Submit Adjustment</button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
         </main>
     </div>
 
+    <!-- Submission Confirmation Modal -->
+    <div class="modal-overlay" id="varianceModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Adjustment Request</div>
+            <div class="modal-body">
+                Are you sure you want to submit this invoice variance adjustment? It will be logged to the general ledger and forwarded to the Head Manager for final approval.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmVarianceBtn" data-modal-close>Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
     <script src="js/app.js"></script>
-    <script src="js/ac-purchase-orders.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
     <script>
         function transitionTo(url) {
             document.body.classList.add('page-exit');
             setTimeout(() => window.location.href = url, 300);
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const poData = [
+                { id: 'PO-2026-089', supplier: 'Acme Industrial Supplies', dateOrdered: 'Jul 28, 2026', amount: '$12,450.00', status: 'Approved', remarks: 'Cleared for disbursement' },
+                { id: 'PO-2026-088', supplier: 'Apex Logistics Corp', dateOrdered: 'Jul 27, 2026', amount: '$3,100.00', status: 'Archived', remarks: 'Paid & filed in ledger' },
+                { id: 'PO-2026-087', supplier: 'Global Tech Manufacturing', dateOrdered: 'Jul 25, 2026', amount: '$45,800.00', status: 'Under Review', remarks: 'Pending cost variance check' },
+                { id: 'PO-2026-085', supplier: 'Metro Steel Alloys', dateOrdered: 'Jul 20, 2026', amount: '$22,150.00', status: 'Approved', remarks: 'Tax clearance verified' },
+                { id: 'PO-2026-081', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 15, 2026', amount: '$8,900.00', status: 'Archived', remarks: 'Reconciled fully' }
+            ];
+
+            const tableBody = document.getElementById('poTableBody');
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const btnExport = document.getElementById('btnExport');
+            
+            const varianceForm = document.getElementById('varianceForm');
+            const btnSaveDraft = document.getElementById('btnSaveDraft');
+            const confirmVarianceBtn = document.getElementById('confirmVarianceBtn');
+
+            const renderPOTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterStatus = statusFilter.value;
+
+                tableBody.innerHTML = '';
+
+                const filteredData = poData.filter(po => {
+                    const matchesSearch = po.id.toLowerCase().includes(searchTerm) || po.supplier.toLowerCase().includes(searchTerm);
+                    const matchesStatus = filterStatus === 'All' || po.status === filterStatus;
+                    return matchesSearch && matchesStatus;
+                });
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="empty-state-row">No purchase orders match your criteria.</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(po => {
+                    let badgeClass = '';
+                    if (po.status === 'Approved') badgeClass = 'badge-success';
+                    else if (po.status === 'Under Review') badgeClass = 'badge-warning';
+                    else if (po.status === 'Archived') badgeClass = 'badge-info';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${po.id}</strong></td>
+                        <td>${po.supplier}</td>
+                        <td>${po.dateOrdered}</td>
+                        <td><strong>${po.amount}</strong></td>
+                        <td><span class="badge ${badgeClass}">${po.status}</span></td>
+                        <td class="text-muted-sm">${po.remarks}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            };
+
+            searchInput.addEventListener('input', renderPOTable);
+            statusFilter.addEventListener('change', renderPOTable);
+
+            btnExport.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Export Started', 'Generating PO financial audit report in CSV format...', 'primary');
+            });
+
+            btnSaveDraft.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Draft Saved', 'Invoice variance draft saved locally.', 'info');
+            });
+
+            confirmVarianceBtn.addEventListener('click', () => {
+                const poNum = document.getElementById('poNumber').value.trim();
+                const supplier = document.getElementById('supplierName').value.trim();
+                const amount = document.getElementById('varianceAmt').value;
+                const reason = document.getElementById('varianceReason').value;
+
+                if (!poNum || !supplier || !amount || !reason) {
+                    if(window.showToast) window.showToast('Incomplete Form', 'Please fill out all required fields before submitting.', 'danger');
+                    return;
+                }
+
+                if(window.showToast) window.showToast('Adjustment Submitted', 'Invoice Variance Adjustment has been forwarded to Head Manager.', 'success');
+                varianceForm.reset();
+            });
+
+            renderPOTable();
+        });
     </script>
 </body>
 </html>
