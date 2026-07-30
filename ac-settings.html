@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Accountant Settings</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Accountant Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ac-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-purchase-orders.html')">
+                        <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-material-reports.html')">
+                        <i class="fas fa-exclamation-triangle"></i> Material Discrepancies
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
+                        <i class="fas fa-file-contract"></i> Compliance Reports
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Settings</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-sliders-h icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Profile Synchronized</div>
+                                    <div class="notif-desc">Accountant permissions up to date.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">CH</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Clairo Hade</div>
+                                <div class="profile-role">Accountant</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <div class="breadcrumb">
+                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Profile & System Settings</span>
+                </div>
+
+                <!-- Settings Form Card -->
+                <div class="card form-card">
+                    <h3 class="section-title mb-3"><i class="fas fa-user-cog section-icon icon-primary"></i> Profile Information</h3>
+                    <form id="settings-form">
+                        <div class="form-group mb-2">
+                            <label for="user-fullname" class="form-label">Full Name</label>
+                            <input type="text" id="user-fullname" class="form-input full-width" value="Clairo Hade">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="user-email" class="form-label">Email Address</label>
+                            <input type="email" id="user-email" class="form-input full-width" value="clairo.hade@company.com">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Notification Preferences</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="email-notif" checked>
+                                <label for="email-notif">Email alerts for Discrepancy Claims</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Settings</button>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/ac-settings.js"></script>
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+    </script>
+</body>
+</html>
