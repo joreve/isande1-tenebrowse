@@ -250,25 +250,34 @@ function initLoginPage() {
                 
                 // Route mapping based on the selected persona role
                 let targetDashboard = '';
-                switch (roleVal) {
-                    case 'pic':
-                        targetDashboard = 'pic-dashboard.html';
-                        break;
-                    case 'gm':
-                        targetDashboard = 'gm-dashboard.html';
-                        break;
-                    case 'po':
-                        targetDashboard = 'po-dashboard.html';
-                        break;
-                    case 'ws':
-                        targetDashboard = 'ws-dashboard.html';
-                        break;
-                    case 'admin':
-                        targetDashboard = 'admin-dashboard.html';
-                        break;
-                    default:
-                        targetDashboard = 'index.html'; // Fallback failsafe
-                }
+              switch (roleVal) {
+                  case 'pic':
+                    targetDashboard = 'pic-dashboard.html';
+                    break;
+
+                  case 'gm':
+                    targetDashboard = 'gm-dashboard.html';
+                    break;
+
+                  case 'po':
+                    targetDashboard = 'po-dashboard.html';
+                    break;
+
+                  case 'ws':
+                    targetDashboard = 'ws-dashboard.html';
+                    break;
+
+                  case 'ac':
+                    targetDashboard = 'ac-dashboard.html';
+                    break;
+
+                  case 'admin':
+                    targetDashboard = 'admin-dashboard.html';
+                    break;
+
+                  default:
+                    targetDashboard = 'index.html';
+            }
 
                 // Execute page transition exit effect before routing to the defined dashboard
                 setTimeout(() => {
