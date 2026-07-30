@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accountant Portal - Tenebrowse</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #475569;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* --- SIDEBAR --- */
+    aside {
+      width: 260px;
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      padding: 20px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #60a5fa;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .role-badge {
+      font-size: 0.7rem;
+      background-color: #1e40af;
+      color: #93c5fd;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 15px 10px;
+    }
+
+    .nav-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background-color: var(--accent);
+      color: var(--text-main);
+    }
+
+    .user-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      background-color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* --- MAIN CONTENT AREA --- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      padding: 15px 30px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--danger);
+      color: white;
+      font-size: 0.65rem;
+      padding: 2px 5px;
+      border-radius: 50%;
+    }
+
+    .content-body {
+      padding: 30px;
+      flex: 1;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* --- CARDS & STATS --- */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: var(--bg-secondary);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card h4 {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .card .val {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    /* --- TABLES & CONTROLS --- */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    input, select, button {
+      padding: 10px 14px;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 6px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: var(--bg-card);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .status-tag {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .status-ok { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .status-warn { background-color: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .status-danger { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+    /* --- NOTIFICATION PANEL --- */
+    .notif-panel {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 30px;
+      width: 320px;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 100;
+    }
+
+    .notif-panel.active { display: block; }
+    .notif-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; }
+    .notif-item { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .notif-item:last-child { border: none; }
+    .notif-item small { color: var(--text-muted); display: block; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- RESTRICTED ACCOUNTANT SIDEBAR -->
+  <aside>
+    <div>
+      <div class="brand">
+        Tenebrowse <span class="role-badge">Accountant</span>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" onclick="switchTab('dashboard', this)">
+          <span>📊</span> Dashboard
+        </li>
+        <li class="nav-item" onclick="switchTab('purchase-orders', this)">
+          <span>📄</span> Purchase Orders
+        </li>
+        <li class="nav-item" onclick="switchTab('discrepancies', this)">
+          <span>⚠️</span> Material Discrepancies
+        </li>
+        <li class="nav-item" onclick="switchTab('compliance', this)">
+          <span>📑</span> Compliance Reports
+        </li>
+        <li class="nav-item" onclick="switchTab('settings', this)">
+          <span>⚙️</span> Settings
+        </li>
+      </ul>
+    </div>
+    <div class="user-footer">
+      <div class="avatar">AC</div>
+      <div>
+        <div style="font-weight: bold; font-size: 0.9rem;">Jane Doe</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Lead Accountant</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main>
+    <header>
+      <h2 id="page-title">Financial Dashboard</h2>
+      <button class="notif-btn" onclick="toggleNotifications()">
+        🔔 <span class="notif-badge">3</span>
+      </button>
+
+      <!-- PUSH NOTIFICATION POPUP -->
+      <div class="notif-panel" id="notifPanel">
+        <div class="notif-header">Push Notifications</div>
+        <div class="notif-item">
+          <strong>PO #4092 Approved</strong>
+          <p>Approved by GM. Ready for audit logging.</p>
+          <small>10 mins ago</small>
+        </div>
+        <div class="notif-item">
+          <strong>Shipment Discrepancy Flagged</strong>
+          <p>3 damaged items moved to Warehouse 3.</p>
+          <small>1 hour ago</small>
+        </div>
+        <div class="notif-item">
+          <strong>Export Ready</strong>
+          <p>Q3 Material Fulfillment Report ready for download.</p>
+          <small>2 hours ago</small>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-body">
+      
+      <!-- TAB 1: DASHBOARD -->
+      <section id="dashboard" class="tab-content active">
+        <div class="metrics-grid">
+          <div class="card">
+            <h4>Total Purchase Orders</h4>
+            <div class="val">1,248</div>
+          </div>
+          <div class="card">
+            <h4>Material Discrepancies</h4>
+            <div class="val" style="color: var(--warning);">14</div>
+          </div>
+          <div class="card">
+            <h4>Recent Approved POs</h4>
+            <div class="val" style="color: var(--success);">28</div>
+          </div>
+          <div class="card">
+            <h4>Compliance Status</h4>
+            <div class="val" style="color: var(--success);">Audited</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 15px;">Recent Purchase Orders Summary</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>PO Number</th>
+                <th>Supplier</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PO-2026-089</td>
+                <td>Acme Industrial Supplies</td>
+                <td>2026-07-28</td>
+                <td>$12,450.00</td>
+                <td><span class="status-tag status-ok">Approved</span></td>
+              </tr>
+              <tr>
+                <td>PO-2026-088</td>
+                <td>Apex Logistics Corp</td>
+                <td>2026-07-27</td>
+                <td>$3,100.00</td>
+                <td><span class="status-tag status-ok">Approved</span></td>
+              </tr>
+              <tr>
+                <td>PO-2026-087</td>
+                <td>Global Tech Manufacturing</td>
+                <td>2026-07-25</td>
+                <td>$45,800.00</td>
+                <td><span class="status-tag status-warn">Under Discrepancy Review</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: PURCHASE ORDERS -->
+      <section id="purchase-orders" class="tab-content">
+        <div class="controls">
+          <input type="text" id="poSearch" placeholder="Search PO # or Supplier..." onkeyup="filterPOs()">
+          <div>
+            <select id="poFilter" onchange="filterPOs()">
+              <option value="ALL">All Suppliers</option>
+              <option value="Acme Industrial Supplies">Acme Industrial Supplies</option>
+              <option value="Apex Logistics Corp">Apex Logistics Corp</option>
+              <option value="Global Tech Manufacturing">Global Tech Manufacturing</option>
+            </select>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>PO Number</th>
+              <th>Supplier</th>
+              <th>Date</th>
+              <th>Total Amount</th>
+              <th>Archive Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="poTableBody">
+            <tr>
+              <td>PO-2026-089</td>
+              <td>Acme Industrial Supplies</td>
+              <td>2026-07-28</td>
+              <td>$12,450.00</td>
+              <td><span class="status-tag status-ok">Active</span></td>
+              <td><button class="btn-primary" onclick="alert('Viewing PO Details for PO-2026-089')">Review Details</button></td>
+            </tr>
+            <tr>
+              <td>PO-2026-088</td>
+              <td>Apex Logistics Corp</td>
+              <td>2026-07-27</td>
+              <td>$3,100.00</td>
+              <td><span class="status-tag status-ok">Archived</span></td>
+              <td><button class="btn-primary" onclick="alert('Viewing PO Details for PO-2026-088')">Review Details</button></td>
+            </tr>
+            <tr>
+              <td>PO-2026-087</td>
+              <td>Global Tech Manufacturing</td>
+              <td>2026-07-25</td>
+              <td>$45,800.00</td>
+              <td><span class="status-tag status-warn">Active</span></td>
+              <td><button class="btn-primary" onclick="alert('Viewing PO Details for PO-2026-087')">Review Details</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- TAB 3: MATERIAL DISCREPANCIES -->
+      <section id="discrepancies" class="tab-content">
+        <div class="card" style="margin-bottom: 20px;">
+          <h3>Automated Delivery & Discrepancy Tracking</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">
+            Summarizes delivery shortages, overages, and items isolated in Warehouse 3.
+          </p>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Supplier</th>
+              <th>Discrepancy Type</th>
+              <th>Affected Items</th>
+              <th>Warehouse Isolation</th>
+              <th>Financial Loss</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DISC-104</td>
+              <td>Global Tech Manufacturing</td>
+              <td><span class="status-tag status-danger">Damaged Goods</span></td>
+              <td>5x Steel Tubing</td>
+              <td>Warehouse 3 (Return Slip Issued)</td>
+              <td>$1,250.00</td>
+              <td><button class="btn-primary" onclick="alert('Discrepancy audit saved & recorded.')">Save Audit</button></td>
+            </tr>
+            <tr>
+              <td>DISC-103</td>
+              <td>Apex Logistics Corp</td>
+              <td><span class="status-tag status-warn">Shortage</span></td>
+              <td>12x Fasteners</td>
+              <td>N/A</td>
+              <td>$180.00</td>
+              <td><button class="btn-primary" onclick="alert('Discrepancy audit saved & recorded.')">Save Audit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- TAB 4: COMPLIANCE REPORTS -->
+      <section id="compliance" class="tab-content">
+        <div class="card" style="max-width: 600px;">
+          <h3 style="margin-bottom: 15px;">Structured Compliance Export Tool</h3>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-size: 0.85rem;">Select Report Type</label>
+            <select id="reportType" style="width: 100%;">
+              <option value="Material Fulfillment">Material Fulfillment Report</option>
+              <option value="Purchase Order Audit">Purchase Order Report</option>
+              <option value="Inventory Tax & Compliance">Inventory Report</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-size: 0.85rem;">Export Format</label>
+            <select id="exportFormat" style="width: 100%;">
+              <option value="CSV">CSV File (.csv)</option>
+              <option value="Excel">Excel Spreadsheet (.xlsx)</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-primary" style="flex: 1;" onclick="exportReport()">Export Report</button>
+            <button style="background: transparent; border: 1px solid var(--border-color); cursor: pointer;" onclick="window.print()">Print Report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: SETTINGS & PROFILE -->
+      <section id="settings" class="tab-content">
+        <div class="card" style="max-width: 500px;">
+          <h3 style="margin-bottom: 15px;">Accountant Settings & Profile</h3>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem;">Full Name</label>
+            <input type="text" value="Jane Doe" style="width: 100%; margin-top: 4px;">
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem;">Email Address</label>
+            <input type="email" value="jane.doe@company.com" style="width: 100%; margin-top: 4px;">
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="font-size: 0.85rem;">Notification Preferences</label>
+            <div style="margin-top: 8px;">
+              <input type="checkbox" id="emailNotif" checked> <label for="emailNotif">Email alerts for Discrepancies</label>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="alert('Profile updated!')">Save Settings</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Tab Navigation Logic
+    function switchTab(tabId, element) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      element.classList.add('active');
+
+      const titles = {
+        'dashboard': 'Financial Dashboard',
+        'purchase-orders': 'Digital Purchase Orders',
+        'discrepancies': 'Material Discrepancy Viewer',
+        'compliance': 'Compliance & Tax Export Tool',
+        'settings': 'Accountant Profile & Settings'
+      };
+      document.getElementById('page-title').innerText = titles[tabId];
+    }
+
+    // Push Notifications Toggle
+    function toggleNotifications() {
+      const panel = document.getElementById('notifPanel');
+      panel.classList.toggle('active');
+    }
+
+    // Purchase Order Search & Filter
+    function filterPOs() {
+      const searchValue = document.getElementById('poSearch').value.toLowerCase();
+      const filterValue = document.getElementById('poFilter').value;
+      const rows = document.querySelectorAll('#poTableBody tr');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const supplier = row.children[1].innerText;
+
+        const matchesSearch = text.includes(searchValue);
+        const matchesFilter = (filterValue === 'ALL' || supplier === filterValue);
+
+        if (matchesSearch && matchesFilter) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Export Functionality Simulation
+    function exportReport() {
+      const type = document.getElementById('reportType').value;
+      const format = document.getElementById('exportFormat').value;
+      alert(`Generating and Exporting ${type} as a ${format} file. Status: Recorded.`);
+    }
+  </script>
+</body>
+</html>
