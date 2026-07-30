@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Material Discrepancies</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Accountant Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ac-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-purchase-orders.html')">
+                        <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-exclamation-triangle"></i> Material Discrepancies
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
+                        <i class="fas fa-file-contract"></i> Compliance Reports
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Material Discrepancies</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-circle icon-danger"></i>
+                                <div>
+                                    <div class="notif-title">New Shortage Flagged</div>
+                                    <div class="notif-desc">DISC-104 requires financial loss adjustment.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">CH</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Clairo Hade</div>
+                                <div class="profile-role">Accountant</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <div class="breadcrumb">
+                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Discrepancy Audit Tracking</span>
+                </div>
+
+                <div class="card mb-3">
+                    <h3 class="section-title mb-1"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Delivery & Warehouse Isolation Audits</h3>
+                    <p class="welcome-text">
+                        Tracks site cargo shortages, damaged shipments, and materials quarantined in Warehouse 3. Reconcile claims before issuing supplier payments.
+                    </p>
+                </div>
+
+                <!-- Material Discrepancies Table -->
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Supplier</th>
+                                    <th>Discrepancy Type</th>
+                                    <th>Affected Items</th>
+                                    <th>Warehouse Isolation</th>
+                                    <th>Financial Loss</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>DISC-104</td>
+                                    <td>Global Tech Manufacturing</td>
+                                    <td><span class="status-tag status-danger">Damaged Goods</span></td>
+                                    <td>5x Steel Tubing</td>
+                                    <td>Warehouse 3 (Return Slip Issued)</td>
+                                    <td>$1,250.00</td>
+                                    <td><button class="btn btn-primary btn-sm btn-save-audit" data-id="DISC-104"><i class="fas fa-save"></i> Save Audit</button></td>
+                                </tr>
+                                <tr>
+                                    <td>DISC-103</td>
+                                    <td>Apex Logistics Corp</td>
+                                    <td><span class="status-tag status-warn">Shortage</span></td>
+                                    <td>12x Fasteners</td>
+                                    <td>N/A</td>
+                                    <td>$180.00</td>
+                                    <td><button class="btn btn-primary btn-sm btn-save-audit" data-id="DISC-103"><i class="fas fa-save"></i> Save Audit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/ac-material-reports.js"></script>
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+    </script>
+</body>
+</html>
