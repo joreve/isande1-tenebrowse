@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Material Discrepancies</title>
+    <title>Tenebrowse - Material Discrepancies Audit</title>
     
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -54,11 +54,12 @@
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Material Discrepancies</h2>
+                    <h2 class="page-title">Discrepancies & Quality Audits</h2>
                 </div>
                 
                 <div class="topbar-right">
                     
+                    <!-- Notification Bell Component Structure -->
                     <div class="notification-wrapper">
                         <button class="icon-btn" id="notifBtn">
                             <i class="far fa-bell"></i>
@@ -71,12 +72,13 @@
                                 <i class="fas fa-exclamation-circle icon-danger"></i>
                                 <div>
                                     <div class="notif-title">New Shortage Flagged</div>
-                                    <div class="notif-desc">DISC-104 requires financial loss adjustment.</div>
+                                    <div class="notif-desc">DISC-2026-104 requires financial loss adjustment.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- Enterprise Segment Profile Dropdown -->
                     <div class="profile-menu-container">
                         <button class="profile-trigger">
                             <div class="profile-avatar">CH</div>
@@ -90,72 +92,225 @@
                 </div>
             </header>
 
-            <!-- Page Workspace Wrapper -->
             <div class="page-container">
                 
+                <!-- System Structural Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <a href="javascript:transitionTo('ac-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Discrepancy Audit Tracking</span>
+                    <span>Material Discrepancies</span>
                 </div>
 
+                <!-- Top Module Toolbar -->
+                <div class="module-toolbar">
+                    <div class="toolbar-filters">
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search Report ID, supplier, or items...">
+                        </div>
+                        <select id="typeFilter" class="form-control filter-select">
+                            <option value="All">All Discrepancy Types</option>
+                            <option value="Damaged Goods">Damaged Goods</option>
+                            <option value="Shortage">Quantity Shortage</option>
+                            <option value="Specification Mismatch">Specification Mismatch</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
+                    </div>
+                </div>
+
+                <!-- Discrepancies Tracking Table -->
                 <div class="card mb-3">
-                    <h3 class="section-title mb-1"><i class="fas fa-shield-alt section-icon icon-secondary"></i> Delivery & Warehouse Isolation Audits</h3>
-                    <p class="welcome-text">
-                        Tracks site cargo shortages, damaged shipments, and materials quarantined in Warehouse 3. Reconcile claims before issuing supplier payments.
-                    </p>
-                </div>
-
-                <!-- Material Discrepancies Table -->
-                <div class="card">
-                    <div class="table-responsive">
-                        <table class="data-table">
+                    <h3 class="section-title mb-2"><i class="fas fa-shield-alt section-icon icon-primary"></i> Delivery & Quarantine Audit Register</h3>
+                    <div class="table-wrapper">
+                        <table class="table" id="discrepancyTable">
                             <thead>
                                 <tr>
                                     <th>Report ID</th>
                                     <th>Supplier</th>
                                     <th>Discrepancy Type</th>
                                     <th>Affected Items</th>
-                                    <th>Warehouse Isolation</th>
-                                    <th>Financial Loss</th>
-                                    <th>Action</th>
+                                    <th>Isolation Location</th>
+                                    <th>Est. Financial Loss</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>DISC-104</td>
-                                    <td>Global Tech Manufacturing</td>
-                                    <td><span class="status-tag status-danger">Damaged Goods</span></td>
-                                    <td>5x Steel Tubing</td>
-                                    <td>Warehouse 3 (Return Slip Issued)</td>
-                                    <td>$1,250.00</td>
-                                    <td><button class="btn btn-primary btn-sm btn-save-audit" data-id="DISC-104"><i class="fas fa-save"></i> Save Audit</button></td>
-                                </tr>
-                                <tr>
-                                    <td>DISC-103</td>
-                                    <td>Apex Logistics Corp</td>
-                                    <td><span class="status-tag status-warn">Shortage</span></td>
-                                    <td>12x Fasteners</td>
-                                    <td>N/A</td>
-                                    <td>$180.00</td>
-                                    <td><button class="btn btn-primary btn-sm btn-save-audit" data-id="DISC-103"><i class="fas fa-save"></i> Save Audit</button></td>
-                                </tr>
+                            <tbody id="discrepancyTableBody">
+                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <!-- Financial Claim Adjustment Form Component -->
+                <div class="card card-highlight-secondary">
+                    <h3 class="section-title mb-2"><i class="fas fa-hand-holding-usd section-icon icon-secondary"></i> Supplier Financial Claim Request</h3>
+                    <p class="section-description">File a formal credit memo or payment deduction request against suppliers for verified material damages and shortages.</p>
+                    
+                    <form id="claimForm">
+                        <div class="sub-form-grid">
+                            
+                            <div class="form-group">
+                                <label class="form-label">Discrepancy Report ID</label>
+                                <input type="text" id="claimReportId" class="form-control" placeholder="e.g., DISC-2026-104" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Target Supplier</label>
+                                <input type="text" id="claimSupplier" class="form-control" placeholder="e.g., Global Tech Manufacturing" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Claim Amount (₱ PHP)</label>
+                                <input type="number" id="claimAmount" class="form-control" placeholder="0.00" step="0.01" min="1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Proposed Settlement Action</label>
+                                <select id="claimAction" class="form-control" required>
+                                    <option value="" disabled selected>Select settlement method...</option>
+                                    <option value="Supplier Credit Memo">Supplier Credit Memo</option>
+                                    <option value="Invoice Payment Deduction">Invoice Payment Deduction</option>
+                                    <option value="Free Material Replacement">Free Material Replacement</option>
+                                    <option value="Refund Request">Direct Refund Request</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Audit Evidence & Justification Notes</label>
+                                <textarea id="claimNotes" class="form-control" placeholder="Detail inspection evidence, warehouse return receipts, or photos attached..."></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="btnSaveDraft">Save Draft</button>
+                            <button type="button" class="btn btn-primary" data-modal-target="claimModal">File Claim</button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
         </main>
     </div>
 
+    <!-- Submission Confirmation Modal -->
+    <div class="modal-overlay" id="claimModal">
+        <div class="modal">
+            <div class="modal-header">Confirm Financial Claim</div>
+            <div class="modal-body">
+                Are you sure you want to process this supplier claim? The deduction request will be logged to accounts payable and forwarded to the Head Manager for final approval.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Cancel</button>
+                <button class="btn btn-primary" id="confirmClaimBtn" data-modal-close>Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Core App JS Hook -->
     <script src="js/app.js"></script>
-    <script src="js/ac-material-reports.js"></script>
+
+    <!-- Page Specific Vanilla JS Logic -->
     <script>
         function transitionTo(url) {
             document.body.classList.add('page-exit');
             setTimeout(() => window.location.href = url, 300);
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const discrepancyData = [
+                { id: 'DISC-2026-104', supplier: 'Global Tech Manufacturing', type: 'Damaged Goods', items: '5x Structural Steel Tubing', location: 'Warehouse 3 (Return Slip Issued)', loss: '₱62,500.00', status: 'Pending Review' },
+                { id: 'DISC-2026-103', supplier: 'Apex Logistics Corp', type: 'Shortage', items: '12x Heavy-Duty Fasteners', location: 'N/A (Dock Shortage)', loss: '₱9,000.00', status: 'Approved' },
+                { id: 'DISC-2026-098', supplier: 'Metro Steel Alloys', type: 'Specification Mismatch', items: '20x Grade 40 Rebars (Expected Grade 60)', location: 'Warehouse 1', loss: '₱145,000.00', status: 'Pending Review' },
+                { id: 'DISC-2026-092', supplier: 'Prime Cement Corp', type: 'Damaged Goods', items: '15x Portland Cement Bags (Moisture Ruined)', location: 'Warehouse 3', loss: '₱4,250.00', status: 'Resolved' },
+                { id: 'DISC-2026-085', supplier: 'Acme Industrial Supplies', type: 'Shortage', items: '2x Hydraulic Valves', location: 'N/A', loss: '₱18,500.00', status: 'Resolved' }
+            ];
+
+            const tableBody = document.getElementById('discrepancyTableBody');
+            const searchInput = document.getElementById('searchInput');
+            const typeFilter = document.getElementById('typeFilter');
+            const btnExport = document.getElementById('btnExport');
+            
+            const claimForm = document.getElementById('claimForm');
+            const btnSaveDraft = document.getElementById('btnSaveDraft');
+            const confirmClaimBtn = document.getElementById('confirmClaimBtn');
+
+            const renderTable = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterType = typeFilter.value;
+
+                tableBody.innerHTML = '';
+
+                const filteredData = discrepancyData.filter(item => {
+                    const matchesSearch = item.id.toLowerCase().includes(searchTerm) || 
+                                          item.supplier.toLowerCase().includes(searchTerm) ||
+                                          item.items.toLowerCase().includes(searchTerm);
+                    const matchesType = filterType === 'All' || item.type === filterType;
+                    return matchesSearch && matchesType;
+                });
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="empty-state-row">No discrepancy records match your criteria.</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    let typeBadgeClass = 'badge-info';
+                    if (item.type === 'Damaged Goods') typeBadgeClass = 'badge-danger';
+                    else if (item.type === 'Shortage') typeBadgeClass = 'badge-warning';
+
+                    let statusBadgeClass = 'badge-info';
+                    if (item.status === 'Resolved') statusBadgeClass = 'badge-success';
+                    else if (item.status === 'Pending Review') statusBadgeClass = 'badge-warning';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${item.id}</strong></td>
+                        <td>${item.supplier}</td>
+                        <td><span class="badge ${typeBadgeClass}">${item.type}</span></td>
+                        <td>${item.items}</td>
+                        <td class="text-muted-sm">${item.location}</td>
+                        <td><strong>${item.loss}</strong></td>
+                        <td><span class="badge ${statusBadgeClass}">${item.status}</span></td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            };
+
+            searchInput.addEventListener('input', renderTable);
+            typeFilter.addEventListener('change', renderTable);
+
+            btnExport.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Export Started', 'Generating material discrepancy audit log in CSV format...', 'primary');
+            });
+
+            btnSaveDraft.addEventListener('click', () => {
+                if(window.showToast) window.showToast('Draft Saved', 'Financial claim draft has been saved locally.', 'info');
+            });
+
+            confirmClaimBtn.addEventListener('click', () => {
+                const reportId = document.getElementById('claimReportId').value.trim();
+                const supplier = document.getElementById('claimSupplier').value.trim();
+                const amount = document.getElementById('claimAmount').value;
+                const action = document.getElementById('claimAction').value;
+
+                if (!reportId || !supplier || !amount || !action) {
+                    if(window.showToast) window.showToast('Incomplete Form', 'Please fill out all required fields before submitting.', 'danger');
+                    return;
+                }
+
+                if(window.showToast) window.showToast('Claim Filed', 'Supplier Financial Claim has been logged and sent for manager approval.', 'success');
+                claimForm.reset();
+            });
+
+            renderTable();
+        });
     </script>
 </body>
 </html>
