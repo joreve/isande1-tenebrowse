@@ -31,14 +31,8 @@
                     <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
                         <i class="fas fa-boxes"></i> Inventory
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-warehouse-facilities.html')">
-                        <i class="fas fa-warehouse"></i> Warehouse Facilities
-                    </li>
                     <li class="nav-item active">
                         <i class="fas fa-truck-loading"></i> Deliveries
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('ws-inventory-activity.html')">
-                        <i class="fas fa-clipboard-list"></i> Inventory Activity
                     </li>
                     <li class="nav-item" onclick="transitionTo('ws-settings.html')">
                         <i class="fas fa-cog"></i> Settings
@@ -102,34 +96,6 @@
                     <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Deliveries</span>
-                </div>
-
-                <!-- Guided Access Contextual Guidance Alert -->
-                <div class="card mb-3 entry-form-card" id="guidedAccessBanner">
-                    <div class="feed-item info mb-0">
-                        <div class="feed-icon">
-                            <i class="fas fa-compass"></i>
-                        </div>
-                        <div class="feed-body">
-                            <div class="feed-title">Guided Access</div>
-                            <div class="feed-meta">Follow each step to verify deliveries accurately before adding accepted materials to inventory.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Guided Workflow Progress Indicator -->
-                <div class="card mb-3" id="guidedStepsProgress">
-                    <div class="summary-card-title mb-1">
-                        <i class="fas fa-list-ol icon-primary"></i> Guided Workflow Progress
-                    </div>
-                    <div class="metric-sub-grid">
-                        <span class="badge" id="step1Badge">1. Select Delivery</span>
-                        <span class="badge" id="step2Badge">2. Compare Ordered Items</span>
-                        <span class="badge" id="step3Badge">3. Record Received Quantities</span>
-                        <span class="badge" id="step4Badge">4. Record Damaged or Missing Items</span>
-                        <span class="badge" id="step5Badge">5. Review Verification</span>
-                        <span class="badge" id="step6Badge">6. Confirm Delivery</span>
-                    </div>
                 </div>
 
                 <!-- Delivery Summary -->
@@ -425,6 +391,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Guided Access Persistent Floating Helper (Fixed Bottom-Right) -->
+    <div class="guided-helper-card" id="deliveriesGuidedHelper">
+        <div class="guided-helper-header">
+            <div class="guided-helper-title">
+                <i class="fas fa-list-ol"></i> Guided Workflow Progress
+                <span class="badge badge-info guided-helper-subbadge" id="guidedSubbadge">Step 1 of 6</span>
+            </div>
+            <div class="guided-helper-actions">
+                <button class="guided-helper-btn" id="btnCollapseGuide" title="Minimize Helper"><i class="fas fa-minus"></i></button>
+                <button class="guided-helper-btn" id="btnHideGuide" title="Temporarily Hide Helper"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="guided-helper-body">
+            <div class="guided-helper-steps" id="guidedStepsList">
+                <div class="guided-step-item active" id="step1Badge">
+                    <span class="guided-step-num">1</span> Select Delivery
+                </div>
+                <div class="guided-step-item" id="step2Badge">
+                    <span class="guided-step-num">2</span> Compare Ordered Items
+                </div>
+                <div class="guided-step-item" id="step3Badge">
+                    <span class="guided-step-num">3</span> Record Received Quantities
+                </div>
+                <div class="guided-step-item" id="step4Badge">
+                    <span class="guided-step-num">4</span> Record Damaged or Missing Items
+                </div>
+                <div class="guided-step-item" id="step5Badge">
+                    <span class="guided-step-num">5</span> Review Verification
+                </div>
+                <div class="guided-step-item" id="step6Badge">
+                    <span class="guided-step-num">6</span> Confirm Delivery
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guided Access Restore Control -->
+    <button class="guided-restore-btn hidden" id="btnRestoreGuide" title="Restore Guided Help">
+        <i class="fas fa-compass"></i> Show Guided Access
+    </button>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>

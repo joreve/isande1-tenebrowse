@@ -44,4 +44,7 @@
 ## v3.2 Fixes
 - Standardized Guided Access Card
 - Standardized Action Buttons
-- Next: Fix Deliveries Action Buttons in Guided Access, Left-Align Action Column in Deliveries, Add Inventory Activities Guided Access
+
+## v3.3 Fixes
+- Combined Warehouse Facilities and Inventory Activity inside Inventory
+- Adjusted Guided Access to always be visible

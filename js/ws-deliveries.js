@@ -71,8 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const verifyWarehouseError = document.getElementById('verifyWarehouseError');
     const verifyRemarksError = document.getElementById('verifyRemarksError');
 
-    const guidedAccessBanner = document.getElementById('guidedAccessBanner');
-    const guidedStepsProgress = document.getElementById('guidedStepsProgress');
+    const deliveriesGuidedHelper = document.getElementById('deliveriesGuidedHelper');
+    const btnCollapseGuide = document.getElementById('btnCollapseGuide');
+    const btnHideGuide = document.getElementById('btnHideGuide');
+    const btnRestoreGuide = document.getElementById('btnRestoreGuide');
+    const guidedSubbadge = document.getElementById('guidedSubbadge');
     const confirmReviewCheckbox = document.getElementById('confirmReviewCheckbox');
     const btnVerifyBack = document.getElementById('btnVerifyBack');
     const btnVerifyCancel = document.getElementById('btnVerifyCancel');
@@ -109,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     };
 
-    // ==========================================
-    // Guided Access — State & Progress
+   // ==========================================
+    // Guided Access — State & Progress (Fixed Bottom-Right Helper)
     // ==========================================
     const isGuidedAccessMode = () => {
         return localStorage.getItem('tenebrowseWarehouseGuidedAccess') === 'true' ||
@@ -119,8 +122,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateGuidedAccessUI = () => {
         const guided = isGuidedAccessMode();
-        if (guidedAccessBanner) guidedAccessBanner.style.display = guided ? 'block' : 'none';
-        if (guidedStepsProgress) guidedStepsProgress.style.display = guided ? 'block' : 'none';
+        if (guided) {
+            document.body.classList.add('guided-access-enabled');
+        } else {
+            document.body.classList.remove('guided-access-enabled');
+        }
+
+        const isHidden = sessionStorage.getItem('tenebrowseDeliveriesGuideHidden') === 'true';
+        const isCollapsed = sessionStorage.getItem('tenebrowseDeliveriesGuideCollapsed') === 'true';
+
+        if (deliveriesGuidedHelper) {
+            if (!guided || isHidden) {
+                deliveriesGuidedHelper.classList.add('hidden');
+            } else {
+                deliveriesGuidedHelper.classList.remove('hidden');
+                if (isCollapsed) {
+                    deliveriesGuidedHelper.classList.add('collapsed');
+                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-plus"></i>';
+                } else {
+                    deliveriesGuidedHelper.classList.remove('collapsed');
+                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-minus"></i>';
+                }
+            }
+        }
+
+        if (btnRestoreGuide) {
+            if (guided && isHidden) {
+                btnRestoreGuide.classList.remove('hidden');
+            } else {
+                btnRestoreGuide.classList.add('hidden');
+            }
+        }
+    };
+
+    const initGuidedAccessControls = () => {
+        if (btnCollapseGuide) {
+            btnCollapseGuide.addEventListener('click', () => {
+                const isCollapsed = deliveriesGuidedHelper.classList.toggle('collapsed');
+                sessionStorage.setItem('tenebrowseDeliveriesGuideCollapsed', isCollapsed ? 'true' : 'false');
+                btnCollapseGuide.innerHTML = isCollapsed ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
+            });
+        }
+
+        if (btnHideGuide) {
+            btnHideGuide.addEventListener('click', () => {
+                sessionStorage.setItem('tenebrowseDeliveriesGuideHidden', 'true');
+                updateGuidedAccessUI();
+            });
+        }
+
+        if (btnRestoreGuide) {
+            btnRestoreGuide.addEventListener('click', () => {
+                sessionStorage.setItem('tenebrowseDeliveriesGuideHidden', 'false');
+                updateGuidedAccessUI();
+            });
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'tenebrowseWarehouseGuidedAccess') {
+                updateGuidedAccessUI();
+            }
+        });
     };
 
     const updateProgressSteps = (stepNum) => {
@@ -135,18 +197,28 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('step6Badge')
         ];
 
-        steps.forEach((badge, index) => {
-            if (!badge) return;
+        steps.forEach((stepEl, index) => {
+            if (!stepEl) return;
             const num = index + 1;
-            badge.className = 'badge';
-            if (num < stepNum) badge.classList.add('badge-success');
-            else if (num === stepNum) badge.classList.add('badge-warning');
-            else badge.classList.add('badge-info');
+            stepEl.className = 'guided-step-item';
+            if (num < stepNum) {
+                stepEl.classList.add('completed');
+            } else if (num === stepNum) {
+                stepEl.classList.add('active');
+            }
         });
+
+        if (guidedSubbadge) {
+            guidedSubbadge.textContent = `Step ${stepNum} of 6`;
+        }
     };
 
     const resetProgressSteps = () => updateProgressSteps(1);
-
+    
+    // Initialize helper controls and initial UI state
+    initGuidedAccessControls();
+    updateGuidedAccessUI();
+    
     // ==========================================
     // Filters (populated from data)
     // ==========================================

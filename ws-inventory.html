@@ -28,17 +28,11 @@
                     <li class="nav-item" data-url="ws-dashboard.html">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item active" onclick="scrollToSection('inventory-workspace')">
                         <i class="fas fa-boxes"></i> Inventory
-                    </li>
-                    <li class="nav-item" data-url="ws-warehouse-facilities.html">
-                        <i class="fas fa-warehouse"></i> Warehouse Facilities
                     </li>
                     <li class="nav-item" data-url="ws-deliveries.html">
                         <i class="fas fa-truck"></i> Deliveries
-                    </li>
-                    <li class="nav-item" data-url="ws-inventory-activity.html">
-                        <i class="fas fa-clipboard-list"></i> Inventory Activity
                     </li>
                     <li class="nav-item" data-url="ws-settings.html">
                         <i class="fas fa-cog"></i> Settings
@@ -51,13 +45,13 @@
         </aside>
 
         <!-- Main Workspace Frame -->
-        <main class="main-content">
+        <main class="main-content" id="inventory-workspace">
             
             <!-- Top Navigation Bar -->
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Inventory</h2>
+                    <h2 class="page-title">Inventory &amp; Facility Management</h2>
                 </div>
                 
                 <div class="topbar-right">
@@ -102,36 +96,12 @@
                 <div class="breadcrumb">
                     <a href="#" data-url="ws-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Inventory</span>
+                    <span>Inventory &amp; Facilities</span>
                 </div>
 
-                <!-- Guided Access Contextual Guidance Alert -->
-                <div class="card mb-3 entry-form-card" id="guidedAccessBanner" style="display: none;">
-                    <div class="feed-item info mb-0">
-                        <div class="feed-icon">
-                            <i class="fas fa-compass"></i>
-                        </div>
-                        <div class="feed-body">
-                            <div class="feed-title">Guided Access</div>
-                            <div class="feed-meta">Select a material from the inventory list, choose the correct update type, review the new quantity, and confirm before saving.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Guided Workflow Progress Indicator -->
-                <div class="card mb-3" id="guidedStepsProgress" style="display: none;">
-                    <div class="summary-card-title mb-1">
-                        <i class="fas fa-list-ol icon-primary"></i> Guided Workflow Progress
-                    </div>
-                    <div class="metric-sub-grid">
-                        <span class="badge" id="step1Badge">1. Select Material</span>
-                        <span class="badge" id="step2Badge">2. Choose Update Type</span>
-                        <span class="badge" id="step3Badge">3. Enter Quantity</span>
-                        <span class="badge" id="step4Badge">4. Review Changes</span>
-                        <span class="badge" id="step5Badge">5. Confirm and Save</span>
-                    </div>
-                </div>
-
+                <!-- ========================================================== -->
+                <!-- INVENTORY SUMMARY METRICS (ALWAYS VISIBLE AT TOP)          -->
+                <!-- ========================================================== -->
                 <!-- Inventory Summary Status Metrics Blocks -->
                 <div class="grid grid-cols-4 mb-3">
 
@@ -141,8 +111,8 @@
                             <i class="fas fa-cubes icon-info"></i> Total Materials
                         </div>
                         <div class="metric-block metric-border-info mb-0">
-                            <div class="metric-value" id="metricTotalMaterials">8</div>
-                            <div class="metric-label">Tracked Materials</div>
+                            <div class="metric-value" id="metricTotalMaterials">0</div>
+                            <div class="metric-label">Tracked SKUs</div>
                         </div>
                     </div>
 
@@ -152,8 +122,8 @@
                             <i class="fas fa-check-circle icon-success"></i> Available Stock
                         </div>
                         <div class="metric-block metric-border-success mb-0">
-                            <div class="metric-value" id="metricAvailableStock">4</div>
-                            <div class="metric-label">In Stock</div>
+                            <div class="metric-value" id="metricAvailableStock">0</div>
+                            <div class="metric-label">In Stock Items</div>
                         </div>
                     </div>
 
@@ -163,7 +133,7 @@
                             <i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items
                         </div>
                         <div class="metric-block metric-border-secondary mb-0">
-                            <div class="metric-value" id="metricLowStock">3</div>
+                            <div class="metric-value" id="metricLowStock">0</div>
                             <div class="metric-label">Below Minimum</div>
                         </div>
                     </div>
@@ -174,70 +144,196 @@
                             <i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items
                         </div>
                         <div class="metric-block metric-border-danger mb-0">
-                            <div class="metric-value" id="metricOutOfStock">1</div>
-                            <div class="metric-label">Depleted</div>
+                            <div class="metric-value" id="metricOutOfStock">0</div>
+                            <div class="metric-label">Depleted / Quarantined</div>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Top Module Toolbar for Inventory Filtering -->
-                <div class="module-toolbar">
-                    <div class="toolbar-filters">
-                        <div class="search-container">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search Material ID or Name...">
+                <!-- ========================================================== -->
+                <!-- HORIZONTAL TAB NAVIGATION                                  -->
+                <!-- ========================================================== -->
+                <div class="tabs-nav mb-3" role="tablist">
+                    <button class="tab-btn active" data-tab="materials" role="tab" aria-selected="true" aria-controls="materials-container">
+                        <i class="fas fa-boxes"></i> Materials
+                    </button>
+                    <button class="tab-btn" data-tab="activity" role="tab" aria-selected="false" aria-controls="activity-container">
+                        <i class="fas fa-clipboard-list"></i> Inventory Activity
+                    </button>
+                </div>
+
+                <!-- ========================================================== -->
+                <!-- TAB 1: MATERIALS CONTAINER (DEFAULT VISIBLE)               -->
+                <!-- ========================================================== -->
+                <div id="materials-container" class="tab-content active" role="tabpanel">
+                    <div id="inventory-section">
+                        <!-- Top Module Toolbar for Inventory Filtering -->
+                        <div class="module-toolbar">
+                            <div class="toolbar-filters">
+                                <div class="search-container">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Search Material ID or Name...">
+                                </div>
+                                <select id="categoryFilter" class="form-control filter-select">
+                                    <option value="All">All Categories</option>
+                                    <option value="Structural">Structural</option>
+                                    <option value="Electrical">Electrical</option>
+                                    <option value="Plumbing">Plumbing</option>
+                                    <option value="Finishing">Finishing</option>
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Tools">Tools</option>
+                                    <option value="Safety">Safety</option>
+                                </select>
+                                <select id="warehouseFilter" class="form-control filter-select">
+                                    <option value="All">All Warehouses</option>
+                                    <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                                    <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                                    <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+                                </select>
+                                <select id="statusFilter" class="form-control filter-select">
+                                    <option value="All">All Statuses</option>
+                                    <option value="In Stock">In Stock</option>
+                                    <option value="Low Stock">Low Stock</option>
+                                    <option value="Out of Stock">Out of Stock</option>
+                                    <option value="Overstocked">Overstocked</option>
+                                    <option value="Damaged">Damaged</option>
+                                </select>
+                            </div>
+                            <div class="toolbar-actions">
+                                <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Inventory Report</button>
+                            </div>
                         </div>
-                        <select id="categoryFilter" class="form-control filter-select">
-                            <option value="All">All Categories</option>
-                            <option value="Structural">Structural</option>
-                            <option value="Electrical">Electrical</option>
-                            <option value="Plumbing">Plumbing</option>
-                            <option value="Finishing">Finishing</option>
-                        </select>
-                        <select id="warehouseFilter" class="form-control filter-select">
-                            <option value="All">All Warehouses</option>
-                            <option value="Warehouse 1">Warehouse 1</option>
-                            <option value="Warehouse 2">Warehouse 2</option>
-                            <option value="Warehouse 3">Warehouse 3</option>
-                        </select>
-                        <select id="statusFilter" class="form-control filter-select">
-                            <option value="All">All Statuses</option>
-                            <option value="In Stock">In Stock</option>
-                            <option value="Low Stock">Low Stock</option>
-                            <option value="Out of Stock">Out of Stock</option>
-                            <option value="Overstocked">Overstocked</option>
-                        </select>
-                    </div>
-                    <div class="toolbar-actions">
-                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Inventory Report</button>
+
+                        <!-- Inventory Data Table -->
+                        <div class="card mb-3">
+                            <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory <span class="badge badge-info ml-2" id="currentWarehouseBadge">All Warehouses</span></h3>
+                            <p class="text-muted-sm mb-2">Tip: Use action buttons to update quantity, record received stock, log damaged stock, or transfer materials between warehouses.</p>
+                            <div class="table-wrapper">
+                                <table class="table" id="inventoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Material ID</th>
+                                            <th>Material Name</th>
+                                            <th>Category</th>
+                                            <th>Current Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Warehouse Location</th>
+                                            <th>Min. Level</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                            <th class="text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventoryTableBody">
+                                        <!-- Populated dynamically by js/ws-inventory.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Material Inventory Pagination -->
+                            <div class="flex-between mt-3">
+                                <span class="text-muted-sm" id="inventoryPaginationInfo">Showing 0-0 of 0 records</span>
+                                <div class="toolbar-actions">
+                                    <button class="btn btn-outline" id="inventoryPrevBtn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                    <button class="btn btn-outline" id="inventoryNextBtn">Next <i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Inventory Data Table -->
-                <div class="card">
-                    <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory</h3>
-                    <p class="text-muted-sm mb-2">Tip: Use action buttons to update quantity, record received stock, log damaged stock, or transfer materials.</p>
-                    <div class="table-wrapper">
-                        <table class="table" id="inventoryTable">
-                            <thead>
-                                <tr>
-                                    <th>Material ID</th>
-                                    <th>Material Name</th>
-                                    <th>Category</th>
-                                    <th>Current Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Warehouse Location</th>
-                                    <th>Min. Stock Level</th>
-                                    <th>Status</th>
-                                    <th>Last Updated</th>
-                                    <th class="text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="inventoryTableBody">
-                                <!-- Populated dynamically by js/ws-inventory.js -->
-                            </tbody>
-                        </table>
+                <!-- ========================================================== -->
+                <!-- TAB 2: INVENTORY ACTIVITY CONTAINER                        -->
+                <!-- ========================================================== -->
+                <div id="activity-container" class="tab-content" role="tabpanel">
+                    <div id="activity-section">
+                        <div class="card mb-3">
+                            <h3 class="section-title mb-2"><i class="fas fa-clipboard-list section-icon icon-primary"></i> Inventory Activity Audit Log</h3>
+                            <p class="text-muted-sm mb-3">This is an immutable, read-only audit log. Every inventory update, receipt, transfer, and discrepancy is recorded automatically.</p>
+
+                            <!-- Activity Summary Metrics -->
+                            <div class="grid grid-cols-4 mb-3">
+                                <div class="metric-block metric-border-info mb-0">
+                                    <div class="metric-value" id="summaryUpdatesToday">0</div>
+                                    <div class="metric-label">Updates Today</div>
+                                </div>
+                                <div class="metric-block metric-border-success mb-0">
+                                    <div class="metric-value" id="summaryStockReceived">0</div>
+                                    <div class="metric-label">Received Entries</div>
+                                </div>
+                                <div class="metric-block metric-border-secondary mb-0">
+                                    <div class="metric-value" id="summaryTransfers">0</div>
+                                    <div class="metric-label">Transfer Entries</div>
+                                </div>
+                                <div class="metric-block metric-border-danger mb-0">
+                                    <div class="metric-value" id="summaryDiscrepancies">0</div>
+                                    <div class="metric-label">Corrections / Damaged</div>
+                                </div>
+                            </div>
+
+                            <!-- Activity Table Filters -->
+                            <div class="module-toolbar mb-2">
+                                <div class="toolbar-filters">
+                                    <div class="search-container">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="activitySearchInput" class="form-control" placeholder="Search Activity ID, Material, or Ref...">
+                                    </div>
+                                    <select id="activityTypeFilter" class="form-control filter-select">
+                                        <option value="All">All Activity Types</option>
+                                        <option value="Stock Received">Stock Received</option>
+                                        <option value="Quantity Updated">Quantity Updated</option>
+                                        <option value="Material Transferred">Material Transferred</option>
+                                        <option value="Damaged Material Recorded">Damaged Material Recorded</option>
+                                        <option value="Missing Material Reported">Missing Material Reported</option>
+                                        <option value="Inventory Correction">Inventory Correction</option>
+                                        <option value="Delivery Verified">Delivery Verified</option>
+                                    </select>
+                                    <select id="activityWarehouseFilter" class="form-control filter-select">
+                                        <option value="All">All Warehouses</option>
+                                        <option value="Warehouse 1">Warehouse 1</option>
+                                        <option value="Warehouse 2">Warehouse 2</option>
+                                        <option value="Warehouse 3">Warehouse 3</option>
+                                    </select>
+                                    <input type="date" id="activityDateFilter" class="form-control filter-select">
+                                </div>
+                                <div class="toolbar-actions">
+                                    <button class="btn btn-outline" id="btnExportActivity"><i class="fas fa-file-export"></i> Export Activity Report</button>
+                                </div>
+                            </div>
+
+                            <!-- Activity Data Table -->
+                            <div class="table-wrapper">
+                                <table class="table" id="activityTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Activity ID</th>
+                                            <th>Material</th>
+                                            <th>Activity Type</th>
+                                            <th>Previous Qty</th>
+                                            <th>Updated Qty</th>
+                                            <th>Warehouse</th>
+                                            <th>Updated By</th>
+                                            <th>Date &amp; Time</th>
+                                            <th>Reference No.</th>
+                                            <th class="text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="activityTableBody">
+                                        <!-- Populated dynamically by js/ws-inventory.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Activity Pagination -->
+                            <div class="flex-between mt-3">
+                                <span class="text-muted-sm" id="activityPaginationInfo">Showing 0-0 of 0 records</span>
+                                <div class="toolbar-actions">
+                                    <button class="btn btn-outline" id="activityPrevBtn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                    <button class="btn btn-outline" id="activityNextBtn">Next <i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -295,7 +391,7 @@
         </div>
     </div>
 
-    <!-- Inventory Action Workflow Modal Component -->
+    <!-- Inventory Action Workflow Modal Component (Unified for Update, Receive, Damage, Transfer) -->
     <div class="modal-overlay" id="updateQtyModal">
         <div class="modal">
             <div class="modal-header" id="modalTitle">Inventory Update Workflow</div>
@@ -326,7 +422,7 @@
                             <option value="Add Received Stock">Add Received Stock</option>
                             <option value="Reduce Stock">Reduce Stock</option>
                             <option value="Correct Inventory Count">Correct Inventory Count</option>
-                            <option value="Record Damaged Stock">Record Damaged Stock</option>
+                            <option value="Record Damaged Stock">Record Damaged Stock (Move to Warehouse 3)</option>
                             <option value="Transfer Material">Transfer Material</option>
                         </select>
                     </div>
@@ -352,9 +448,9 @@
                         <label class="form-label">Destination Warehouse</label>
                         <select id="destinationWarehouse" class="form-control">
                             <option value="">Select destination warehouse...</option>
-                            <option value="Warehouse 1">Warehouse 1</option>
-                            <option value="Warehouse 2">Warehouse 2</option>
-                            <option value="Warehouse 3">Warehouse 3</option>
+                            <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                            <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                            <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
                         </select>
                         <div class="error-message" id="destinationWarehouseError"></div>
                     </div>
@@ -368,8 +464,8 @@
 
                     <!-- Reason for Correction (Inventory Correction) -->
                     <div class="form-group mb-2" id="correctionReasonGroup">
-                        <label class="form-label">Reason for Correction</label>
-                        <input type="text" id="correctionReason" class="form-control" placeholder="e.g., Physical count discrepancy...">
+                        <label class="form-label">Reason for Correction / Action</label>
+                        <input type="text" id="correctionReason" class="form-control" placeholder="e.g., Physical count discrepancy, water damage...">
                         <div class="error-message" id="correctionReasonError"></div>
                     </div>
 
@@ -455,6 +551,14 @@
                             <div id="reviewRemarks">-</div>
                         </div>
                     </div>
+
+                    <div id="reviewUsableImpactBox" class="feed-item warning mb-2" style="display: none;">
+                        <div class="feed-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="feed-body">
+                            <div class="feed-title">Usable Stock Impact</div>
+                            <div class="feed-meta">Moving materials to Warehouse 3 removes them from usable project inventory.</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Final Confirmation Message Section (Step 5) -->
@@ -489,6 +593,62 @@
                 <button class="btn btn-primary" id="btnFinalConfirm">Confirm &amp; Save</button>
             </div>
 
+        </div>
+    </div>
+
+    <!-- View Activity Details Modal (Read-Only) -->
+    <div class="modal-overlay" id="viewActivityModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">Activity Record <span class="badge badge-info ml-2" id="detActivityIdBadge"></span></div>
+            <div class="modal-body">
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Material</div>
+                        <div id="detMaterial" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Activity Type</div>
+                        <div id="detActivityType" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Previous Quantity</div>
+                        <div id="detPrevQty" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Updated Quantity</div>
+                        <div id="detUpdatedQty" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Warehouse</div>
+                        <div id="detWarehouse" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Updated By</div>
+                        <div id="detUpdatedBy" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-3">
+                    <div>
+                        <div class="text-muted-sm font-semibold">Date &amp; Time</div>
+                        <div id="detDateTime" class="text-main"></div>
+                    </div>
+                    <div>
+                        <div class="text-muted-sm font-semibold">Reference Number</div>
+                        <div id="detReference" class="text-main"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="text-muted-sm font-semibold">Remarks</div>
+                    <div id="detRemarks" class="text-main" style="padding: 0.5rem; background-color: var(--color-background); border-radius: var(--radius-sm); border-left: 3px solid var(--color-primary);"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" data-modal-close>Close</button>
+            </div>
         </div>
     </div>
 
