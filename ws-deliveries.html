@@ -178,56 +178,92 @@
                     </div>
                 </div>
 
-                <!-- Lower Layout Analytics Grid Split Block -->
-                <div class="dashboard-lower-grid">
-
-                    <!-- Deliveries Table Layout Container -->
-                    <div class="chart-column">
-
-                        <div class="card">
-                            <h3 class="section-title mb-2"><i class="fas fa-truck-loading section-icon icon-primary"></i> Incoming Deliveries</h3>
-                            <div class="table-wrapper">
-                                <table class="table" id="deliveriesTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Delivery Ref.</th>
-                                            <th>PO Number</th>
-                                            <th>Supplier</th>
-                                            <th>Expected Date</th>
-                                            <th>Actual Date</th>
-                                            <th># Materials</th>
-                                            <th>Status</th>
-                                            <th class="text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="deliveriesTableBody">
-                                        <!-- Populated by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Pagination -->
-                            <div class="flex-between mt-3">
-                                <span class="text-muted-sm" id="paginationInfo">Showing 0-0 of 0 records</span>
-                                <div class="toolbar-actions">
-                                    <button class="btn btn-outline" id="prevPageBtn"><i class="fas fa-chevron-left"></i> Prev</button>
-                                    <button class="btn btn-outline" id="nextPageBtn">Next <i class="fas fa-chevron-right"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Delivery Activity Panel Component -->
-                    <div class="card">
-                        <h3 class="section-title mb-2"><i class="fas fa-bell section-icon icon-secondary"></i> Delivery Activity</h3>
-                        <div class="notification-feed" id="activityFeed">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
+                <!-- Deliveries Tab Navigation -->
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Deliveries Section Navigation">
+                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="incoming-deliveries-tab" data-tab="incoming-deliveries" id="tab-btn-incoming">
+                        <i class="fas fa-truck-loading"></i>
+                        <span>Incoming Deliveries</span>
+                    </button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="delivery-activity-tab" data-tab="delivery-activity" id="tab-btn-activity">
+                        <i class="fas fa-history"></i>
+                        <span>Delivery Activity</span>
+                    </button>
                 </div>
 
+                <!-- Tab 1: Incoming Deliveries (Default Active) -->
+                <div id="incoming-deliveries-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-incoming" data-tab-content="incoming-deliveries">
+                    <!-- Existing Incoming Deliveries Component -->
+                    <div class="card">
+                        <div class="module-toolbar">
+                            <div class="toolbar-filters">
+                                <div class="search-container">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Search PO or Delivery Reference...">
+                                </div>
+                                <select id="statusFilter" class="form-control filter-select" aria-label="Filter by Status">
+                                    <option value="All">All Statuses</option>
+                                    <option value="Expected">Expected</option>
+                                    <option value="Arrived">Arrived</option>
+                                    <option value="Partially Received">Partially Received</option>
+                                    <option value="Verified">Verified</option>
+                                    <option value="Discrepancy Reported">Discrepancy Reported</option>
+                                </select>
+                                <select id="supplierFilter" class="form-control filter-select" aria-label="Filter by Supplier">
+                                    <option value="All">All Suppliers</option>
+                                </select>
+                                <input type="date" id="dateFilter" class="form-control filter-select" aria-label="Filter by Expected Date">
+                            </div>
+                            <div class="toolbar-actions">
+                                <button type="button" id="btnExport" class="btn btn-outline">
+                                    <i class="fas fa-file-export"></i>
+                                    <span>Export</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="table" id="deliveriesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Delivery Ref</th>
+                                        <th>PO Number</th>
+                                        <th>Supplier</th>
+                                        <th>Expected Date</th>
+                                        <th>Actual Date</th>
+                                        <th>Items</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deliveriesTableBody">
+                                    <!-- Populated dynamically via existing js/ws-deliveries.js logic -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="flex-between mt-3">
+                            <span class="text-muted-sm" id="paginationInfo">Showing 0-0 of 0 records</span>
+                            <div>
+                                <button type="button" id="prevPageBtn" class="btn btn-outline" disabled>Previous</button>
+                                <button type="button" id="nextPageBtn" class="btn btn-outline ml-2" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Delivery Activity -->
+                <div id="delivery-activity-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-activity" data-tab-content="delivery-activity">
+                    <!-- Existing Delivery Activity Component -->
+                    <div class="card">
+                        <div class="summary-card-title">
+                            <i class="fas fa-history section-icon"></i>
+                            <span>Delivery Activity Log</span>
+                        </div>
+                        <div class="notification-feed mt-2" id="activityFeed">
+                            <!-- Populated dynamically via existing js/ws-deliveries.js logic -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

@@ -524,12 +524,20 @@ ul { list-style: none; }
     color: var(--color-primary);
 }
 
+/* Ensure full-width presentation for tab content containers across both Inventory and Deliveries */
 .tab-content {
     display: none;
+    width: 100%;
 }
 
 .tab-content.active {
     display: block;
+    animation: fadeInTab 0.2s ease-in-out forwards;
+}
+
+@keyframes fadeInTab {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
@@ -768,14 +776,26 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 .action-btn:hover { color: var(--color-primary); background-color: var(--color-background); }
 
 /* Action List Toolbar inside Material Table Rows */
+/* Left-align the Actions column: header, container, and buttons */
+#inventoryTable th:last-child,
+#inventoryTable td:last-child,
+#deliveriesTable th:last-child,
+#deliveriesTable td:last-child {
+    text-align: left !important;
+}
+
+/* Action List Toolbar inside Material Table Rows */
 .action-list {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    background-color: var(--color-background);
-    padding: 0.2rem 0.35rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /* gap: 0.35rem; */
+    /* background-color: var(--color-background); */
+    /* padding: 0.35rem; */
+    /* border-radius: var(--radius-md);
+    border: 1px solid var(--color-border); */
+    /* width: 100%;
+    min-width: 120px; */
 }
 
 .action-item-btn {
@@ -783,14 +803,23 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
     border: none;
     color: var(--color-text-main);
     cursor: pointer;
-    padding: 0.35rem 0.6rem;
+    padding: 0.4rem 0.6rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.35rem;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    width: 100%;
+    text-align: left;
     transition: all var(--transition-fast);
+}
+
+/* Hide action labels visually by default (Normal Mode / Guided Access OFF) */
+.action-item-btn .action-label {
+    display: none;
+    white-space: nowrap;
 }
 
 .action-item-btn i {
@@ -806,6 +835,31 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
 .action-item-btn:active {
     transform: scale(0.98);
+}
+
+/* ==========================================================================
+   Guided Access Mode: Inventory Action Button Layout Standardization
+   ========================================================================== */
+body.guided-access-enabled .action-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    width: 100%;
+    min-width: 120px;
+}
+
+body.guided-access-enabled .action-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+}
+
+body.guided-access-enabled .action-item-btn .action-label {
+    display: inline;
 }
 
 /* ==========================================================================

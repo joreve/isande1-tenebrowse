@@ -48,3 +48,7 @@
 ## v3.3 Fixes
 - Combined Warehouse Facilities and Inventory Activity inside Inventory
 - Adjusted Guided Access to always be visible
+
+## v3.4 Fixes
+- Standardized Action Icons and Buttons
+- Standardized Overall Inventory and Deliveries Design

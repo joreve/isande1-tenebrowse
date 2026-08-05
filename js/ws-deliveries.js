@@ -287,11 +287,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td class="text-muted-sm">${d.actualDate}</td>
                     <td class="font-semibold">${d.materialCount}</td>
                     <td><span class="badge ${badgeClassFor(d.status)}">${d.status}</span></td>
-                    <td class="text-right">
-                        <button class="action-btn" onclick="viewDelivery('${d.id}')" title="View Delivery"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn edit" onclick="openVerify('${d.id}')" title="Verify Delivery"><i class="fas fa-clipboard-check"></i></button>
-                        <button class="action-btn delete" onclick="openDiscrepancy('${d.id}')" title="Report Discrepancy"><i class="fas fa-exclamation-triangle"></i></button>
-                        <button class="action-btn" onclick="exportDelivery('${d.id}')" title="Export Delivery Record"><i class="fas fa-file-export"></i></button>
+                    <td>
+                        <div class="action-list">
+                            <button class="action-item-btn" onclick="viewDelivery('${d.id}')" title="View Delivery" aria-label="View Delivery">
+                                <i class="fas fa-eye"></i>
+                                <span class="action-label">View</span>
+                            </button>
+                            <button class="action-item-btn" onclick="openVerify('${d.id}')" title="Verify Delivery" aria-label="Verify Delivery">
+                                <i class="fas fa-clipboard-check"></i>
+                                <span class="action-label">Verify</span>
+                            </button>
+                            <button class="action-item-btn" onclick="openDiscrepancy('${d.id}')" title="Report Discrepancy" aria-label="Report Discrepancy">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="action-label">Report</span>
+                            </button>
+                            <button class="action-item-btn" onclick="exportDelivery('${d.id}')" title="Export Delivery Record" aria-label="Export Delivery Record">
+                                <i class="fas fa-file-export"></i>
+                                <span class="action-label">Export</span>
+                            </button>
+                        </div>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -678,6 +692,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return isValid;
     };
+
+    // ==========================================
+    // Tab Switching Navigation (Inventory Pattern)
+    // ==========================================
+    const initDeliveriesTabs = () => {
+        const tabButtons = document.querySelectorAll('.tabs-nav .tab-btn[data-tab]');
+        const tabContents = document.querySelectorAll('.tab-content[data-tab-content]');
+
+        if (!tabButtons.length || !tabContents.length) return;
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetTabId = btn.getAttribute('data-tab');
+
+                // Reuse shared tab activator from js/app.js if available
+                if (typeof window.activateTab === 'function') {
+                    window.activateTab(targetTabId);
+                    return;
+                }
+
+                // Standard Inventory class-toggling fallback (no refresh, no scroll)
+                tabButtons.forEach(b => {
+                    const isActive = b === btn;
+                    b.classList.toggle('active', isActive);
+                    b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+
+                tabContents.forEach(content => {
+                    const isTarget = content.getAttribute('data-tab-content') === targetTabId ||
+                                     content.id === `${targetTabId}-tab`;
+                    content.classList.toggle('active', isTarget);
+                });
+            });
+        });
+    };
+
+    initDeliveriesTabs();
 
     // ==========================================
     // Initial Render
