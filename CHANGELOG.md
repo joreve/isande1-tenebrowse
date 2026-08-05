@@ -52,3 +52,10 @@
 ## v3.4 Fixes
 - Standardized Action Icons and Buttons
 - Standardized Overall Inventory and Deliveries Design
+
+## 4.0 Revisions for Warehouse Staff Interface
+- Added Batch Deliveries
+- Added Multiple Receipts per Supplier
+- Added Material Pricing per Delivery
+- Added Material Return Request
+- Optimized UI for Warehouse Staff

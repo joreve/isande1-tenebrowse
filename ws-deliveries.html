@@ -25,20 +25,30 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('ws-dashboard.html')">
-                        <i class="fas fa-chart-pie"></i> Dashboard
+                    <li>
+                        <a class="nav-item" href="ws-dashboard.html">
+                            <i class="fas fa-chart-pie"></i> Dashboard
+                        </a>
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-inventory.html')">
-                        <i class="fas fa-boxes"></i> Inventory
+                    <li>
+                        <a class="nav-item" href="ws-inventory.html">
+                            <i class="fas fa-boxes"></i> Inventory
+                        </a>
                     </li>
-                    <li class="nav-item active">
-                        <i class="fas fa-truck-loading"></i> Deliveries
+                    <li>
+                        <a class="nav-item active" href="ws-deliveries.html" aria-current="page">
+                            <i class="fas fa-truck-loading"></i> Deliveries
+                        </a>
                     </li>
-                    <li class="nav-item" onclick="transitionTo('ws-settings.html')">
-                        <i class="fas fa-cog"></i> Settings
+                    <li>
+                        <a class="nav-item" href="ws-settings.html">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <li>
+                        <a class="nav-item logout-item" href="index.html">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -58,7 +68,7 @@
 
                     <!-- Notification Bell Component Structure -->
                     <div class="notification-wrapper">
-                        <button class="icon-btn" id="notifBtn">
+                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
                             <i class="far fa-bell"></i>
                             <span class="badge-dot"></span>
                         </button>
@@ -68,8 +78,8 @@
                             <div class="dropdown-item">
                                 <i class="fas fa-truck-loading icon-info"></i>
                                 <div>
-                                    <div class="notif-title">Delivery Arriving</div>
-                                    <div class="notif-desc">DEL-3298 from Global Logistics Foundry expected today.</div>
+                                    <div class="notif-title">Delivery Batch Arriving</div>
+                                    <div class="notif-desc">DR-770-01 for PO-2026-770 from Global Logistics Foundry expected today.</div>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +103,7 @@
 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('ws-dashboard.html')">Tenebrowse Control</a>
+                    <a href="ws-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Deliveries</span>
                 </div>
@@ -107,7 +117,7 @@
                         </div>
                         <div class="metric-block metric-border-info mb-0">
                             <div class="metric-value" id="summaryExpectedToday">0</div>
-                            <div class="metric-label">Scheduled Arrivals</div>
+                            <div class="metric-label">Scheduled Batches</div>
                         </div>
                     </div>
 
@@ -117,27 +127,27 @@
                         </div>
                         <div class="metric-block metric-border-secondary mb-0">
                             <div class="metric-value" id="summaryAwaitingVerification">0</div>
-                            <div class="metric-label">Arrived, Not Verified</div>
+                            <div class="metric-label">Arrived Receipts</div>
                         </div>
                     </div>
 
                     <div class="card">
                         <div class="summary-card-title">
-                            <i class="fas fa-dolly icon-secondary"></i> Partially Received
+                            <i class="fas fa-dolly icon-secondary"></i> Open Purchase Orders
                         </div>
                         <div class="metric-block metric-border-secondary mb-0">
                             <div class="metric-value" id="summaryPartiallyReceived">0</div>
-                            <div class="metric-label">Incomplete Shipments</div>
+                            <div class="metric-label">Active / Partial Orders</div>
                         </div>
                     </div>
 
                     <div class="card">
                         <div class="summary-card-title">
-                            <i class="fas fa-check-circle icon-success"></i> Verified Deliveries
+                            <i class="fas fa-check-circle icon-success"></i> Completed Orders
                         </div>
                         <div class="metric-block metric-border-success mb-0">
                             <div class="metric-value" id="summaryVerified">0</div>
-                            <div class="metric-label">Confirmed Complete</div>
+                            <div class="metric-label">All Batches Received</div>
                         </div>
                     </div>
 
@@ -147,26 +157,37 @@
                         </div>
                         <div class="metric-block metric-border-danger mb-0">
                             <div class="metric-value" id="summaryDiscrepancies">0</div>
-                            <div class="metric-label">Flagged for Review</div>
+                            <div class="metric-label">Batches Under Review</div>
                         </div>
                     </div>
 
                 </div>
 
+                <!-- Deliveries Tab Navigation -->
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Deliveries Section Navigation">
+                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="incoming-deliveries-tab" data-tab="incoming-deliveries" id="tab-btn-incoming">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Purchase Orders</span>
+                    </button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="delivery-activity-tab" data-tab="delivery-activity" id="tab-btn-activity">
+                        <i class="fas fa-history"></i>
+                        <span>Delivery Activity</span>
+                    </button>
+                </div>
+
                 <!-- Top Module Toolbar -->
-                <div class="module-toolbar">
+                <div class="module-toolbar" id="purchaseOrderToolbar">
                     <div class="toolbar-filters">
                         <div class="search-container">
                             <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search Delivery Ref or PO Number...">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search PO Number or Supplier...">
                         </div>
                         <select id="statusFilter" class="form-control filter-select">
-                            <option value="All">All Statuses</option>
-                            <option value="Expected">Expected</option>
-                            <option value="Arrived">Arrived</option>
-                            <option value="Partially Received">Partially Received</option>
-                            <option value="Verified">Verified</option>
-                            <option value="Discrepancy Reported">Discrepancy Reported</option>
+                            <option value="All">All PO Statuses</option>
+                            <option value="Ordered">Ordered</option>
+                            <option value="Partially Delivered">Partially Delivered</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Closed with Outstanding Quantity">Closed with Outstanding Quantity</option>
                         </select>
                         <select id="supplierFilter" class="form-control filter-select">
                             <option value="All">All Suppliers</option>
@@ -178,65 +199,25 @@
                     </div>
                 </div>
 
-                <!-- Deliveries Tab Navigation -->
-                <div class="tabs-nav mb-3" role="tablist" aria-label="Deliveries Section Navigation">
-                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="incoming-deliveries-tab" data-tab="incoming-deliveries" id="tab-btn-incoming">
-                        <i class="fas fa-truck-loading"></i>
-                        <span>Incoming Deliveries</span>
-                    </button>
-                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="delivery-activity-tab" data-tab="delivery-activity" id="tab-btn-activity">
-                        <i class="fas fa-history"></i>
-                        <span>Delivery Activity</span>
-                    </button>
-                </div>
-
-                <!-- Tab 1: Incoming Deliveries (Default Active) -->
+                <!-- Tab 1: Purchase Orders Table (One Row Per PO) -->
                 <div id="incoming-deliveries-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-incoming" data-tab-content="incoming-deliveries">
-                    <!-- Existing Incoming Deliveries Component -->
                     <div class="card">
-                        <div class="module-toolbar">
-                            <div class="toolbar-filters">
-                                <div class="search-container">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Search PO or Delivery Reference...">
-                                </div>
-                                <select id="statusFilter" class="form-control filter-select" aria-label="Filter by Status">
-                                    <option value="All">All Statuses</option>
-                                    <option value="Expected">Expected</option>
-                                    <option value="Arrived">Arrived</option>
-                                    <option value="Partially Received">Partially Received</option>
-                                    <option value="Verified">Verified</option>
-                                    <option value="Discrepancy Reported">Discrepancy Reported</option>
-                                </select>
-                                <select id="supplierFilter" class="form-control filter-select" aria-label="Filter by Supplier">
-                                    <option value="All">All Suppliers</option>
-                                </select>
-                                <input type="date" id="dateFilter" class="form-control filter-select" aria-label="Filter by Expected Date">
-                            </div>
-                            <div class="toolbar-actions">
-                                <button type="button" id="btnExport" class="btn btn-outline">
-                                    <i class="fas fa-file-export"></i>
-                                    <span>Export</span>
-                                </button>
-                            </div>
-                        </div>
-
                         <div class="table-wrapper">
                             <table class="table" id="deliveriesTable">
                                 <thead>
                                     <tr>
-                                        <th>Delivery Ref</th>
-                                        <th>PO Number</th>
-                                        <th>Supplier</th>
-                                        <th>Expected Date</th>
-                                        <th>Actual Date</th>
-                                        <th>Items</th>
-                                        <th>Status</th>
+                                        <th>Purchase Order Number</th>
+                                        <th>Number of Suppliers</th>
+                                        <th>Ordered Quantity</th>
+                                        <th>Accepted Quantity</th>
+                                        <th>Remaining Quantity</th>
+                                        <th>Progress</th>
+                                        <th>Purchase Order Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="deliveriesTableBody">
-                                    <!-- Populated dynamically via existing js/ws-deliveries.js logic -->
+                                    <!-- Populated dynamically via js/ws-deliveries.js -->
                                 </tbody>
                             </table>
                         </div>
@@ -253,14 +234,106 @@
 
                 <!-- Tab 2: Delivery Activity -->
                 <div id="delivery-activity-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-activity" data-tab-content="delivery-activity">
-                    <!-- Existing Delivery Activity Component -->
-                    <div class="card">
-                        <div class="summary-card-title">
-                            <i class="fas fa-history section-icon"></i>
-                            <span>Delivery Activity Log</span>
+                    <div class="card mb-3">
+                        <h3 class="section-title mb-2">
+                            <i class="fas fa-history section-icon icon-primary"></i>
+                            Delivery Activity Audit Log
+                        </h3>
+                        <p class="text-muted-sm mb-3">
+                            This is an immutable, read-only audit log. Every receipt arrival, verification, discrepancy, return request, and report export is recorded automatically.
+                        </p>
+
+                        <!-- Delivery Activity Summary Metrics -->
+                        <div class="grid grid-cols-4 mb-3">
+                            <div class="metric-block metric-border-info mb-0">
+                                <div class="metric-value" id="deliveryActivityUpdatesToday">0</div>
+                                <div class="metric-label">Updates Today</div>
+                            </div>
+                            <div class="metric-block metric-border-success mb-0">
+                                <div class="metric-value" id="deliveryActivityVerified">0</div>
+                                <div class="metric-label">Verified Receipts</div>
+                            </div>
+                            <div class="metric-block metric-border-secondary mb-0">
+                                <div class="metric-value" id="deliveryActivityArrivals">0</div>
+                                <div class="metric-label">Receipt Arrivals</div>
+                            </div>
+                            <div class="metric-block metric-border-danger mb-0">
+                                <div class="metric-value" id="deliveryActivityExceptions">0</div>
+                                <div class="metric-label">Discrepancies / Returns</div>
+                            </div>
                         </div>
-                        <div class="notification-feed mt-2" id="activityFeed">
-                            <!-- Populated dynamically via existing js/ws-deliveries.js logic -->
+
+                        <!-- Delivery Activity Filters -->
+                        <div class="module-toolbar mb-2">
+                            <div class="toolbar-filters">
+                                <div class="search-container">
+                                    <i class="fas fa-search"></i>
+                                    <input
+                                        type="text"
+                                        id="deliveryActivitySearchInput"
+                                        class="form-control"
+                                        placeholder="Search Activity ID, PO, Receipt, Supplier, or Ref...">
+                                </div>
+                                <select id="deliveryActivityTypeFilter" class="form-control filter-select">
+                                    <option value="All">All Activity Types</option>
+                                    <option value="Delivery Receipt Arrived">Delivery Receipt Arrived</option>
+                                    <option value="Delivery Receipt Verified">Delivery Receipt Verified</option>
+                                    <option value="Delivery Verified with Discrepancy">Verified with Discrepancy</option>
+                                    <option value="Return Request Submitted">Return Request Submitted</option>
+                                    <option value="Delivery Discrepancy Reported">Delivery Discrepancy Reported</option>
+                                    <option value="Report Exported">Report Exported</option>
+                                </select>
+                                <select id="deliveryActivityWarehouseFilter" class="form-control filter-select">
+                                    <option value="All">All Warehouses</option>
+                                    <option value="Warehouse 1">Warehouse 1</option>
+                                    <option value="Warehouse 2">Warehouse 2</option>
+                                    <option value="Warehouse 3">Warehouse 3</option>
+                                </select>
+                                <input type="date" id="deliveryActivityDateFilter" class="form-control filter-select">
+                            </div>
+                            <div class="toolbar-actions">
+                                <button type="button" class="btn btn-outline" id="btnExportDeliveryActivity">
+                                    <i class="fas fa-file-export"></i> Export Activity Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Activity Table -->
+                        <div class="table-wrapper">
+                            <table class="table" id="deliveryActivityTable">
+                                <thead>
+                                    <tr>
+                                        <th>Activity ID</th>
+                                        <th>Purchase Order</th>
+                                        <th>Receipt / Batch</th>
+                                        <th>Activity Type</th>
+                                        <th>Previous Status</th>
+                                        <th>Updated Status</th>
+                                        <th>Supplier</th>
+                                        <th>Warehouse</th>
+                                        <th>Updated By</th>
+                                        <th>Date &amp; Time</th>
+                                        <th>Reference No.</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deliveryActivityTableBody">
+                                    <!-- Populated dynamically via js/ws-deliveries.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Delivery Activity Pagination -->
+                        <div class="flex-between mt-3">
+                            <span class="text-muted-sm" id="deliveryActivityPaginationInfo">Showing 0-0 of 0 records</span>
+                            <div class="toolbar-actions">
+                                <button type="button" class="btn btn-outline" id="deliveryActivityPrevBtn">
+                                    <i class="fas fa-chevron-left"></i> Prev
+                                </button>
+                                <button type="button" class="btn btn-outline" id="deliveryActivityNextBtn">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -268,214 +341,417 @@
         </main>
     </div>
 
-    <!-- View Delivery Modal -->
-    <div class="modal-overlay" id="viewModal">
-        <div class="modal">
-            <div class="modal-header">Delivery Details</div>
-            <div class="modal-body" id="viewBody"></div>
+    <!-- 1. Purchase Order Details Modal (Contains PO Summary + Delivery Receipt History) -->
+    <div class="modal-overlay" id="viewModal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="viewModalTitle"><i class="fas fa-file-invoice icon-primary"></i> Purchase Order Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="viewBody">
+                <!-- Populated dynamically with PO Summary & Delivery Receipt History Table -->
+            </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Close</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Verify Delivery Modal -->
-    <div class="modal-overlay" id="verifyModal">
-        <div class="modal">
-            <div class="modal-header">Verify Delivery</div>
+    <!-- 2. View Itemized Materials Table Modal (Packing List / Supplier Invoice View) -->
+    <div class="modal-overlay" id="viewReceiptItemsModal" role="dialog" aria-modal="true" aria-labelledby="viewReceiptItemsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="viewReceiptItemsTitle"><i class="fas fa-list-alt icon-primary"></i> Delivery Receipt Itemized Materials</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="viewReceiptItemsBody">
+                <!-- Populated dynamically with itemized materials packing list table and financial summary -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Verify Delivery Receipt Modal (Itemized Verification Table & Real-Time Financial Summary) -->
+    <div class="modal-overlay" id="verifyModal" role="dialog" aria-modal="true" aria-labelledby="verifyModalTitle">
+        <div class="modal modal-2xl">
+            <div class="modal-header">
+                <span id="verifyModalTitle"><i class="fas fa-clipboard-check icon-primary"></i> Verify Delivery Receipt (Itemized Verification)</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="verifyForm" novalidate>
+                <div class="modal-body">
+                    <!-- Read-Only Accounting Reference Banner -->
+                    <div class="accounting-note-banner mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Estimated values are provided for warehouse reconciliation and future accounting reference. Warehouse Staff cannot edit prices.</span>
+                    </div>
+
+                    <!-- Purchase Order & Delivery Receipt Metadata Summary -->
+                    <div class="dr-readonly-section mb-3">
+                        <div class="sub-form-grid">
+                            <div><span class="text-muted-sm">Purchase Order Number</span><div class="font-semibold" id="verifyPoNumberDisplay">-</div></div>
+                            <div><span class="text-muted-sm">PO Status</span><div><span id="verifyPoStatusBadge" class="badge badge-info">-</span></div></div>
+                            <div><span class="text-muted-sm">Batch Number</span><div class="font-semibold" id="verifyDrBatchNumber">-</div></div>
+                            <div><span class="text-muted-sm">Delivery Ref Number</span><div class="font-semibold" id="verifyDrRefNumber">-</div></div>
+                            <div><span class="text-muted-sm">Receipt Number</span><div class="font-semibold" id="verifyDrReceiptNumber">-</div></div>
+                            <div><span class="text-muted-sm">Supplier</span><div class="font-semibold" id="verifyDrSupplier">-</div></div>
+                            <div><span class="text-muted-sm">Delivery Date</span><div class="font-semibold" id="verifyDrExpectedDate">-</div></div>
+                            <div><span class="text-muted-sm">Receipt Status</span><div><span id="verifyDrStatusBadge" class="badge badge-info">-</span></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Itemized Materials Verification Table -->
+                    <div class="section-title mb-2">
+                        <i class="fas fa-boxes icon-secondary"></i>
+                        <span>Itemized Materials Verification</span>
+                    </div>
+                    <div class="table-wrapper mb-3">
+                        <table class="table" id="verifyMaterialsTable">
+                            <thead>
+                                <tr>
+                                    <th>Material ID</th>
+                                    <th>Material Description</th>
+                                    <th class="text-right">Expected Qty</th>
+                                    <th>Unit</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right" style="width: 110px;">Received Qty</th>
+                                    <th class="text-right" style="width: 110px;">Damaged Qty</th>
+                                    <th class="text-right">Accepted Qty</th>
+                                    <th class="text-right">Missing Qty</th>
+                                    <th class="text-right">Accepted Value</th>
+                                    <th class="text-right">Damaged Value</th>
+                                    <th class="text-right">Missing Value</th>
+                                    <th>Warehouse</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="verifyMaterialsTableBody">
+                                <!-- Populated dynamically with editable rows per material -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Delivery Receipt Financial Summary Panel -->
+                    <div class="po-progress-card mb-3">
+                        <div class="po-progress-header">
+                            <span class="po-progress-title">
+                                <i class="fas fa-calculator icon-primary"></i> Delivery Receipt Financial Summary
+                            </span>
+                            <span class="text-muted-sm">Automatic Calculations</span>
+                        </div>
+                        <div class="financial-summary-grid">
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Number of Materials</div>
+                                <div class="po-stat-value" id="sumNumMaterials">0</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Total Expected Batch Value</div>
+                                <div class="po-stat-value" id="sumExpectedValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Total Accepted Value</div>
+                                <div class="po-stat-value text-success" id="sumAcceptedValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Total Damaged Value</div>
+                                <div class="po-stat-value text-danger" id="sumDamagedValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Total Missing Value</div>
+                                <div class="po-stat-value text-danger" id="sumMissingValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Estimated Refund Value</div>
+                                <div class="po-stat-value" id="sumRefundValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box">
+                                <div class="po-stat-label">Estimated Replacement Value</div>
+                                <div class="po-stat-value" id="sumReplacementValue">₱0.00</div>
+                            </div>
+                            <div class="po-stat-box highlight-financial-impact">
+                                <div class="po-stat-label">Total Financial Impact</div>
+                                <div class="po-stat-value text-danger" id="sumFinancialImpact">₱0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="verifyFormError" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btnProceedReview"><i class="fas fa-check"></i> Review &amp; Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Verify Confirmation Modal -->
+    <div class="modal-overlay" id="verifyConfirmModal" role="dialog" aria-modal="true" aria-labelledby="verifyConfirmTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="verifyConfirmTitle"><i class="fas fa-check-double icon-primary"></i> Confirm Itemized Delivery Verification</span>
+                <button type="button" class="action-btn" id="btnCloseConfirmModal" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
             <div class="modal-body">
-                <p class="section-description mb-2">Record what actually arrived. Warehouse Staff cannot edit the original purchase order.</p>
-                <form id="verifyForm">
+                <p class="section-description">Please review the itemized quantities and financial impact before submitting your verification.</p>
+                <div id="confirmVerifySummary">
+                    <!-- Populated dynamically -->
+                </div>
 
-                    <div class="sub-form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Purchase Order Number</label>
-                            <input type="text" id="verifyPoNumber" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Supplier</label>
-                            <input type="text" id="verifySupplier" class="form-control" disabled>
-                        </div>
+                <!-- Purchase Order Status Completion Options -->
+                <div class="po-completion-card mt-3">
+                    <div class="section-title mb-1">
+                        <i class="fas fa-tasks icon-primary"></i>
+                        <span>Purchase Order Completion Assessment</span>
                     </div>
-
-                    <div class="sub-form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Delivery Reference Number</label>
-                            <input type="text" id="verifyRefNumber" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Material Name</label>
-                            <input type="text" id="verifyMaterialName" class="form-control" disabled>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Quantity Ordered</label>
-                        <input type="text" id="verifyOrderedQty" class="form-control" disabled>
-                    </div>
-
-                    <div class="sub-form-grid">
-                        <div class="form-group" id="verifyReceivedGroup">
-                            <label class="form-label">Quantity Received</label>
-                            <input type="number" id="verifyReceivedQty" class="form-control" min="0">
-                            <div class="error-message" id="verifyReceivedError"></div>
-                        </div>
-                        <div class="form-group" id="verifyDamagedGroup">
-                            <label class="form-label">Damaged Quantity</label>
-                            <input type="number" id="verifyDamagedQty" class="form-control" min="0">
-                            <div class="error-message" id="verifyDamagedError"></div>
-                        </div>
-                    </div>
-
-                    <div class="sub-form-grid">
-                        <div class="form-group" id="verifyMissingGroup">
-                            <label class="form-label">Missing Quantity</label>
-                            <input type="number" id="verifyMissingQty" class="form-control" readonly>
-                            <div class="error-message" id="verifyMissingError"></div>
-                        </div>
-                        <div class="form-group" id="verifyAcceptedGroup">
-                            <label class="form-label">Accepted Quantity</label>
-                            <input type="number" id="verifyAcceptedQty" class="form-control" readonly>
-                            <div class="error-message" id="verifyAcceptedError"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" id="verifyWarehouseGroup">
-                        <label class="form-label">Assigned Warehouse</label>
-                        <select id="verifyWarehouse" class="form-control">
-                            <option value="Warehouse 1">Warehouse 1 - Small Items</option>
-                            <option value="Warehouse 2">Warehouse 2 - Large Materials</option>
-                            <option value="Warehouse 3">Warehouse 3 - Damaged &amp; Quarantined</option>
+                    <div class="form-group mb-2">
+                        <label class="form-label" for="poMoreReceiptsSelect">Are additional delivery receipts expected for this Purchase Order?</label>
+                        <select class="form-control" id="poMoreReceiptsSelect">
+                            <option value="Yes">Yes — Leave Purchase Order status as Partially Delivered</option>
+                            <option value="No">No — Final batch for this Purchase Order</option>
                         </select>
-                        <div class="error-message" id="verifyWarehouseError"></div>
                     </div>
-
-                    <div class="form-group mb-0" id="verifyRemarksGroup">
-                        <label class="form-label">Remarks</label>
-                        <textarea id="verifyRemarks" class="form-control" placeholder="Required if damaged or missing quantities are recorded..."></textarea>
-                        <div class="error-message" id="verifyRemarksError"></div>
+                    <div id="poOutstandingClassificationGroup" style="display: none;">
+                        <div class="form-group mb-0">
+                            <label class="form-label" for="poOutstandingReasonSelect">Classify Outstanding Purchase Order Quantity (<span id="poOutstandingQtyDisplay">0</span> remaining):</label>
+                            <select class="form-control" id="poOutstandingReasonSelect">
+                                <option value="">-- Select Classification --</option>
+                                <option value="Supplier Shortage (Agreed Deduction)">Supplier Shortage — Agreed Deduction</option>
+                                <option value="Order Cancelled by Purchasing">Order Partially Cancelled by Purchasing</option>
+                                <option value="Delivery Discontinued">Delivery Discontinued / Completed Short</option>
+                            </select>
+                            <div class="error-message" id="poOutstandingError">Please select a classification for the outstanding quantity.</div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="modal-footer mt-3">
-                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="btnReviewVerification">Review Verification</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delivery Review Screen (Guided Access Step 5-6) -->
-    <div class="modal-overlay" id="verifyConfirmModal">
-        <div class="modal">
-            <div class="modal-header">Review Verification</div>
-            <div class="modal-body">
-                <p class="mb-2">Please review the recorded quantities before completing verification. This will update inventory and notify the Purchasing Officer and General Manager.</p>
-                <div id="confirmVerifySummary"></div>
-
-                <div class="form-group mb-0 mt-3">
-                    <label class="form-label" for="confirmReviewCheckbox">
+                <div class="form-group mt-3 mb-0">
+                    <label class="remember-me-label">
                         <input type="checkbox" id="confirmReviewCheckbox">
-                        I have reviewed the received quantities and all delivery discrepancies.
+                        <span>I certify that every material item has been physically inspected and all counts are accurate.</span>
                     </label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" id="btnVerifyBack">Back</button>
-                <button class="btn btn-outline" id="btnVerifyCancel">Cancel</button>
-                <button class="btn btn-primary" id="confirmVerifyBtn" data-modal-close disabled>Confirm Delivery</button>
+                <button type="button" class="btn btn-outline" id="btnVerifyBack"><i class="fas fa-arrow-left"></i> Back to Edit</button>
+                <button type="button" class="btn btn-primary" id="confirmVerifyBtn" disabled><i class="fas fa-check-circle"></i> Submit Verification</button>
             </div>
         </div>
     </div>
 
-    <!-- Report Discrepancy Modal -->
-    <div class="modal-overlay" id="discrepancyModal">
-        <div class="modal">
-            <div class="modal-header">Report Discrepancy</div>
-            <div class="modal-body">
-                <form id="discrepancyForm">
-                    <div class="sub-form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Delivery Reference Number</label>
-                            <input type="text" id="discrepancyRefNumber" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Purchase Order Number</label>
-                            <input type="text" id="discrepancyPoNumber" class="form-control" disabled>
+    <!-- 5. Return Request Modal (Operates on Individual Material Rows) -->
+    <div class="modal-overlay" id="returnRequestModal" role="dialog" aria-modal="true" aria-labelledby="returnRequestTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="returnRequestTitle"><i class="fas fa-undo-alt icon-primary"></i> Create Itemized Return Request</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="returnRequestForm" novalidate>
+                <div class="modal-body">
+                    <!-- Read-Only Accounting Reference Banner -->
+                    <div class="accounting-note-banner mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Estimated values are provided for warehouse reconciliation and future accounting reference. Warehouse Staff cannot edit prices.</span>
+                    </div>
+
+                    <div class="dr-readonly-section mb-3">
+                        <div class="sub-form-grid">
+                            <div><span class="text-muted-sm">Purchase Order Number</span><div class="font-semibold" id="retPoNumberDisplay">-</div></div>
+                            <div><span class="text-muted-sm">Receipt Number</span><div class="font-semibold" id="retDrReceiptDisplay">-</div></div>
+                            <div><span class="text-muted-sm">Supplier</span><div class="font-semibold" id="retSupplierDisplay">-</div></div>
+                            <div><span class="text-muted-sm">Delivery Reference</span><div class="font-semibold" id="retDeliveryRefDisplay">-</div></div>
                         </div>
                     </div>
+
+                    <div class="section-title mb-2">
+                        <i class="fas fa-clipboard-list icon-secondary"></i>
+                        <span>Select Affected Materials for Return Request</span>
+                    </div>
+                    <p class="text-muted-sm mb-2">Select one or more materials with damaged or rejected quantities to include in this return request.</p>
+
+                    <div class="table-wrapper mb-3">
+                        <table class="table" id="returnMaterialsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" id="selectAllReturnItems" aria-label="Select All Materials"></th>
+                                    <th>Material ID</th>
+                                    <th>Material Description</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Damaged Qty</th>
+                                    <th class="text-right">Missing Qty</th>
+                                    <th class="text-right" style="width: 120px;">Return Qty</th>
+                                    <th class="text-right">Est. Return Value</th>
+                                    <th>Preferred Resolution</th>
+                                </tr>
+                            </thead>
+                            <tbody id="returnMaterialsTableBody">
+                                <!-- Populated dynamically with selectable affected material rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="po-progress-card mb-3">
+                        <div class="flex-between">
+                            <div>
+                                <div class="po-stat-label">Selected Items Count</div>
+                                <div class="po-stat-value" id="returnSelectedCount">0 Materials</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="po-stat-label">Total Estimated Return Value</div>
+                                <div class="po-stat-value text-danger" id="returnTotalValueDisplay">₱0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="returnGeneralNotes">Return Reason &amp; Additional Notes</label>
+                        <textarea class="form-control" id="returnGeneralNotes" placeholder="Describe packaging condition, damage details, or supplier return authorization notes..."></textarea>
+                    </div>
+
+                    <div class="error-message" id="returnFormError" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Return Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Discrepancy Reporting Modal -->
+    <div class="modal-overlay" id="discrepancyModal" role="dialog" aria-modal="true" aria-labelledby="discrepancyTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="discrepancyTitle"><i class="fas fa-exclamation-triangle icon-danger"></i> Report Delivery Discrepancy</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="discrepancyForm" novalidate>
+                <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label">Issue Type</label>
-                        <select id="discrepancyType" class="form-control" required>
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Damaged Goods">Damaged Goods</option>
-                            <option value="Missing Items">Missing Items</option>
-                            <option value="Wrong Material Delivered">Wrong Material Delivered</option>
-                            <option value="Quantity Mismatch">Quantity Mismatch</option>
-                            <option value="Other">Other</option>
+                        <label class="form-label" for="discrepancyPoNumber">Purchase Order Number</label>
+                        <input type="text" id="discrepancyPoNumber" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="discrepancyRefNumber">Delivery Reference Number</label>
+                        <input type="text" id="discrepancyRefNumber" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="discrepancyType">Discrepancy Category</label>
+                        <select class="form-control" id="discrepancyType" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Damaged Shipment / Broken Materials">Damaged Shipment / Broken Materials</option>
+                            <option value="Short Shipment (Missing Quantities)">Short Shipment (Missing Quantities)</option>
+                            <option value="Incorrect Material Delivered">Incorrect Material Delivered</option>
+                            <option value="Documentation Discrepancy">Documentation / Invoice Discrepancy</option>
                         </select>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Description</label>
-                        <textarea id="discrepancyDesc" class="form-control" placeholder="Describe what you observed..." required></textarea>
+                        <label class="form-label" for="discrepancyDesc">Detailed Incident Description</label>
+                        <textarea class="form-control" id="discrepancyDesc" placeholder="Provide specific details regarding the discrepancy observed during receiving..." required></textarea>
                     </div>
-                    <div class="modal-footer mt-3">
-                        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
-                        <button type="submit" class="btn btn-danger">Submit Report</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-exclamation-circle"></i> Flag &amp; Notify Purchasing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. Read-Only Delivery Discrepancy Details Modal -->
+    <div class="modal-overlay" id="discrepancyDetailsModal" role="dialog" aria-modal="true" aria-labelledby="discrepancyDetailsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="discrepancyDetailsTitle"><i class="fas fa-exclamation-triangle icon-danger"></i> Delivery Discrepancy Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="discrepancyDetailsBody">
+                <!-- Populated dynamically with receipt-specific discrepancy details -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Guided Access Persistent Floating Helper (Fixed Bottom-Right) -->
-    <div class="guided-helper-card" id="deliveriesGuidedHelper">
+    <!-- 8. Read-Only Delivery Activity Details Modal -->
+    <div class="modal-overlay" id="deliveryActivityDetailsModal" role="dialog" aria-modal="true" aria-labelledby="deliveryActivityDetailsTitle">
+        <div class="modal delivery-activity-details-modal">
+            <div class="modal-header">
+                <span id="deliveryActivityDetailsTitle">
+                    <i class="fas fa-clipboard-list icon-primary"></i> Delivery Activity Record
+                    <span class="badge badge-info ml-2" id="deliveryActivityDetailsId">-</span>
+                </span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body delivery-activity-details-body" id="deliveryActivityDetailsBody">
+                <!-- Populated dynamically via js/ws-deliveries.js -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Guided Access Persistent Helper Card & Restore Controls -->
+    <div class="guided-helper-card hidden" id="deliveriesGuidedHelper" aria-label="Guided Access Workflow Helper">
         <div class="guided-helper-header">
             <div class="guided-helper-title">
-                <i class="fas fa-list-ol"></i> Guided Workflow Progress
-                <span class="badge badge-info guided-helper-subbadge" id="guidedSubbadge">Step 1 of 6</span>
+                <i class="fas fa-compass icon-primary"></i>
+                <span>Guided Access: Deliveries</span>
+                <span class="badge badge-success guided-helper-subbadge" id="guidedSubbadge">Step 1 of 6</span>
             </div>
             <div class="guided-helper-actions">
-                <button class="guided-helper-btn" id="btnCollapseGuide" title="Minimize Helper"><i class="fas fa-minus"></i></button>
-                <button class="guided-helper-btn" id="btnHideGuide" title="Temporarily Hide Helper"><i class="fas fa-times"></i></button>
+                <button type="button" class="guided-helper-btn" id="btnCollapseGuide" title="Minimize Helper" aria-label="Minimize Helper"><i class="fas fa-minus"></i></button>
+                <button type="button" class="guided-helper-btn" id="btnHideGuide" title="Hide Helper" aria-label="Hide Helper"><i class="fas fa-times"></i></button>
             </div>
         </div>
         <div class="guided-helper-body">
-            <div class="guided-helper-steps" id="guidedStepsList">
+            <div class="guided-helper-steps">
                 <div class="guided-step-item active" id="step1Badge">
-                    <span class="guided-step-num">1</span> Select Delivery
+                    <span class="guided-step-num">1</span>
+                    <span>Select &amp; view Purchase Order details</span>
                 </div>
                 <div class="guided-step-item" id="step2Badge">
-                    <span class="guided-step-num">2</span> Compare Ordered Items
+                    <span class="guided-step-num">2</span>
+                    <span>Select an arrived Delivery Receipt batch</span>
                 </div>
                 <div class="guided-step-item" id="step3Badge">
-                    <span class="guided-step-num">3</span> Record Received Quantities
+                    <span class="guided-step-num">3</span>
+                    <span>Verify itemized quantities physically received</span>
                 </div>
                 <div class="guided-step-item" id="step4Badge">
-                    <span class="guided-step-num">4</span> Record Damaged or Missing Items
+                    <span class="guided-step-num">4</span>
+                    <span>Record damaged or missing quantities per item</span>
                 </div>
                 <div class="guided-step-item" id="step5Badge">
-                    <span class="guided-step-num">5</span> Review Verification
+                    <span class="guided-step-num">5</span>
+                    <span>Review automatic financial calculations &amp; summary</span>
                 </div>
                 <div class="guided-step-item" id="step6Badge">
-                    <span class="guided-step-num">6</span> Confirm Delivery
+                    <span class="guided-step-num">6</span>
+                    <span>Confirm verification &amp; update PO completion</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Guided Access Restore Control -->
-    <button class="guided-restore-btn hidden" id="btnRestoreGuide" title="Restore Guided Help">
-        <i class="fas fa-compass"></i> Show Guided Access
+    <button type="button" class="guided-restore-btn hidden" id="btnRestoreGuide" title="Restore Guided Help" aria-label="Restore Guided Help">
+        <i class="fas fa-compass"></i>
+        <span>Show Guide</span>
     </button>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Core App JS Hook -->
+    <!-- Shared Application Logic -->
     <script src="js/app.js"></script>
 
-    <!-- Page Specific Logic (External Script) -->
+    <!-- Deliveries Specific Logic -->
     <script src="js/ws-deliveries.js"></script>
 </body>
 </html>

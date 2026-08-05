@@ -342,51 +342,65 @@
     </div>
 
     <!-- View Material Details Modal Component -->
-    <div class="modal-overlay" id="viewMaterialModal">
-        <div class="modal">
-            <div class="modal-header">Material Details</div>
-            <div class="modal-body">
-                <div class="form-group mb-2">
-                    <label class="form-label">Material Name</label>
-                    <input type="text" id="viewName" class="form-control" disabled>
-                </div>
-                <div class="sub-form-grid">
-                    <div class="form-group mb-2">
-                        <label class="form-label">Material ID</label>
-                        <input type="text" id="viewId" class="form-control" disabled>
+    <div class="modal-overlay" id="viewMaterialModal" role="dialog" aria-modal="true" aria-labelledby="viewMaterialModalTitle">
+        <div class="modal material-details-modal">
+            <div class="modal-header">
+                <span id="viewMaterialModalTitle">
+                    <i class="fas fa-box-open icon-primary"></i>
+                    Material Details
+                </span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close Material Details">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body material-details-body">
+                <section class="material-details-hero" aria-label="Material overview">
+                    <div class="material-details-icon" aria-hidden="true">
+                        <i class="fas fa-cube"></i>
                     </div>
-                    <div class="form-group mb-2">
-                        <label class="form-label">Category</label>
-                        <input type="text" id="viewCategory" class="form-control" disabled>
+                    <div class="material-details-identity">
+                        <label class="material-details-eyebrow" for="viewName">Material Name</label>
+                        <input type="text" id="viewName" class="material-details-name" disabled>
                     </div>
-                </div>
-                <div class="sub-form-grid">
-                    <div class="form-group mb-2">
-                        <label class="form-label">Current Quantity</label>
-                        <input type="text" id="viewQty" class="form-control" disabled>
+                    <div id="viewStatus" class="material-status-badge">-</div>
+                </section>
+
+                <section class="material-details-grid" aria-label="Material information">
+                    <div class="material-detail-card">
+                        <div class="material-detail-label"><i class="fas fa-barcode"></i> Material ID</div>
+                        <input type="text" id="viewId" class="material-detail-value" disabled>
                     </div>
-                    <div class="form-group mb-2">
-                        <label class="form-label">Minimum Stock Level</label>
-                        <input type="text" id="viewMin" class="form-control" disabled>
+                    <div class="material-detail-card">
+                        <div class="material-detail-label"><i class="fas fa-tags"></i> Category</div>
+                        <input type="text" id="viewCategory" class="material-detail-value" disabled>
                     </div>
-                </div>
-                <div class="sub-form-grid">
-                    <div class="form-group mb-2">
-                        <label class="form-label">Warehouse Location</label>
-                        <input type="text" id="viewWarehouse" class="form-control" disabled>
+                    <div class="material-detail-card material-detail-card-emphasis">
+                        <div class="material-detail-label"><i class="fas fa-boxes-stacked"></i> Current Quantity</div>
+                        <input type="text" id="viewQty" class="material-detail-value" disabled>
                     </div>
-                    <div class="form-group mb-2">
-                        <label class="form-label">Status</label>
-                        <input type="text" id="viewStatus" class="form-control" disabled>
+                    <div class="material-detail-card">
+                        <div class="material-detail-label"><i class="fas fa-gauge-low"></i> Minimum Stock Level</div>
+                        <input type="text" id="viewMin" class="material-detail-value" disabled>
                     </div>
-                </div>
-                <div class="form-group mb-0">
-                    <label class="form-label">Last Updated</label>
-                    <input type="text" id="viewLastUpdated" class="form-control" disabled>
+                    <div class="material-detail-card">
+                        <div class="material-detail-label"><i class="fas fa-warehouse"></i> Warehouse Location</div>
+                        <input type="text" id="viewWarehouse" class="material-detail-value" disabled>
+                    </div>
+                    <div class="material-detail-card">
+                        <div class="material-detail-label"><i class="fas fa-clock-rotate-left"></i> Last Updated</div>
+                        <input type="text" id="viewLastUpdated" class="material-detail-value" disabled>
+                    </div>
+                </section>
+
+                <div class="material-details-note">
+                    <i class="fas fa-circle-info"></i>
+                    <span>This is a read-only inventory record. Use the row actions to update quantities, receive stock, record damage, or transfer materials.</span>
                 </div>
             </div>
+
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Close</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
             </div>
         </div>
     </div>
@@ -422,7 +436,7 @@
                             <option value="Add Received Stock">Add Received Stock</option>
                             <option value="Reduce Stock">Reduce Stock</option>
                             <option value="Correct Inventory Count">Correct Inventory Count</option>
-                            <option value="Record Damaged Stock">Record Damaged Stock (Move to Warehouse 3)</option>
+                            <option value="Record Damaged Stock (Move to Warehouse 3)">Record Damaged Stock (Move to Warehouse 3)</option>
                             <option value="Transfer Material">Transfer Material</option>
                         </select>
                     </div>

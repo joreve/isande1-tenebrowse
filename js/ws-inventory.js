@@ -710,7 +710,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('viewQty').value = `${item.qty.toLocaleString()} ${item.unit}`;
         document.getElementById('viewMin').value = `${item.min.toLocaleString()} ${item.unit}`;
         document.getElementById('viewWarehouse').value = item.warehouse;
-        document.getElementById('viewStatus').value = item.status;
+
+        const viewStatus = document.getElementById('viewStatus');
+        if (viewStatus) {
+            const statusClassMap = {
+                'In Stock': 'material-status-success',
+                'Low Stock': 'material-status-warning',
+                'Out of Stock': 'material-status-danger',
+                'Overstocked': 'material-status-info',
+                'Damaged': 'material-status-danger'
+            };
+            viewStatus.textContent = item.status;
+            viewStatus.className = `material-status-badge ${statusClassMap[item.status] || 'material-status-neutral'}`;
+        }
+
         document.getElementById('viewLastUpdated').value = item.lastUpdated;
 
         const viewModal = document.getElementById('viewMaterialModal');
@@ -910,7 +923,20 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (actionType === 'transfer') defaultType = 'Transfer Material';
         else if (actionType === 'update') defaultType = 'Correct Inventory Count';
 
-        if (updateType) updateType.value = defaultType;
+        if (updateType) {
+            updateType.value = defaultType;
+
+            // Defensive fallback for older HTML versions whose option value did
+            // not match its visible label. This guarantees that the row action
+            // opens the workflow with the intended update type selected.
+            if (updateType.value !== defaultType) {
+                const matchingOption = Array.from(updateType.options).find((option) =>
+                    option.textContent.trim() === defaultType ||
+                    option.textContent.trim().startsWith(defaultType)
+                );
+                if (matchingOption) updateType.value = matchingOption.value;
+            }
+        }
         if (qtyChange) qtyChange.value = '';
         if (destinationWarehouse) destinationWarehouse.value = '';
         if (refNumber) refNumber.value = '';

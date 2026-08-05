@@ -45,15 +45,15 @@ function initSidebar() {
 }
 
 // ==========================================
-// Navigation Event Listener (Replaces inline onclick)
+// Navigation Event Listener
 // ==========================================
 function initNavigation() {
     document.addEventListener('click', (e) => {
         const navItem = e.target.closest('[data-url]');
         if (navItem) {
-            e.preventDefault();
             const url = navItem.getAttribute('data-url');
-            if (url) {
+            if (url && url !== '#' && !url.startsWith('javascript:')) {
+                e.preventDefault();
                 transitionTo(url);
             }
         }
@@ -69,7 +69,7 @@ function initDropdowns() {
 
     if (notifBtn && notifMenu) {
         notifBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent immediate closing
+            e.stopPropagation();
             notifMenu.classList.toggle('show');
         });
 
@@ -83,35 +83,73 @@ function initDropdowns() {
 }
 
 // ==========================================
-// Confirmation Modal System
+// Reusable Confirmation Modal & Scroll Lock System
 // ==========================================
+function updateBodyScrollLock() {
+    const activeModals = document.querySelectorAll('.modal-overlay.active');
+    if (activeModals.length > 0) {
+        document.body.style.overflow = 'hidden';
+        document.body.classList.add('modal-open');
+    } else {
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
+    }
+}
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+        updateBodyScrollLock();
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        updateBodyScrollLock();
+    }
+}
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+
 function initModals() {
-    const openModalBtns = document.querySelectorAll('[data-modal-target]');
-    const closeBtns = document.querySelectorAll('[data-modal-close]');
-    
-    openModalBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-modal-target');
-            const modal = document.getElementById(targetId);
-            if(modal) modal.classList.add('active');
-        });
-    });
+    // Event delegation for opening modals via data attributes
+    document.addEventListener('click', (e) => {
+        const triggerBtn = e.target.closest('[data-modal-target]');
+        if (triggerBtn) {
+            const targetId = triggerBtn.getAttribute('data-modal-target');
+            openModal(targetId);
+        }
 
-    closeBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const modal = e.target.closest('.modal-overlay');
-            if(modal) modal.classList.remove('active');
-        });
-    });
-
-    // Close on overlay click
-    const overlays = document.querySelectorAll('.modal-overlay');
-    overlays.forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            if(e.target === overlay) {
-                overlay.classList.remove('active');
+        // Event delegation for closing modals via data attributes
+        const closeBtn = e.target.closest('[data-modal-close]');
+        if (closeBtn) {
+            const modal = closeBtn.closest('.modal-overlay');
+            if (modal && modal.id) {
+                closeModal(modal.id);
             }
-        });
+        }
+
+        // Backdrop click handler
+        if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('active')) {
+            closeModal(e.target.id);
+        }
+    });
+
+    // Escape key closes topmost modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const activeModals = Array.from(document.querySelectorAll('.modal-overlay.active'));
+            if (activeModals.length > 0) {
+                const topmostModal = activeModals[activeModals.length - 1];
+                if (topmostModal.id) {
+                    closeModal(topmostModal.id);
+                }
+            }
+        }
     });
 }
 
@@ -125,13 +163,12 @@ function showToast(title, message, type = 'primary') {
     // Create Toast Element
     const toast = document.createElement('div');
     toast.className = 'toast';
-    // Adapt left border color based on type
     toast.style.borderLeftColor = `var(--color-${type})`;
 
     // Choose icon based on type
     let iconClass = 'fa-info-circle';
-    if(type === 'success') iconClass = 'fa-check-circle';
-    if(type === 'danger') iconClass = 'fa-exclamation-triangle';
+    if (type === 'success') iconClass = 'fa-check-circle';
+    if (type === 'danger') iconClass = 'fa-exclamation-triangle';
 
     toast.innerHTML = `
         <div class="toast-icon" style="color: var(--color-${type})">
@@ -151,11 +188,10 @@ function showToast(title, message, type = 'primary') {
     // Auto remove after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 250); // wait for transition
+        setTimeout(() => toast.remove(), 250);
     }, 3000);
 }
 
-// Expose toast function for app-wide use
 window.showToast = showToast;
 
 // ==========================================
@@ -181,20 +217,17 @@ function initLoginPage() {
     const roleSelect = document.getElementById('role');
     const passwordToggle = document.getElementById('passwordToggle');
     const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    
-    // Reusable Error Parsing Utilities
+
     const clearErrors = () => {
         document.querySelectorAll('.form-group').forEach(group => group.classList.remove('has-error'));
         document.querySelectorAll('.error-message').forEach(err => err.style.display = 'none');
     };
 
-    // Interactive Password Visibility Engine Toggle
     if (passwordToggle && passwordInput) {
         passwordToggle.addEventListener('click', () => {
             const typeAttribute = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', typeAttribute);
-            
-            // Icon Variant Management Sync
+
             const iconElement = passwordToggle.querySelector('i');
             if (typeAttribute === 'text') {
                 iconElement.className = 'far fa-eye-slash';
@@ -204,7 +237,6 @@ function initLoginPage() {
         });
     }
 
-    // Forgot Password Enterprise Notice Overide
     if (forgotPasswordLink) {
         forgotPasswordLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -212,7 +244,6 @@ function initLoginPage() {
         });
     }
 
-    // Client Validation Form Controller & Routing Logic
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -223,7 +254,6 @@ function initLoginPage() {
             const passwordVal = passwordInput.value.trim();
             const roleVal = roleSelect.value;
 
-            // Static Context Processing Validation Checks
             if (!usernameVal) {
                 document.getElementById('usernameGroup').classList.add('has-error');
                 document.getElementById('usernameError').style.display = 'block';
@@ -242,44 +272,35 @@ function initLoginPage() {
                 clientFormIsValid = false;
             }
 
-            // Execution Branch Path Forward Redirect Mapping Strategy
             if (clientFormIsValid) {
                 if (typeof window.showToast === 'function') {
                     window.showToast('Validation Verified', 'Authorization criteria processed successfully. Mounting internal desktop application metrics...', 'success');
                 }
-                
-                // Route mapping based on the selected persona role
+
                 let targetDashboard = '';
-              switch (roleVal) {
-                  case 'pic':
-                    targetDashboard = 'pic-dashboard.html';
-                    break;
+                switch (roleVal) {
+                    case 'pic':
+                        targetDashboard = 'pic-dashboard.html';
+                        break;
+                    case 'gm':
+                        targetDashboard = 'gm-dashboard.html';
+                        break;
+                    case 'po':
+                        targetDashboard = 'po-dashboard.html';
+                        break;
+                    case 'ws':
+                        targetDashboard = 'ws-dashboard.html';
+                        break;
+                    case 'ac':
+                        targetDashboard = 'ac-dashboard.html';
+                        break;
+                    case 'admin':
+                        targetDashboard = 'admin-dashboard.html';
+                        break;
+                    default:
+                        targetDashboard = 'index.html';
+                }
 
-                  case 'gm':
-                    targetDashboard = 'gm-dashboard.html';
-                    break;
-
-                  case 'po':
-                    targetDashboard = 'po-dashboard.html';
-                    break;
-
-                  case 'ws':
-                    targetDashboard = 'ws-dashboard.html';
-                    break;
-
-                  case 'ac':
-                    targetDashboard = 'ac-dashboard.html';
-                    break;
-
-                  case 'admin':
-                    targetDashboard = 'admin-dashboard.html';
-                    break;
-
-                  default:
-                    targetDashboard = 'index.html';
-            }
-
-                // Execute page transition exit effect before routing to the defined dashboard
                 setTimeout(() => {
                     transitionTo(targetDashboard);
                 }, 500);
