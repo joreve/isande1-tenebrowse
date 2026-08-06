@@ -1,458 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Accountant Purchase Orders</title>
-    
-    <!-- Enterprise System Fonts (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome for Enterprise Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Core Design System CSS Reference -->
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Orders - Accountant Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="page-transition">
+<body>
 
-    <div class="app-wrapper">
-        
-        <!-- Sidebar Navigation (Accountant Scope) -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
-                    Tenebrowse
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('ac-dashboard.html')">
-                        <i class="fas fa-chart-pie"></i> Dashboard
-                    </li>
-                    <li class="nav-item active">
-                        <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('ac-material-reports.html')">
-                        <i class="fas fa-exclamation-triangle"></i> Material Discrepancies
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
-                        <i class="fas fa-file-contract"></i> Compliance Reports
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('ac-settings.html')">
-                        <i class="fas fa-cog"></i> Settings
-                    </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Workspace -->
-        <main class="main-content">
-            
-            <!-- Top Navigation -->
-            <header class="topbar">
-                <div class="topbar-left">
-                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Financial Purchase Orders Overview</h2>
-                </div>
-                
-                <div class="topbar-right">
-                    <!-- Notification Bell Component Structure -->
-                    <div class="notification-wrapper">
-                        <button class="icon-btn" id="notifBtn">
-                            <i class="far fa-bell"></i>
-                            <span class="badge-dot"></span>
-                        </button>
-                    </div>
-                    
-                    <!-- Profile Header -->
-                    <div class="profile-menu-container">
-                        <button class="profile-trigger">
-                            <div class="profile-avatar">CH</div>
-                            <div class="profile-info">
-                                <div class="profile-name">Clairo Hade</div>
-                                <div class="profile-role">Accountant</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <div class="page-container">
-                
-                <!-- Breadcrumbs -->
-                <div class="breadcrumb">
-                    <a href="javascript:transitionTo('ac-dashboard.html')">Tenebrowse Control</a>
-                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Purchase Orders</span>
-                </div>
-
-                <!-- Controls & Filter Toolbar -->
-                <div class="card mb-3">
-                    <div class="toolbar-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                        <div class="search-box" style="display: flex; gap: 0.5rem; flex: 1; min-width: 300px;">
-                            <input type="text" id="poSearchInput" class="form-control" placeholder="Search PO #, Vendor, Invoice #, or Site...">
-                            <select id="statusFilter" class="form-control" style="width: 200px;">
-                                <option value="ALL">All Payment Statuses</option>
-                                <option value="Pending Audit">Pending Audit</option>
-                                <option value="Invoice Matched">Invoice Matched</option>
-                                <option value="Discrepancy Flagged">Discrepancy Flagged</option>
-                                <option value="Paid">Paid</option>
-                            </select>
-                        </div>
-                        <div class="action-buttons" style="display: flex; gap: 0.5rem;">
-                            <button class="btn btn-outline" id="btnExportBatch" disabled>
-                                <i class="fas fa-file-export"></i> Export Selected (<span id="selectedCount">0</span>)
-                            </button>
-                            <button class="btn btn-primary" id="btnViewSelected" disabled>
-                                <i class="fas fa-layer-group"></i> Inspect Selected POs
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Multi-PO Ledger Table View -->
-                <div class="card">
-                    <div class="table-responsive">
-                        <table class="table" id="poTable">
-                            <thead>
-                                <tr>
-                                    <th style="width: 40px;">
-                                        <input type="checkbox" id="selectAllPos">
-                                    </th>
-                                    <th>PO Number</th>
-                                    <th>Vendor / Supplier</th>
-                                    <th>Project Site</th>
-                                    <th>Invoice #</th>
-                                    <th>PO Amount</th>
-                                    <th>Payment Status</th>
-                                    <th style="text-align: right;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="poTableBody">
-                                <!-- Accountant Multi-PO Row 1 -->
-                                <tr data-po="PO-2026-001" data-status="Pending Audit">
-                                    <td><input type="checkbox" class="po-checkbox"></td>
-                                    <td><strong>PO-2026-001</strong></td>
-                                    <td>Apex Steel Corp</td>
-                                    <td>Metro Tower A</td>
-                                    <td><code>INV-88210</code></td>
-                                    <td>$45,200.00</td>
-                                    <td><span class="badge badge-warning">Pending Audit</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-001')">Financial Audit</button>
-                                    </td>
-                                </tr>
-                                <!-- Accountant Multi-PO Row 2 -->
-                                <tr data-po="PO-2026-002" data-status="Invoice Matched">
-                                    <td><input type="checkbox" class="po-checkbox"></td>
-                                    <td><strong>PO-2026-002</strong></td>
-                                    <td>BuildMax Concrete Inc</td>
-                                    <td>Bridge Expansion Site</td>
-                                    <td><code>INV-99412</code></td>
-                                    <td>$18,750.00</td>
-                                    <td><span class="badge badge-info">Invoice Matched</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-002')">Financial Audit</button>
-                                    </td>
-                                </tr>
-                                <!-- Accountant Multi-PO Row 3 -->
-                                <tr data-po="PO-2026-003" data-status="Discrepancy Flagged">
-                                    <td><input type="checkbox" class="po-checkbox"></td>
-                                    <td><strong>PO-2026-003</strong></td>
-                                    <td>Titan Lumber & Hardware</td>
-                                    <td>Harbor Logistics Hub</td>
-                                    <td><code>INV-10293</code></td>
-                                    <td>$112,400.00</td>
-                                    <td><span class="badge badge-danger">Discrepancy Flagged</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-003')">Financial Audit</button>
-                                    </td>
-                                </tr>
-                                <!-- Accountant Multi-PO Row 4 -->
-                                <tr data-po="PO-2026-004" data-status="Paid">
-                                    <td><input type="checkbox" class="po-checkbox"></td>
-                                    <td><strong>PO-2026-004</strong></td>
-                                    <td>Vanguard Piping Solutions</td>
-                                    <td>Metro Tower B</td>
-                                    <td><code>INV-77311</code></td>
-                                    <td>$28,900.00</td>
-                                    <td><span class="badge badge-success">Paid</span></td>
-                                    <td style="text-align: right;">
-                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-004')">Financial Audit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </main>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        Tenebrowse <span class="role-badge">Accountant</span>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="ac-dashboard.html" class="nav-link">
+            <span class="nav-icon">📊</span> Dashboard
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="ac-purchase-orders.html" class="nav-link">
+            <span class="nav-icon">📄</span> Purchase Orders
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ac-material-reports.html" class="nav-link">
+            <span class="nav-icon">⚠️</span> Material Discrepancies
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ac-compliance-reports.html" class="nav-link">
+            <span class="nav-icon">📑</span> Compliance Reports
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ac-settings.html" class="nav-link">
+            <span class="nav-icon">⚙️</span> Settings
+          </a>
+        </li>
+      </ul>
     </div>
+    <div class="user-footer">
+      <div class="avatar">AC</div>
+      <div class="user-info">
+        <div class="user-name">Jane Doe</div>
+        <div class="user-role">Lead Accountant</div>
+      </div>
+    </div>
+  </aside>
 
-    <!-- Multi-PO Financial Audit Modal -->
-    <div class="modal-overlay" id="poDetailModal">
-        <div class="modal" style="max-width: 850px; width: 90%;">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <span id="poModalTitle">Accountant PO Review</span>
-                <span id="poModalTabs" style="display: flex; gap: 0.25rem;"></span>
-            </div>
-            <div class="modal-body" id="poModalBody">
-                <!-- Content loaded dynamically via JS -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close onclick="closePoModal()">Close</button>
-                <button class="btn btn-primary" id="modalVerifyBtn" onclick="markAsVerified()">Approve Payment Release</button>
-            </div>
+  <!-- MAIN VIEWPORT -->
+  <main class="main-content">
+    <header class="top-header">
+      <h2>Digital Purchase Orders</h2>
+      <div class="notif-wrapper">
+        <button id="notif-toggle-btn" class="notif-btn" aria-label="Toggle notifications">
+          🔔 <span class="notif-badge">3</span>
+        </button>
+
+        <div id="notif-panel" class="notif-panel hidden">
+          <div class="notif-header">Push Notifications</div>
+          <div class="notif-item">
+            <strong>PO #4092 Approved</strong>
+            <p>Approved by GM. Ready for audit logging.</p>
+            <small>10 mins ago</small>
+          </div>
         </div>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- CONTROLS & SEARCH -->
+      <div class="controls-bar">
+        <input type="text" id="po-search" class="form-input" placeholder="Search PO # or Supplier...">
+        <select id="po-filter" class="form-select">
+          <option value="ALL">All Suppliers</option>
+          <option value="Acme Industrial Supplies">Acme Industrial Supplies</option>
+          <option value="Apex Logistics Corp">Apex Logistics Corp</option>
+          <option value="Global Tech Manufacturing">Global Tech Manufacturing</option>
+        </select>
+      </div>
+
+      <!-- PURCHASE ORDERS TABLE -->
+      <section class="card table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>PO Number</th>
+              <th>Supplier</th>
+              <th>Date</th>
+              <th>Total Amount</th>
+              <th>Archive Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="po-table-body">
+            <tr>
+              <td>PO-2026-089</td>
+              <td>Acme Industrial Supplies</td>
+              <td>2026-07-28</td>
+              <td>$12,450.00</td>
+              <td><span class="status-tag status-ok">Active</span></td>
+              <td><button class="btn btn-primary btn-review" data-po="PO-2026-089">Review Details</button></td>
+            </tr>
+            <tr>
+              <td>PO-2026-088</td>
+              <td>Apex Logistics Corp</td>
+              <td>2026-07-27</td>
+              <td>$3,100.00</td>
+              <td><span class="status-tag status-ok">Archived</span></td>
+              <td><button class="btn btn-primary btn-review" data-po="PO-2026-088">Review Details</button></td>
+            </tr>
+            <tr>
+              <td>PO-2026-087</td>
+              <td>Global Tech Manufacturing</td>
+              <td>2026-07-25</td>
+              <td>$45,800.00</td>
+              <td><span class="status-tag status-warn">Active</span></td>
+              <td><button class="btn btn-primary btn-review" data-po="PO-2026-087">Review Details</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </div>
+  </main>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Core App JS Hook -->
-    <script src="js/app.js"></script>
-
-    <!-- Accountant Multi-PO Script Logic -->
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-
-        // Accountant Purchase Order Accounting Data
-        const accountantPOs = {
-            'PO-2026-001': {
-                id: 'PO-2026-001',
-                vendor: 'Apex Steel Corp',
-                project: 'Metro Tower A',
-                invoiceNo: 'INV-88210',
-                status: 'Pending Audit',
-                poAmount: '$45,200.00',
-                taxAmount: '$5,424.00',
-                grandTotal: '$50,624.00',
-                lineItems: [
-                    { name: 'Grade 60 Rebar 12mm', qty: '1,500 pcs', unitPrice: '$20.00', subtotal: '$30,000.00' },
-                    { name: 'Structural Steel I-Beams', qty: '38 pcs', unitPrice: '$400.00', subtotal: '$15,200.00' }
-                ]
-            },
-            'PO-2026-002': {
-                id: 'PO-2026-002',
-                vendor: 'BuildMax Concrete Inc',
-                project: 'Bridge Expansion Site',
-                invoiceNo: 'INV-99412',
-                status: 'Invoice Matched',
-                poAmount: '$18,750.00',
-                taxAmount: '$2,250.00',
-                grandTotal: '$21,000.00',
-                lineItems: [
-                    { name: 'Ready-Mix Concrete Grade 40', qty: '125 cu.m', unitPrice: '$150.00', subtotal: '$18,750.00' }
-                ]
-            },
-            'PO-2026-003': {
-                id: 'PO-2026-003',
-                vendor: 'Titan Lumber & Hardware',
-                project: 'Harbor Logistics Hub',
-                invoiceNo: 'INV-10293',
-                status: 'Discrepancy Flagged',
-                poAmount: '$112,400.00',
-                taxAmount: '$13,488.00',
-                grandTotal: '$125,888.00',
-                lineItems: [
-                    { name: 'Marine Plywood 18mm', qty: '800 sheets', unitPrice: '$65.00', subtotal: '$52,000.00' },
-                    { name: 'Scaffolding Frames (Heavy Duty)', qty: '400 sets', unitPrice: '$151.00', subtotal: '$60,400.00' }
-                ]
-            },
-            'PO-2026-004': {
-                id: 'PO-2026-004',
-                vendor: 'Vanguard Piping Solutions',
-                project: 'Metro Tower B',
-                invoiceNo: 'INV-77311',
-                status: 'Paid',
-                poAmount: '$28,900.00',
-                taxAmount: '$3,468.00',
-                grandTotal: '$32,368.00',
-                lineItems: [
-                    { name: 'Schedule 40 PVC Pipes 4"', qty: '300 pcs', unitPrice: '$43.00', subtotal: '$12,900.00' },
-                    { name: 'Copper Pressure Tubing 1/2"', qty: '200 coils', unitPrice: '$80.00', subtotal: '$16,000.00' }
-                ]
-            }
-        };
-
-        let currentActivePoId = null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const selectAll = document.getElementById('selectAllPos');
-            const checkboxes = document.querySelectorAll('.po-checkbox');
-            const exportBtn = document.getElementById('btnExportBatch');
-            const viewBtn = document.getElementById('btnViewSelected');
-            const selectedCountSpan = document.getElementById('selectedCount');
-            const searchInput = document.getElementById('poSearchInput');
-            const statusFilter = document.getElementById('statusFilter');
-
-            function updateSelectionState() {
-                const checked = document.querySelectorAll('.po-checkbox:checked');
-                const count = checked.length;
-                selectedCountSpan.textContent = count;
-                exportBtn.disabled = count === 0;
-                viewBtn.disabled = count === 0;
-            }
-
-            selectAll.addEventListener('change', (e) => {
-                checkboxes.forEach(cb => {
-                    if (cb.closest('tr').style.display !== 'none') {
-                        cb.checked = e.target.checked;
-                    }
-                });
-                updateSelectionState();
-            });
-
-            checkboxes.forEach(cb => cb.addEventListener('change', updateSelectionState));
-
-            function filterTable() {
-                const term = searchInput.value.toLowerCase();
-                const status = statusFilter.value;
-
-                document.querySelectorAll('#poTableBody tr').forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    const rowStatus = row.getAttribute('data-status');
-                    const matchesSearch = text.includes(term);
-                    const matchesStatus = status === 'ALL' || rowStatus === status;
-
-                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-                });
-            }
-
-            searchInput.addEventListener('input', filterTable);
-            statusFilter.addEventListener('change', filterTable);
-
-            viewBtn.addEventListener('click', () => {
-                const selectedPoIds = [];
-                document.querySelectorAll('.po-checkbox:checked').forEach(cb => {
-                    const poId = cb.closest('tr').getAttribute('data-po');
-                    selectedPoIds.push(poId);
-                });
-
-                if (selectedPoIds.length > 0) {
-                    openMultiPoModal(selectedPoIds);
-                }
-            });
-
-            exportBtn.addEventListener('click', () => {
-                if (window.showToast) {
-                    window.showToast('Batch Exported', 'Selected PO ledger reports generated successfully.', 'info');
-                }
-            });
-        });
-
-        function openPoModal(poId) {
-            openMultiPoModal([poId]);
-        }
-
-        function openMultiPoModal(poIds) {
-            const modal = document.getElementById('poDetailModal');
-            const tabsContainer = document.getElementById('poModalTabs');
-            
-            tabsContainer.innerHTML = '';
-            
-            poIds.forEach((id, index) => {
-                const btn = document.createElement('button');
-                btn.className = `btn btn-sm ${index === 0 ? 'btn-primary' : 'btn-outline'}`;
-                btn.style.marginRight = '4px';
-                btn.textContent = id;
-                btn.onclick = () => renderPoDetail(id, poIds);
-                tabsContainer.appendChild(btn);
-            });
-
-            renderPoDetail(poIds[0], poIds);
-            modal.classList.add('active');
-        }
-
-        function renderPoDetail(poId, activeGroup = []) {
-            currentActivePoId = poId;
-            const data = accountantPOs[poId];
-            const modalBody = document.getElementById('poModalBody');
-            const modalTitle = document.getElementById('poModalTitle');
-            const verifyBtn = document.getElementById('modalVerifyBtn');
-
-            modalTitle.textContent = `Accounting Audit - ${data.id}`;
-            verifyBtn.style.display = (data.status !== 'Paid') ? 'inline-block' : 'none';
-
-            let itemsHtml = data.lineItems.map(item => `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.qty}</td>
-                    <td>${item.unitPrice}</td>
-                    <td>${item.subtotal}</td>
-                </tr>
-            `).join('');
-
-            let badgeClass = 'badge-warning';
-            if (data.status === 'Paid') badgeClass = 'badge-success';
-            if (data.status === 'Invoice Matched') badgeClass = 'badge-info';
-            if (data.status === 'Discrepancy Flagged') badgeClass = 'badge-danger';
-
-            modalBody.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                    <div>
-                        <p><strong>Vendor Name:</strong> ${data.vendor}</p>
-                        <p><strong>Project Allocation:</strong> ${data.project}</p>
-                    </div>
-                    <div>
-                        <p><strong>Vendor Invoice #:</strong> <code>${data.invoiceNo}</code></p>
-                        <p><strong>Payment Status:</strong> <span class="badge ${badgeClass}">${data.status}</span></p>
-                    </div>
-                </div>
-                <h4>Audited Line Items</h4>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Item Description</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>${itemsHtml}</tbody>
-                    </table>
-                </div>
-                <div style="text-align: right; margin-top: 1rem; border-top: 1px solid #eee; padding-top: 0.5rem;">
-                    <p>Net PO Subtotal: <strong>${data.poAmount}</strong></p>
-                    <p>Estimated VAT (12%): <strong>${data.taxAmount}</strong></p>
-                    <h3>Total Financial Clearance: ${data.grandTotal}</h3>
-                </div>
-            `;
-        }
-
-        function markAsVerified() {
-            if (currentActivePoId && accountantPOs[currentActivePoId]) {
-                accountantPOs[currentActivePoId].status = 'Paid';
-                
-                const row = document.querySelector(`tr[data-po="${currentActivePoId}"]`);
-                if (row) {
-                    row.setAttribute('data-status', 'Paid');
-                    row.querySelector('.badge').className = 'badge badge-success';
-                    row.querySelector('.badge').textContent = 'Paid';
-                }
-
-                if (window.showToast) {
-                    window.showToast('Payment Approved', `Payment status for ${currentActivePoId} marked as Paid.`, 'success');
-                }
-                closePoModal();
-            }
-        }
-
-        function closePoModal() {
-            document.getElementById('poDetailModal').classList.remove('active');
-        }
-    </script>
+  <script src="js/app.js"></script>
+  <script src="js/ac-purchase-orders.js"></script>
 </body>
 </html>
