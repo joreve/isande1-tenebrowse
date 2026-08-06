@@ -1,133 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purchase Orders - Accountant Portal</title>
-  <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Purchase Orders</title>
+    
+    <!-- FontAwesome for Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System CSS Reference -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="page-transition">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="brand">
-        Tenebrowse <span class="role-badge">Accountant</span>
-      </div>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a href="ac-dashboard.html" class="nav-link">
-            <span class="nav-icon">📊</span> Dashboard
-          </a>
-        </li>
-        <li class="nav-item active">
-          <a href="ac-purchase-orders.html" class="nav-link">
-            <span class="nav-icon">📄</span> Purchase Orders
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="ac-material-reports.html" class="nav-link">
-            <span class="nav-icon">⚠️</span> Material Discrepancies
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="ac-compliance-reports.html" class="nav-link">
-            <span class="nav-icon">📑</span> Compliance Reports
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="ac-settings.html" class="nav-link">
-            <span class="nav-icon">⚙️</span> Settings
-          </a>
-        </li>
-      </ul>
+    <div class="app-wrapper">
+        
+        <!-- Sidebar Navigation (Accountant Scope) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" onclick="transitionTo('ac-dashboard.html')">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </li>
+                    <li class="nav-item active">
+                        <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-material-reports.html')">
+                        <i class="fas fa-exclamation-triangle"></i> Material Discrepancies
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-compliance-reports.html')">
+                        <i class="fas fa-file-contract"></i> Compliance Reports
+                    </li>
+                    <li class="nav-item" onclick="transitionTo('ac-settings.html')">
+                        <i class="fas fa-cog"></i> Settings
+                    </li>
+                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Frame -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Digital Purchase Orders</h2>
+                </div>
+                
+                <div class="topbar-right">
+                    
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Broadcast Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-info-circle icon-info"></i>
+                                <div>
+                                    <div class="notif-title">PO Verification Needed</div>
+                                    <div class="notif-desc">PO-2026-087 requires cost auditing.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">CH</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Clairo Hade</div>
+                                <div class="profile-role">Accountant</div>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Page Workspace Wrapper -->
+            <div class="page-container">
+                
+                <div class="breadcrumb">
+                    <a href="ac-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Purchase Orders Audit</span>
+                </div>
+
+                <!-- Controls & Search Toolbar -->
+                <div class="card mb-3">
+                    <div class="controls-bar">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="po-search" class="form-input" placeholder="Search PO # or Supplier...">
+                        </div>
+                        <select id="po-filter" class="form-select">
+                            <option value="ALL">All Suppliers</option>
+                            <option value="Acme Industrial Supplies">Acme Industrial Supplies</option>
+                            <option value="Apex Logistics Corp">Apex Logistics Corp</option>
+                            <option value="Global Tech Manufacturing">Global Tech Manufacturing</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Purchase Orders Table Card -->
+                <div class="card">
+                    <h3 class="section-title mb-2"><i class="fas fa-list section-icon icon-primary"></i> Recorded Invoices & Requisitions</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>PO Number</th>
+                                    <th>Supplier</th>
+                                    <th>Date</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="po-table-body">
+                                <tr>
+                                    <td>PO-2026-089</td>
+                                    <td>Acme Industrial Supplies</td>
+                                    <td>2026-07-28</td>
+                                    <td>$12,450.00</td>
+                                    <td><span class="status-tag status-ok">Approved</span></td>
+                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-089"><i class="fas fa-search"></i> Review</button></td>
+                                </tr>
+                                <tr>
+                                    <td>PO-2026-088</td>
+                                    <td>Apex Logistics Corp</td>
+                                    <td>2026-07-27</td>
+                                    <td>$3,100.00</td>
+                                    <td><span class="status-tag status-muted">Archived</span></td>
+                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-088"><i class="fas fa-search"></i> Review</button></td>
+                                </tr>
+                                <tr>
+                                    <td>PO-2026-087</td>
+                                    <td>Global Tech Manufacturing</td>
+                                    <td>2026-07-25</td>
+                                    <td>$45,800.00</td>
+                                    <td><span class="status-tag status-warn">Under Review</span></td>
+                                    <td><button class="btn btn-primary btn-sm btn-review" data-po="PO-2026-087"><i class="fas fa-search"></i> Review</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
-    <div class="user-footer">
-      <div class="avatar">AC</div>
-      <div class="user-info">
-        <div class="user-name">Jane Doe</div>
-        <div class="user-role">Lead Accountant</div>
-      </div>
-    </div>
-  </aside>
 
-  <!-- MAIN VIEWPORT -->
-  <main class="main-content">
-    <header class="top-header">
-      <h2>Digital Purchase Orders</h2>
-      <div class="notif-wrapper">
-        <button id="notif-toggle-btn" class="notif-btn" aria-label="Toggle notifications">
-          🔔 <span class="notif-badge">3</span>
-        </button>
-
-        <div id="notif-panel" class="notif-panel hidden">
-          <div class="notif-header">Push Notifications</div>
-          <div class="notif-item">
-            <strong>PO #4092 Approved</strong>
-            <p>Approved by GM. Ready for audit logging.</p>
-            <small>10 mins ago</small>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <div class="content-body">
-      <!-- CONTROLS & SEARCH -->
-      <div class="controls-bar">
-        <input type="text" id="po-search" class="form-input" placeholder="Search PO # or Supplier...">
-        <select id="po-filter" class="form-select">
-          <option value="ALL">All Suppliers</option>
-          <option value="Acme Industrial Supplies">Acme Industrial Supplies</option>
-          <option value="Apex Logistics Corp">Apex Logistics Corp</option>
-          <option value="Global Tech Manufacturing">Global Tech Manufacturing</option>
-        </select>
-      </div>
-
-      <!-- PURCHASE ORDERS TABLE -->
-      <section class="card table-card">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>PO Number</th>
-              <th>Supplier</th>
-              <th>Date</th>
-              <th>Total Amount</th>
-              <th>Archive Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="po-table-body">
-            <tr>
-              <td>PO-2026-089</td>
-              <td>Acme Industrial Supplies</td>
-              <td>2026-07-28</td>
-              <td>$12,450.00</td>
-              <td><span class="status-tag status-ok">Active</span></td>
-              <td><button class="btn btn-primary btn-review" data-po="PO-2026-089">Review Details</button></td>
-            </tr>
-            <tr>
-              <td>PO-2026-088</td>
-              <td>Apex Logistics Corp</td>
-              <td>2026-07-27</td>
-              <td>$3,100.00</td>
-              <td><span class="status-tag status-ok">Archived</span></td>
-              <td><button class="btn btn-primary btn-review" data-po="PO-2026-088">Review Details</button></td>
-            </tr>
-            <tr>
-              <td>PO-2026-087</td>
-              <td>Global Tech Manufacturing</td>
-              <td>2026-07-25</td>
-              <td>$45,800.00</td>
-              <td><span class="status-tag status-warn">Active</span></td>
-              <td><button class="btn btn-primary btn-review" data-po="PO-2026-087">Review Details</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </div>
-  </main>
-
-  <script src="js/app.js"></script>
-  <script src="js/ac-purchase-orders.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ac-purchase-orders.js"></script>
+    <script>
+        function transitionTo(url) {
+            document.body.classList.add('page-exit');
+            setTimeout(() => window.location.href = url, 300);
+        }
+    </script>
 </body>
 </html>
