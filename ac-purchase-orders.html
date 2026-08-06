@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Purchase Orders</title>
+    <title>Tenebrowse - Accountant Purchase Orders</title>
     
+    <!-- Enterprise System Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- FontAwesome for Enterprise Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -47,38 +52,26 @@
             </nav>
         </aside>
 
-        <!-- Main Workspace Frame -->
+        <!-- Main Workspace -->
         <main class="main-content">
             
-            <!-- Top Navigation Bar -->
+            <!-- Top Navigation -->
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Digital Purchase Orders</h2>
+                    <h2 class="page-title">Financial Purchase Orders Overview</h2>
                 </div>
                 
                 <div class="topbar-right">
-                    
                     <!-- Notification Bell Component Structure -->
                     <div class="notification-wrapper">
                         <button class="icon-btn" id="notifBtn">
                             <i class="far fa-bell"></i>
                             <span class="badge-dot"></span>
                         </button>
-                        
-                        <div class="dropdown-menu" id="notifMenu">
-                            <div class="dropdown-header">System Broadcast Notifications</div>
-                            <div class="dropdown-item">
-                                <i class="fas fa-info-circle icon-info"></i>
-                                <div>
-                                    <div class="notif-title">PO Verification Needed</div>
-                                    <div class="notif-desc">PO-2026-087 requires cost auditing.</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     
-                    <!-- Enterprise Segment Profile Dropdown -->
+                    <!-- Profile Header -->
                     <div class="profile-menu-container">
                         <button class="profile-trigger">
                             <div class="profile-avatar">CH</div>
@@ -88,122 +81,135 @@
                             </div>
                         </button>
                     </div>
-
                 </div>
             </header>
 
             <div class="page-container">
                 
-                <!-- System Structural Breadcrumbs -->
+                <!-- Breadcrumbs -->
                 <div class="breadcrumb">
                     <a href="javascript:transitionTo('ac-dashboard.html')">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Purchase Orders Audit</span>
+                    <span>Purchase Orders</span>
                 </div>
 
-                <!-- Top Module Toolbar -->
-                <div class="module-toolbar">
-                    <div class="toolbar-filters">
-                        <div class="search-container">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search PO number or supplier...">
-                        </div>
-                        <select id="statusFilter" class="form-control filter-select">
-                            <option value="All">All Statuses</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Under Review">Under Review</option>
-                            <option value="Archived">Archived</option>
-                        </select>
-                    </div>
-                    <div class="toolbar-actions">
-                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export Report</button>
-                    </div>
-                </div>
-
-                <!-- PO Tracking Table -->
+                <!-- Controls & Filter Toolbar -->
                 <div class="card mb-3">
-                    <h3 class="section-title mb-2"><i class="fas fa-file-invoice-dollar section-icon icon-primary"></i> Recorded Invoices & Requisitions</h3>
-                    <div class="table-wrapper">
+                    <div class="toolbar-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div class="search-box" style="display: flex; gap: 0.5rem; flex: 1; min-width: 300px;">
+                            <input type="text" id="poSearchInput" class="form-control" placeholder="Search PO #, Vendor, Invoice #, or Site...">
+                            <select id="statusFilter" class="form-control" style="width: 200px;">
+                                <option value="ALL">All Payment Statuses</option>
+                                <option value="Pending Audit">Pending Audit</option>
+                                <option value="Invoice Matched">Invoice Matched</option>
+                                <option value="Discrepancy Flagged">Discrepancy Flagged</option>
+                                <option value="Paid">Paid</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons" style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-outline" id="btnExportBatch" disabled>
+                                <i class="fas fa-file-export"></i> Export Selected (<span id="selectedCount">0</span>)
+                            </button>
+                            <button class="btn btn-primary" id="btnViewSelected" disabled>
+                                <i class="fas fa-layer-group"></i> Inspect Selected POs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-PO Ledger Table View -->
+                <div class="card">
+                    <div class="table-responsive">
                         <table class="table" id="poTable">
                             <thead>
                                 <tr>
+                                    <th style="width: 40px;">
+                                        <input type="checkbox" id="selectAllPos">
+                                    </th>
                                     <th>PO Number</th>
-                                    <th>Supplier</th>
-                                    <th>Date Ordered</th>
-                                    <th>Total Amount</th>
-                                    <th>Status</th>
-                                    <th>Remarks</th>
+                                    <th>Vendor / Supplier</th>
+                                    <th>Project Site</th>
+                                    <th>Invoice #</th>
+                                    <th>PO Amount</th>
+                                    <th>Payment Status</th>
+                                    <th style="text-align: right;">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="poTableBody">
-                                <!-- Populated by JS -->
+                                <!-- Accountant Multi-PO Row 1 -->
+                                <tr data-po="PO-2026-001" data-status="Pending Audit">
+                                    <td><input type="checkbox" class="po-checkbox"></td>
+                                    <td><strong>PO-2026-001</strong></td>
+                                    <td>Apex Steel Corp</td>
+                                    <td>Metro Tower A</td>
+                                    <td><code>INV-88210</code></td>
+                                    <td>$45,200.00</td>
+                                    <td><span class="badge badge-warning">Pending Audit</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-001')">Financial Audit</button>
+                                    </td>
+                                </tr>
+                                <!-- Accountant Multi-PO Row 2 -->
+                                <tr data-po="PO-2026-002" data-status="Invoice Matched">
+                                    <td><input type="checkbox" class="po-checkbox"></td>
+                                    <td><strong>PO-2026-002</strong></td>
+                                    <td>BuildMax Concrete Inc</td>
+                                    <td>Bridge Expansion Site</td>
+                                    <td><code>INV-99412</code></td>
+                                    <td>$18,750.00</td>
+                                    <td><span class="badge badge-info">Invoice Matched</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-002')">Financial Audit</button>
+                                    </td>
+                                </tr>
+                                <!-- Accountant Multi-PO Row 3 -->
+                                <tr data-po="PO-2026-003" data-status="Discrepancy Flagged">
+                                    <td><input type="checkbox" class="po-checkbox"></td>
+                                    <td><strong>PO-2026-003</strong></td>
+                                    <td>Titan Lumber & Hardware</td>
+                                    <td>Harbor Logistics Hub</td>
+                                    <td><code>INV-10293</code></td>
+                                    <td>$112,400.00</td>
+                                    <td><span class="badge badge-danger">Discrepancy Flagged</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-003')">Financial Audit</button>
+                                    </td>
+                                </tr>
+                                <!-- Accountant Multi-PO Row 4 -->
+                                <tr data-po="PO-2026-004" data-status="Paid">
+                                    <td><input type="checkbox" class="po-checkbox"></td>
+                                    <td><strong>PO-2026-004</strong></td>
+                                    <td>Vanguard Piping Solutions</td>
+                                    <td>Metro Tower B</td>
+                                    <td><code>INV-77311</code></td>
+                                    <td>$28,900.00</td>
+                                    <td><span class="badge badge-success">Paid</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-sm btn-outline view-po-btn" onclick="openPoModal('PO-2026-004')">Financial Audit</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                <!-- Financial Variance Request Form Component -->
-                <div class="card card-highlight-secondary">
-                    <h3 class="section-title mb-2"><i class="fas fa-calculator section-icon icon-secondary"></i> Invoice Variance Adjustment</h3>
-                    <p class="section-description">File an adjustment request when cost variations, tax discrepancies, or price shifts occur during invoice reconciliation.</p>
-                    
-                    <form id="varianceForm">
-                        <div class="sub-form-grid">
-                            
-                            <div class="form-group">
-                                <label class="form-label">Target PO Number</label>
-                                <input type="text" id="poNumber" class="form-control" placeholder="e.g., PO-2026-087" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Supplier Name</label>
-                                <input type="text" id="supplierName" class="form-control" placeholder="e.g., Global Tech Manufacturing" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Variance Amount (₱ PHP)</label>
-                                <input type="number" id="varianceAmt" class="form-control" placeholder="0.00" step="0.01" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Reason for Adjustment</label>
-                                <select id="varianceReason" class="form-control" required>
-                                    <option value="" disabled selected>Select reason...</option>
-                                    <option value="Supplier Price Shift">Supplier Price Shift</option>
-                                    <option value="Freight / Logistics Surcharge">Freight / Logistics Surcharge</option>
-                                    <option value="Tax Rate Recalibration">Tax Rate Recalibration</option>
-                                    <option value="Quantity Discrepancy Adjustment">Quantity Discrepancy Adjustment</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label class="form-label">Supporting Financial Notes & Audit Details</label>
-                                <textarea id="varianceNotes" class="form-control" placeholder="Detail any tax modifications, price changes, or line-item adjustments..."></textarea>
-                            </div>
-
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" id="btnSaveDraft">Save Draft</button>
-                            <button type="button" class="btn btn-primary" data-modal-target="varianceModal">Submit Adjustment</button>
-                        </div>
-                    </form>
                 </div>
 
             </div>
         </main>
     </div>
 
-    <!-- Submission Confirmation Modal -->
-    <div class="modal-overlay" id="varianceModal">
-        <div class="modal">
-            <div class="modal-header">Confirm Adjustment Request</div>
-            <div class="modal-body">
-                Are you sure you want to submit this invoice variance adjustment? It will be logged to the general ledger and forwarded to the Head Manager for final approval.
+    <!-- Multi-PO Financial Audit Modal -->
+    <div class="modal-overlay" id="poDetailModal">
+        <div class="modal" style="max-width: 850px; width: 90%;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="poModalTitle">Accountant PO Review</span>
+                <span id="poModalTabs" style="display: flex; gap: 0.25rem;"></span>
+            </div>
+            <div class="modal-body" id="poModalBody">
+                <!-- Content loaded dynamically via JS -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Cancel</button>
-                <button class="btn btn-primary" id="confirmVarianceBtn" data-modal-close>Confirm & Submit</button>
+                <button class="btn btn-outline" data-modal-close onclick="closePoModal()">Close</button>
+                <button class="btn btn-primary" id="modalVerifyBtn" onclick="markAsVerified()">Approve Payment Release</button>
             </div>
         </div>
     </div>
@@ -214,97 +220,239 @@
     <!-- Core App JS Hook -->
     <script src="js/app.js"></script>
 
-    <!-- Page Specific Vanilla JS Logic -->
+    <!-- Accountant Multi-PO Script Logic -->
     <script>
         function transitionTo(url) {
             document.body.classList.add('page-exit');
             setTimeout(() => window.location.href = url, 300);
         }
 
+        // Accountant Purchase Order Accounting Data
+        const accountantPOs = {
+            'PO-2026-001': {
+                id: 'PO-2026-001',
+                vendor: 'Apex Steel Corp',
+                project: 'Metro Tower A',
+                invoiceNo: 'INV-88210',
+                status: 'Pending Audit',
+                poAmount: '$45,200.00',
+                taxAmount: '$5,424.00',
+                grandTotal: '$50,624.00',
+                lineItems: [
+                    { name: 'Grade 60 Rebar 12mm', qty: '1,500 pcs', unitPrice: '$20.00', subtotal: '$30,000.00' },
+                    { name: 'Structural Steel I-Beams', qty: '38 pcs', unitPrice: '$400.00', subtotal: '$15,200.00' }
+                ]
+            },
+            'PO-2026-002': {
+                id: 'PO-2026-002',
+                vendor: 'BuildMax Concrete Inc',
+                project: 'Bridge Expansion Site',
+                invoiceNo: 'INV-99412',
+                status: 'Invoice Matched',
+                poAmount: '$18,750.00',
+                taxAmount: '$2,250.00',
+                grandTotal: '$21,000.00',
+                lineItems: [
+                    { name: 'Ready-Mix Concrete Grade 40', qty: '125 cu.m', unitPrice: '$150.00', subtotal: '$18,750.00' }
+                ]
+            },
+            'PO-2026-003': {
+                id: 'PO-2026-003',
+                vendor: 'Titan Lumber & Hardware',
+                project: 'Harbor Logistics Hub',
+                invoiceNo: 'INV-10293',
+                status: 'Discrepancy Flagged',
+                poAmount: '$112,400.00',
+                taxAmount: '$13,488.00',
+                grandTotal: '$125,888.00',
+                lineItems: [
+                    { name: 'Marine Plywood 18mm', qty: '800 sheets', unitPrice: '$65.00', subtotal: '$52,000.00' },
+                    { name: 'Scaffolding Frames (Heavy Duty)', qty: '400 sets', unitPrice: '$151.00', subtotal: '$60,400.00' }
+                ]
+            },
+            'PO-2026-004': {
+                id: 'PO-2026-004',
+                vendor: 'Vanguard Piping Solutions',
+                project: 'Metro Tower B',
+                invoiceNo: 'INV-77311',
+                status: 'Paid',
+                poAmount: '$28,900.00',
+                taxAmount: '$3,468.00',
+                grandTotal: '$32,368.00',
+                lineItems: [
+                    { name: 'Schedule 40 PVC Pipes 4"', qty: '300 pcs', unitPrice: '$43.00', subtotal: '$12,900.00' },
+                    { name: 'Copper Pressure Tubing 1/2"', qty: '200 coils', unitPrice: '$80.00', subtotal: '$16,000.00' }
+                ]
+            }
+        };
+
+        let currentActivePoId = null;
+
         document.addEventListener('DOMContentLoaded', () => {
-            
-            const poData = [
-                { id: 'PO-2026-089', supplier: 'Acme Industrial Supplies', dateOrdered: 'Jul 28, 2026', amount: '₱12,450.00', status: 'Approved', remarks: 'Cleared for disbursement' },
-                { id: 'PO-2026-088', supplier: 'Apex Logistics Corp', dateOrdered: 'Jul 27, 2026', amount: '₱3,100.00', status: 'Archived', remarks: 'Paid & filed in ledger' },
-                { id: 'PO-2026-087', supplier: 'Global Tech Manufacturing', dateOrdered: 'Jul 25, 2026', amount: '₱45,800.00', status: 'Under Review', remarks: 'Pending cost variance check' },
-                { id: 'PO-2026-085', supplier: 'Metro Steel Alloys', dateOrdered: 'Jul 20, 2026', amount: '₱22,150.00', status: 'Approved', remarks: 'Tax clearance verified' },
-                { id: 'PO-2026-081', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 15, 2026', amount: '₱8,900.00', status: 'Archived', remarks: 'Reconciled fully' }
-            ];
-
-            const tableBody = document.getElementById('poTableBody');
-            const searchInput = document.getElementById('searchInput');
+            const selectAll = document.getElementById('selectAllPos');
+            const checkboxes = document.querySelectorAll('.po-checkbox');
+            const exportBtn = document.getElementById('btnExportBatch');
+            const viewBtn = document.getElementById('btnViewSelected');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            const searchInput = document.getElementById('poSearchInput');
             const statusFilter = document.getElementById('statusFilter');
-            const btnExport = document.getElementById('btnExport');
-            
-            const varianceForm = document.getElementById('varianceForm');
-            const btnSaveDraft = document.getElementById('btnSaveDraft');
-            const confirmVarianceBtn = document.getElementById('confirmVarianceBtn');
 
-            const renderPOTable = () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                const filterStatus = statusFilter.value;
+            function updateSelectionState() {
+                const checked = document.querySelectorAll('.po-checkbox:checked');
+                const count = checked.length;
+                selectedCountSpan.textContent = count;
+                exportBtn.disabled = count === 0;
+                viewBtn.disabled = count === 0;
+            }
 
-                tableBody.innerHTML = '';
+            selectAll.addEventListener('change', (e) => {
+                checkboxes.forEach(cb => {
+                    if (cb.closest('tr').style.display !== 'none') {
+                        cb.checked = e.target.checked;
+                    }
+                });
+                updateSelectionState();
+            });
 
-                const filteredData = poData.filter(po => {
-                    const matchesSearch = po.id.toLowerCase().includes(searchTerm) || po.supplier.toLowerCase().includes(searchTerm);
-                    const matchesStatus = filterStatus === 'All' || po.status === filterStatus;
-                    return matchesSearch && matchesStatus;
+            checkboxes.forEach(cb => cb.addEventListener('change', updateSelectionState));
+
+            function filterTable() {
+                const term = searchInput.value.toLowerCase();
+                const status = statusFilter.value;
+
+                document.querySelectorAll('#poTableBody tr').forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    const rowStatus = row.getAttribute('data-status');
+                    const matchesSearch = text.includes(term);
+                    const matchesStatus = status === 'ALL' || rowStatus === status;
+
+                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                });
+            }
+
+            searchInput.addEventListener('input', filterTable);
+            statusFilter.addEventListener('change', filterTable);
+
+            viewBtn.addEventListener('click', () => {
+                const selectedPoIds = [];
+                document.querySelectorAll('.po-checkbox:checked').forEach(cb => {
+                    const poId = cb.closest('tr').getAttribute('data-po');
+                    selectedPoIds.push(poId);
                 });
 
-                if (filteredData.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6" class="empty-state-row">No purchase orders match your criteria.</td></tr>`;
-                    return;
+                if (selectedPoIds.length > 0) {
+                    openMultiPoModal(selectedPoIds);
                 }
-
-                filteredData.forEach(po => {
-                    let badgeClass = '';
-                    if (po.status === 'Approved') badgeClass = 'badge-success';
-                    else if (po.status === 'Under Review') badgeClass = 'badge-warning';
-                    else if (po.status === 'Archived') badgeClass = 'badge-info';
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${po.id}</strong></td>
-                        <td>${po.supplier}</td>
-                        <td>${po.dateOrdered}</td>
-                        <td><strong>${po.amount}</strong></td>
-                        <td><span class="badge ${badgeClass}">${po.status}</span></td>
-                        <td class="text-muted-sm">${po.remarks}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-            };
-
-            searchInput.addEventListener('input', renderPOTable);
-            statusFilter.addEventListener('change', renderPOTable);
-
-            btnExport.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Export Started', 'Generating PO financial audit report in CSV format...', 'primary');
             });
 
-            btnSaveDraft.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Draft Saved', 'Invoice variance draft saved locally.', 'info');
-            });
-
-            confirmVarianceBtn.addEventListener('click', () => {
-                const poNum = document.getElementById('poNumber').value.trim();
-                const supplier = document.getElementById('supplierName').value.trim();
-                const amount = document.getElementById('varianceAmt').value;
-                const reason = document.getElementById('varianceReason').value;
-
-                if (!poNum || !supplier || !amount || !reason) {
-                    if(window.showToast) window.showToast('Incomplete Form', 'Please fill out all required fields before submitting.', 'danger');
-                    return;
+            exportBtn.addEventListener('click', () => {
+                if (window.showToast) {
+                    window.showToast('Batch Exported', 'Selected PO ledger reports generated successfully.', 'info');
                 }
-
-                if(window.showToast) window.showToast('Adjustment Submitted', 'Invoice Variance Adjustment has been forwarded to Head Manager.', 'success');
-                varianceForm.reset();
             });
-
-            renderPOTable();
         });
+
+        function openPoModal(poId) {
+            openMultiPoModal([poId]);
+        }
+
+        function openMultiPoModal(poIds) {
+            const modal = document.getElementById('poDetailModal');
+            const tabsContainer = document.getElementById('poModalTabs');
+            
+            tabsContainer.innerHTML = '';
+            
+            poIds.forEach((id, index) => {
+                const btn = document.createElement('button');
+                btn.className = `btn btn-sm ${index === 0 ? 'btn-primary' : 'btn-outline'}`;
+                btn.style.marginRight = '4px';
+                btn.textContent = id;
+                btn.onclick = () => renderPoDetail(id, poIds);
+                tabsContainer.appendChild(btn);
+            });
+
+            renderPoDetail(poIds[0], poIds);
+            modal.classList.add('active');
+        }
+
+        function renderPoDetail(poId, activeGroup = []) {
+            currentActivePoId = poId;
+            const data = accountantPOs[poId];
+            const modalBody = document.getElementById('poModalBody');
+            const modalTitle = document.getElementById('poModalTitle');
+            const verifyBtn = document.getElementById('modalVerifyBtn');
+
+            modalTitle.textContent = `Accounting Audit - ${data.id}`;
+            verifyBtn.style.display = (data.status !== 'Paid') ? 'inline-block' : 'none';
+
+            let itemsHtml = data.lineItems.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.unitPrice}</td>
+                    <td>${item.subtotal}</td>
+                </tr>
+            `).join('');
+
+            let badgeClass = 'badge-warning';
+            if (data.status === 'Paid') badgeClass = 'badge-success';
+            if (data.status === 'Invoice Matched') badgeClass = 'badge-info';
+            if (data.status === 'Discrepancy Flagged') badgeClass = 'badge-danger';
+
+            modalBody.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <p><strong>Vendor Name:</strong> ${data.vendor}</p>
+                        <p><strong>Project Allocation:</strong> ${data.project}</p>
+                    </div>
+                    <div>
+                        <p><strong>Vendor Invoice #:</strong> <code>${data.invoiceNo}</code></p>
+                        <p><strong>Payment Status:</strong> <span class="badge ${badgeClass}">${data.status}</span></p>
+                    </div>
+                </div>
+                <h4>Audited Line Items</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item Description</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>${itemsHtml}</tbody>
+                    </table>
+                </div>
+                <div style="text-align: right; margin-top: 1rem; border-top: 1px solid #eee; padding-top: 0.5rem;">
+                    <p>Net PO Subtotal: <strong>${data.poAmount}</strong></p>
+                    <p>Estimated VAT (12%): <strong>${data.taxAmount}</strong></p>
+                    <h3>Total Financial Clearance: ${data.grandTotal}</h3>
+                </div>
+            `;
+        }
+
+        function markAsVerified() {
+            if (currentActivePoId && accountantPOs[currentActivePoId]) {
+                accountantPOs[currentActivePoId].status = 'Paid';
+                
+                const row = document.querySelector(`tr[data-po="${currentActivePoId}"]`);
+                if (row) {
+                    row.setAttribute('data-status', 'Paid');
+                    row.querySelector('.badge').className = 'badge badge-success';
+                    row.querySelector('.badge').textContent = 'Paid';
+                }
+
+                if (window.showToast) {
+                    window.showToast('Payment Approved', `Payment status for ${currentActivePoId} marked as Paid.`, 'success');
+                }
+                closePoModal();
+            }
+        }
+
+        function closePoModal() {
+            document.getElementById('poDetailModal').classList.remove('active');
+        }
     </script>
 </body>
 </html>
-    
