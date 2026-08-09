@@ -191,22 +191,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filteredData.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" class="empty-state-row">No purchase orders match your criteria.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="8" class="empty-state-row">No purchase orders match your criteria.</td></tr>';
             return;
         }
 
         filteredData.forEach((po) => {
             const suppliers = getSuppliers(po);
-            const supplierLabel = suppliers.length > 1 ? `${suppliers.length} Suppliers` : suppliers[0];
+            const acceptedQty = getAcceptedQuantity(po);
+            const remainingQty = Math.max(0, po.orderedQty - acceptedQty);
+            const progressPercent = po.orderedQty > 0
+                ? Math.min(100, Math.round((acceptedQty / po.orderedQty) * 100))
+                : 0;
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${escapeHtml(po.id)}</strong></td>
-                <td>${escapeHtml(supplierLabel)}</td>
-                <td>${escapeHtml(po.dateOrdered)}</td>
-                <td>${escapeHtml(po.expDelivery)}</td>
-                <td><span class="badge ${badgeClassForPo(po.status)}">${escapeHtml(po.status)}</span></td>
-                <td class="text-muted-sm">${escapeHtml(po.remarks)}</td>
+                <td>${suppliers.length}</td>
+                <td>${Number(po.orderedQty).toLocaleString()} ${escapeHtml(po.unit)}</td>
+                <td>${Number(acceptedQty).toLocaleString()} ${escapeHtml(po.unit)}</td>
+                <td>${Number(remainingQty).toLocaleString()} ${escapeHtml(po.unit)}</td>
                 <td>
+                    <div class="po-table-progress-bar">
+                        <div class="po-table-progress-track" aria-label="${progressPercent}% of ordered quantity accepted">
+                            <div class="po-table-progress-fill" style="width: ${progressPercent}%;"></div>
+                        </div>
+                        <span class="po-table-progress-text">${progressPercent}%</span>
+                    </div>
+                </td>
+                <td><span class="badge ${badgeClassForPo(po.status)}">${escapeHtml(po.status)}</span></td>
+                <td class="text-center">
                     <button type="button" class="pic-po-view-action" data-action="view-po" data-id="${escapeHtml(po.id)}" aria-label="View ${escapeHtml(po.id)} details" title="View details">
                         <i class="fas fa-eye" aria-hidden="true"></i>
                     </button>

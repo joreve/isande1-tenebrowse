@@ -53,9 +53,27 @@
 - Standardized Action Icons and Buttons
 - Standardized Overall Inventory and Deliveries Design
 
-## 4.0 Revisions for Warehouse Staff Interface
+## v4.0 Revisions for Warehouse Staff Interface
 - Added Batch Deliveries
 - Added Multiple Receipts per Supplier
 - Added Material Pricing per Delivery
 - Added Material Return Request
 - Optimized UI for Warehouse Staff
+
+## v4.1 Revisions for Project-in-Charge Interface
+- Added Material Request Tracking and Status Monitoring
+- Added Pending Material Request Indicator
+- Added Multi-Material Substitution Requests per Approved Material Request
+- Standardized Read-Only Purchase Order Details
+- Optimized and Standardized UI for Project-in-Charge
+
+## v4.2 Revisions for General Manager Interface, Minor Changes in PIC
+- Consolidated Material Requests and Substitution Requests into a Unified Requests Page
+- Consolidated Purchase Orders and Inventory Overview into a Unified Monitoring Page
+- Added Tab-Based Navigation for General Manager Modules
+- Standardized Purchase Order and Inventory Views with Warehouse Staff Interface
+- Added Read-Only Purchase Order Progress Monitoring for General Manager
+- Standardized Page Labels, Sidebar Navigation, and File Structure
+- Increased Visible Request Records per Page for General Manager
+- Standardized Project-in-Charge Purchase Order View with General Manager Monitoring Layout
+- Improved Status Badge and Action Button Consistency Across Interfaces

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - General Manager | Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+    <div class="app-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" data-url="gm-dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</li>
+                    <li class="nav-item" data-url="gm-requests.html"><i class="fas fa-clipboard-list"></i> Requests</li>
+                    <li class="nav-item active"><i class="fas fa-chart-line"></i> Monitoring</li>
+                    <li class="nav-item" data-url="gm-settings.html"><i class="fas fa-cog"></i> Settings</li>
+                    <li class="nav-item logout-item" data-url="index.html"><i class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Monitoring</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Inventory Alert</div>
+                                    <div class="notif-desc">Several materials are below minimum stock levels.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">ST</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Saturn Torres</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                <div class="breadcrumb">
+                    <a href="#" data-url="gm-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Monitoring</span>
+                </div>
+
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Monitoring Sections">
+                    <button type="button" class="tab-btn active" data-tab="purchase-orders" role="tab" aria-selected="true" aria-controls="purchase-orders-tab">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Purchase Orders</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="inventory-overview" role="tab" aria-selected="false" aria-controls="inventory-overview-tab">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory Overview</span>
+                    </button>
+                </div>
+
+                <section id="purchase-orders-tab" class="tab-content active" data-tab-content="purchase-orders" role="tabpanel">
+                    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-file-invoice icon-info"></i> Open Purchase Orders</div>
+                            <div class="metric-block metric-border-info mb-0"><div class="metric-value" id="poOpenCount">0</div><div class="metric-label">Active Orders</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Completed Orders</div>
+                            <div class="metric-block metric-border-success mb-0"><div class="metric-value" id="poCompletedCount">0</div><div class="metric-label">Fully Received</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-cubes icon-secondary"></i> Ordered Quantity</div>
+                            <div class="metric-block metric-border-secondary mb-0"><div class="metric-value" id="poOrderedQuantity">0</div><div class="metric-label">Across Purchase Orders</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-hourglass-half icon-danger"></i> Remaining Quantity</div>
+                            <div class="metric-block metric-border-danger mb-0"><div class="metric-value" id="poRemainingQuantity">0</div><div class="metric-label">Not Yet Accepted</div></div>
+                        </div>
+                    </div>
+
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="poSearchInput" class="form-control" placeholder="Search PO number or supplier...">
+                            </div>
+                            <select id="poStatusFilter" class="form-control filter-select">
+                                <option value="All">All PO Statuses</option>
+                                <option value="Ordered">Ordered</option>
+                                <option value="Partially Delivered">Partially Delivered</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Closed with Outstanding Quantity">Closed with Outstanding Quantity</option>
+                            </select>
+                            <select id="poSupplierFilter" class="form-control filter-select"><option value="All">All Suppliers</option></select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="poExportBtn"><i class="fas fa-file-export"></i> Export</button>
+                        </div>
+                    </div>
+
+                    <div class="gm-readonly-banner mb-3">
+                        <i class="fas fa-eye"></i>
+                        <span><strong>Read-only monitoring.</strong> Receiving, verification, discrepancy, return, and inventory update actions remain with Warehouse Staff.</span>
+                    </div>
+
+                    <div class="card">
+                        <div class="table-wrapper">
+                            <table class="table" id="gmPurchaseOrdersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Purchase Order Number</th>
+                                        <th>Number of Suppliers</th>
+                                        <th>Ordered Quantity</th>
+                                        <th>Accepted Quantity</th>
+                                        <th>Remaining Quantity</th>
+                                        <th>Progress</th>
+                                        <th>Purchase Order Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gmPurchaseOrdersBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="inventory-overview-tab" class="tab-content" data-tab-content="inventory-overview" role="tabpanel">
+                    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
+                            <div class="metric-block metric-border-info mb-0"><div class="metric-value" id="inventoryTotalCount">0</div><div class="metric-label">Tracked SKUs</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
+                            <div class="metric-block metric-border-success mb-0"><div class="metric-value" id="inventoryAvailableCount">0</div><div class="metric-label">In Stock / Overstocked</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
+                            <div class="metric-block metric-border-secondary mb-0"><div class="metric-value" id="inventoryLowCount">0</div><div class="metric-label">Below Minimum</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
+                            <div class="metric-block metric-border-danger mb-0"><div class="metric-value" id="inventoryOutCount">0</div><div class="metric-label">Depleted</div></div>
+                        </div>
+                    </div>
+
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="inventorySearchInput" class="form-control" placeholder="Search Material ID or Name...">
+                            </div>
+                            <select id="inventoryCategoryFilter" class="form-control filter-select">
+                                <option value="All">All Categories</option>
+                                <option value="Structural">Structural</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Finishing">Finishing</option>
+                                <option value="Hardware">Hardware</option>
+                            </select>
+                            <select id="inventoryWarehouseFilter" class="form-control filter-select">
+                                <option value="All">All Warehouses</option>
+                                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+                            </select>
+                            <select id="inventoryStatusFilter" class="form-control filter-select">
+                                <option value="All">All Statuses</option>
+                                <option value="In Stock">In Stock</option>
+                                <option value="Low Stock">Low Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                                <option value="Overstocked">Overstocked</option>
+                                <option value="Damaged">Damaged</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="inventoryExportBtn"><i class="fas fa-file-export"></i> Export Inventory Report</button>
+                        </div>
+                    </div>
+
+                    <div class="gm-readonly-banner mb-3">
+                        <i class="fas fa-eye"></i>
+                        <span><strong>Read-only inventory overview.</strong> Quantity updates, stock receipts, damage logging, and transfers remain with Warehouse Staff.</span>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory <span class="badge badge-info ml-2" id="inventoryWarehouseBadge">All Warehouses</span></h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="gmInventoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Material ID</th>
+                                        <th>Material Name</th>
+                                        <th>Category</th>
+                                        <th>Current Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Warehouse Location</th>
+                                        <th>Min. Level</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gmInventoryBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="gmPoDetailsModal" role="dialog" aria-modal="true" aria-labelledby="gmPoDetailsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="gmPoDetailsTitle"><i class="fas fa-file-invoice icon-primary"></i> Purchase Order Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="gmPoDetailsBody"></div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-modal-close>Close</button></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="js/app.js"></script>
+    <script src="js/gm-monitoring.js"></script>
+</body>
+</html>

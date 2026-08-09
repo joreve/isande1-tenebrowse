@@ -28,22 +28,16 @@
                     <li class="nav-item active">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
-                        <i class="fas fa-box-open"></i> Material Requests
+                    <li class="nav-item" data-url="gm-requests.html">
+                        <i class="fas fa-clipboard-list"></i> Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('gm-substitution-requests.html')">
-                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    <li class="nav-item" data-url="gm-monitoring.html">
+                        <i class="fas fa-chart-line"></i> Monitoring
                     </li>
-                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
-                        <i class="fas fa-file-invoice"></i> Purchase Orders
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('gm-inventory-overview.html')">
-                        <i class="fas fa-boxes"></i> Inventory Overview
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('gm-settings.html')">
+                    <li class="nav-item" data-url="gm-settings.html">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -108,7 +102,7 @@
                 <!-- Role Isolated Welcome Card -->
                 <div class="card welcome-card mb-3">
                     <span class="welcome-badge">Enterprise Operations Command</span>
-                    <h1 class="welcome-title">Welcome Back, General Manager Vance</h1>
+                    <h1 class="welcome-title">Welcome Back, General Manager Saturn</h1>
                     <p class="welcome-text">
                         Monitoring Global Enterprise Logistics Profile. Review enterprise-wide material requisitions, track large-scale purchase fulfillments, and oversee overall inventory health.
                     </p>
@@ -346,11 +340,5 @@
 
     <!-- Core Interactions Application Scripts Hook -->
     <script src="js/app.js"></script>
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-    </script>
 </body>
 </html>

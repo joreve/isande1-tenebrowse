@@ -25,24 +25,19 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('gm-dashboard.html')">
+                    <li class="nav-item" data-url="gm-dashboard.html">
                         <i class="fas fa-chart-pie"></i> Dashboard
-                    <li class="nav-item" onclick="transitionTo('gm-material-requests.html')">
-                        <i class="fas fa-box-open"></i> Material Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('gm-substitution-requests.html')">
-                        <i class="fas fa-exchange-alt"></i> Substitution Requests
+                    <li class="nav-item" data-url="gm-requests.html">
+                        <i class="fas fa-clipboard-list"></i> Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('gm-purchase-orders.html')">
-                        <i class="fas fa-file-invoice"></i> Purchase Orders
-                    </li>
-                    <li class="nav-item" onclick="transitionTo('gm-inventory-overview.html')">
-                        <i class="fas fa-boxes"></i> Inventory Overview
+                    <li class="nav-item" data-url="gm-monitoring.html">
+                        <i class="fas fa-chart-line"></i> Monitoring
                     </li>
                     <li class="nav-item active">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -56,7 +51,7 @@
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">System Configurations</h2>
+                    <h2 class="page-title">Settings</h2>
                 </div>
                 
                 <div class="topbar-right">
@@ -97,7 +92,7 @@
                 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('gm-dashboard.html')">Tenebrowse Control</a>
+                    <a href="#" data-url="gm-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Settings</span>
                 </div>
@@ -272,65 +267,6 @@
 
     <!-- Core App JS Hook -->
     <script src="js/app.js"></script>
-
-    <!-- Page Specific Vanilla JS Logic -->
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            const settingsForm = document.getElementById('settingsForm');
-            const confirmSaveBtn = document.getElementById('confirmSaveBtn');
-            const confirmResetBtn = document.getElementById('confirmResetBtn');
-            const themeToggle = document.getElementById('themeToggle');
-
-            confirmSaveBtn.addEventListener('click', () => {
-                const newPass = document.getElementById('newPassword').value;
-                const confPass = document.getElementById('confirmPassword').value;
-
-                if (newPass || confPass) {
-                    if (newPass !== confPass) {
-                        if(window.showToast) window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
-                        return;
-                    }
-                }
-
-                if(window.showToast) window.showToast('Settings Saved', 'General Manager preferences and profile details updated successfully.', 'success');
-                
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
-            });
-
-            confirmResetBtn.addEventListener('click', () => {
-                settingsForm.reset();
-                
-                document.getElementById('profileName').value = 'Marcus Vance';
-                document.getElementById('profileEmail').value = 'm.vance@tenebrowse.com';
-                document.getElementById('notifMaterialReq').checked = true;
-                document.getElementById('notifPO').checked = true;
-                document.getElementById('notifInventory').checked = true;
-                document.getElementById('notifSystem').checked = true;
-                document.getElementById('systemLang').value = 'en';
-                
-                if (themeToggle.checked) {
-                    themeToggle.checked = false;
-                    document.body.classList.remove('dark-theme');
-                }
-
-                if(window.showToast) window.showToast('Defaults Restored', 'All configuration settings have been reverted to system defaults.', 'info');
-            });
-
-            themeToggle.addEventListener('change', (e) => {
-                if(e.target.checked) {
-                    if(window.showToast) window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
-                }
-            });
-
-        });
-    </script>
+    <script src="js/gm-settings.js"></script>
 </body>
 </html>

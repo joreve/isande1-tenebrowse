@@ -2472,14 +2472,34 @@ body:not(.guided-access-enabled) .guided-restore-btn {
    Project-in-Charge Purchase Orders - Table Action & Status Standardization
    ========================================================================== */
 
-/* Keep PO status badges compact and on one line in the PIC Purchase Orders table. */
+/* Keep the PIC PO table aligned with the General Manager monitoring table. */
+#poTable th:nth-child(2),
+#poTable td:nth-child(2) {
+    min-width: 125px;
+}
+
+#poTable th:nth-child(3),
+#poTable td:nth-child(3),
+#poTable th:nth-child(4),
+#poTable td:nth-child(4),
 #poTable th:nth-child(5),
 #poTable td:nth-child(5) {
     white-space: nowrap;
-    min-width: 175px;
+    min-width: 125px;
 }
 
-#poTable td:nth-child(5) .badge {
+#poTable th:nth-child(6),
+#poTable td:nth-child(6) {
+    min-width: 165px;
+}
+
+#poTable th:nth-child(7),
+#poTable td:nth-child(7) {
+    white-space: nowrap;
+    min-width: 225px;
+}
+
+#poTable td:nth-child(7) .badge {
     white-space: nowrap;
     width: max-content;
     max-width: none;
@@ -2551,4 +2571,160 @@ body:not(.guided-access-enabled) .guided-restore-btn {
     white-space: nowrap;
     line-height: 1;
     justify-content: center;
+}
+
+/* ==========================================================================
+   General Manager Consolidated Requests & Monitoring
+   ========================================================================== */
+.gm-pagination-bar {
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+}
+
+.gm-request-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+}
+
+.gm-modal-compact {
+    max-width: 680px;
+}
+
+.gm-modal-table-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.gm-comment-wrapper.is-hidden {
+    display: none;
+}
+
+.gm-comment-panel,
+.gm-detail-note {
+    margin-top: 0.35rem;
+    padding: 0.75rem;
+    background-color: var(--color-background);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-primary);
+}
+
+.gm-detail-note .text-muted-sm {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.gm-readonly-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-info);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+}
+
+.gm-readonly-banner i {
+    color: var(--color-info);
+    flex-shrink: 0;
+}
+
+.gm-view-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.gm-view-action:hover,
+.gm-view-action:focus-visible {
+    color: var(--color-text-main);
+    background-color: var(--color-background);
+    outline: none;
+}
+
+.gm-view-action:focus-visible {
+    box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+}
+
+#materialRequestsTable td:nth-child(6) .badge,
+#substitutionRequestsTable td:nth-child(6) .badge,
+#substitutionRequestsTable td:nth-child(7) .badge,
+#gmPurchaseOrdersTable td:nth-child(7) .badge,
+#gmInventoryTable td:nth-child(8) .badge {
+    white-space: nowrap;
+    width: max-content;
+    max-width: none;
+}
+
+#gmPurchaseOrdersTable th:nth-child(7),
+#gmPurchaseOrdersTable td:nth-child(7) {
+    min-width: 190px;
+    white-space: nowrap;
+}
+
+#gmPurchaseOrdersTable th:last-child,
+#gmPurchaseOrdersTable td:last-child {
+    width: 70px;
+    min-width: 70px;
+    text-align: center;
+}
+
+#substitutionRequestsTable th:nth-child(6),
+#substitutionRequestsTable td:nth-child(6) {
+    min-width: 135px;
+}
+
+@media (max-width: 1100px) {
+    .gm-monitoring-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .gm-monitoring-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================================================
+   General Manager Monitoring - Modal Badge Fit
+   ========================================================================== */
+
+/* Keep all status badges inside the PO details modal as compact single-line pills. */
+#gmPoDetailsModal .badge {
+    white-space: nowrap;
+    width: max-content;
+    max-width: none;
+    line-height: 1;
+    justify-content: center;
+}
+
+/* Reserve enough room for long receipt statuses such as
+   "Verified with Discrepancy" so the badge does not wrap vertically. */
+#gmPoDetailsModal .gm-po-receipt-table th:nth-child(7),
+#gmPoDetailsModal .gm-po-receipt-table td:nth-child(7),
+#gmPoDetailsModal .gm-po-pricing-table th:last-child,
+#gmPoDetailsModal .gm-po-pricing-table td:last-child {
+    min-width: 205px;
+    white-space: nowrap;
+}
+
+/* Keep the PO status in the progress-card header readable as one badge. */
+#gmPoDetailsModal .po-progress-header .badge {
+    flex-shrink: 0;
 }

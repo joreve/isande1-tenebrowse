@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - General Manager | Requests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+    <div class="app-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" data-url="gm-dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</li>
+                    <li class="nav-item active"><i class="fas fa-clipboard-list"></i> Requests</li>
+                    <li class="nav-item" data-url="gm-monitoring.html"><i class="fas fa-chart-line"></i> Monitoring</li>
+                    <li class="nav-item" data-url="gm-settings.html"><i class="fas fa-cog"></i> Settings</li>
+                    <li class="nav-item logout-item" data-url="index.html"><i class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Requests</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-clipboard-check icon-info"></i>
+                                <div>
+                                    <div class="notif-title">Pending Request Review</div>
+                                    <div class="notif-desc">New material and substitution requests are awaiting General Manager review.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">ST</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Saturn Torres</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                <div class="breadcrumb">
+                    <a href="#" data-url="gm-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Requests</span>
+                </div>
+
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Request Sections">
+                    <button type="button" class="tab-btn active" data-tab="material-requests" role="tab" aria-selected="true" aria-controls="material-requests-tab">
+                        <i class="fas fa-box-open"></i>
+                        <span>Material Requests</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="substitution-requests" role="tab" aria-selected="false" aria-controls="substitution-requests-tab">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Substitution Requests</span>
+                    </button>
+                </div>
+
+                <section id="material-requests-tab" class="tab-content active" data-tab-content="material-requests" role="tabpanel">
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="materialSearchInput" class="form-control" placeholder="Search request no., project, or PIC...">
+                            </div>
+                            <select id="materialStatusFilter" class="form-control filter-select">
+                                <option value="All">All Statuses</option>
+                                <option value="Pending" selected>Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <select id="materialProjectFilter" class="form-control filter-select">
+                                <option value="All">All Projects</option>
+                                <option value="Site Alpha">Site Alpha</option>
+                                <option value="Site Beta">Site Beta</option>
+                                <option value="Sector 4">Sector 4</option>
+                            </select>
+                            <select id="materialSortFilter" class="form-control filter-select">
+                                <option value="desc">Submission Date (Newest)</option>
+                                <option value="asc">Submission Date (Oldest)</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="materialExportBtn"><i class="fas fa-file-export"></i> Export Report</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-inbox section-icon icon-primary"></i> Material Requests</h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="materialRequestsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Request No.</th>
+                                        <th>Project Name</th>
+                                        <th>Project-in-Charge</th>
+                                        <th>Submission Date</th>
+                                        <th>Total Items</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="materialRequestsBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="flex-between mt-3 gm-pagination-bar">
+                            <span class="text-muted-sm" id="materialPageInfo">Showing 0 to 0 of 0 requests</span>
+                            <div class="toolbar-actions">
+                                <button type="button" class="btn btn-outline" id="materialPrevPage"><i class="fas fa-chevron-left"></i> Prev</button>
+                                <button type="button" class="btn btn-outline" id="materialNextPage">Next <i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="substitution-requests-tab" class="tab-content" data-tab-content="substitution-requests" role="tabpanel">
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="substitutionSearchInput" class="form-control" placeholder="Search request no., material, project, or PIC...">
+                            </div>
+                            <select id="substitutionStatusFilter" class="form-control filter-select">
+                                <option value="All">All Statuses</option>
+                                <option value="Pending" selected>Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <select id="substitutionProjectFilter" class="form-control filter-select">
+                                <option value="All">All Projects</option>
+                                <option value="Site Alpha">Site Alpha</option>
+                                <option value="Site Beta">Site Beta</option>
+                                <option value="Sector 4">Sector 4</option>
+                            </select>
+                            <select id="substitutionSortFilter" class="form-control filter-select">
+                                <option value="desc">Submission Date (Newest)</option>
+                                <option value="asc">Submission Date (Oldest)</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="substitutionExportBtn"><i class="fas fa-file-export"></i> Export Report</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-exchange-alt section-icon icon-primary"></i> Substitution Requests</h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="substitutionRequestsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Request No.</th>
+                                        <th>Source Material Request</th>
+                                        <th>Project</th>
+                                        <th>Project-in-Charge</th>
+                                        <th>Submission Date</th>
+                                        <th>Substituted Materials</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="substitutionRequestsBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="flex-between mt-3 gm-pagination-bar">
+                            <span class="text-muted-sm" id="substitutionPageInfo">Showing 0 to 0 of 0 requests</span>
+                            <div class="toolbar-actions">
+                                <button type="button" class="btn btn-outline" id="substitutionPrevPage"><i class="fas fa-chevron-left"></i> Prev</button>
+                                <button type="button" class="btn btn-outline" id="substitutionNextPage">Next <i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="materialDetailsModal" role="dialog" aria-modal="true">
+        <div class="modal gm-modal-compact">
+            <div class="modal-header">
+                <span><i class="fas fa-box-open icon-primary"></i> Material Request Details <span class="badge badge-info ml-2" id="materialDetailsRequestBadge"></span></span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grid grid-cols-2 mb-3">
+                    <div><div class="text-muted-sm font-semibold">Project</div><div id="materialDetailsProject"></div></div>
+                    <div><div class="text-muted-sm font-semibold">Project-in-Charge</div><div id="materialDetailsPic"></div></div>
+                </div>
+                <div class="section-title mb-2"><i class="fas fa-boxes icon-primary"></i> Requested Materials</div>
+                <div class="table-wrapper gm-modal-table-scroll">
+                    <table class="table">
+                        <thead><tr><th>Material</th><th>Category</th><th>Quantity</th><th>Unit</th></tr></thead>
+                        <tbody id="materialDetailsItemsBody"></tbody>
+                    </table>
+                </div>
+                <div class="mt-3 gm-comment-wrapper" id="materialDetailsCommentWrapper">
+                    <div class="text-muted-sm font-semibold">General Manager Comment</div>
+                    <div id="materialDetailsComment" class="gm-comment-panel"></div>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-modal-close>Close</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="materialApproveModal" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">Approve Material Request</div>
+            <div class="modal-body">
+                Approve <strong id="materialApproveRequestNo" class="icon-primary"></strong> and release it for procurement.
+                <div class="form-group mt-3 mb-0">
+                    <label class="form-label" for="materialApproveComment">General Manager Comment (Optional)</label>
+                    <textarea id="materialApproveComment" class="form-control" placeholder="Add approval notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-primary" id="materialConfirmApproveBtn">Confirm Approval</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="materialRejectModal" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">Reject Material Request</div>
+            <div class="modal-body">
+                Reject <strong id="materialRejectRequestNo" class="icon-danger"></strong>.
+                <div class="form-group mt-3 mb-0" id="materialRejectReasonGroup">
+                    <label class="form-label" for="materialRejectReason">Rejection Reason (Required)</label>
+                    <textarea id="materialRejectReason" class="form-control" placeholder="State the reason for rejection..."></textarea>
+                    <div class="error-message" id="materialRejectError">A rejection reason is required.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-danger" id="materialConfirmRejectBtn">Confirm Rejection</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="substitutionDetailsModal" role="dialog" aria-modal="true">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span><i class="fas fa-exchange-alt icon-primary"></i> Substitution Request Details <span class="badge badge-info ml-2" id="substitutionDetailsRequestBadge"></span></span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grid grid-cols-4 mb-3">
+                    <div><div class="text-muted-sm font-semibold">Source Request</div><div id="substitutionDetailsSource"></div></div>
+                    <div><div class="text-muted-sm font-semibold">Project</div><div id="substitutionDetailsProject"></div></div>
+                    <div><div class="text-muted-sm font-semibold">Project-in-Charge</div><div id="substitutionDetailsPic"></div></div>
+                    <div><div class="text-muted-sm font-semibold">Submitted</div><div id="substitutionDetailsDate"></div></div>
+                </div>
+                <div class="section-title mb-2"><i class="fas fa-random icon-primary"></i> Requested Substitutions</div>
+                <div class="table-wrapper mb-3">
+                    <table class="table">
+                        <thead><tr><th>Original Material</th><th>Replacement Material</th><th>Quantity</th><th>Unit</th></tr></thead>
+                        <tbody id="substitutionDetailsItemsBody"></tbody>
+                    </table>
+                </div>
+                <div class="gm-detail-note mb-3"><span class="text-muted-sm font-semibold">Reason</span><div id="substitutionDetailsReason"></div></div>
+                <div class="gm-detail-note"><span class="text-muted-sm font-semibold">Supporting Notes</span><div id="substitutionDetailsNotes"></div></div>
+                <div class="mt-3 gm-comment-wrapper" id="substitutionDetailsCommentWrapper">
+                    <div class="text-muted-sm font-semibold">General Manager Comment</div>
+                    <div id="substitutionDetailsComment" class="gm-comment-panel"></div>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-modal-close>Close</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="substitutionApproveModal" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">Approve Substitution Request</div>
+            <div class="modal-body">
+                Approve <strong id="substitutionApproveRequestNo" class="icon-primary"></strong> as one substitution request for its linked material request.
+                <div class="form-group mt-3 mb-0">
+                    <label class="form-label" for="substitutionApproveComment">General Manager Comment (Optional)</label>
+                    <textarea id="substitutionApproveComment" class="form-control" placeholder="Add approval notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-primary" id="substitutionConfirmApproveBtn">Confirm Approval</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="substitutionRejectModal" role="dialog" aria-modal="true">
+        <div class="modal">
+            <div class="modal-header">Reject Substitution Request</div>
+            <div class="modal-body">
+                Reject <strong id="substitutionRejectRequestNo" class="icon-danger"></strong>.
+                <div class="form-group mt-3 mb-0" id="substitutionRejectReasonGroup">
+                    <label class="form-label" for="substitutionRejectReason">Rejection Reason (Required)</label>
+                    <textarea id="substitutionRejectReason" class="form-control" placeholder="State the reason for rejection..."></textarea>
+                    <div class="error-message" id="substitutionRejectError">A rejection reason is required.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-danger" id="substitutionConfirmRejectBtn">Confirm Rejection</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="js/app.js"></script>
+    <script src="js/gm-requests.js"></script>
+</body>
+</html>
