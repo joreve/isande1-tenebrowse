@@ -1,100 +1,168 @@
-<section id="warehouse-inventory-tab" class="tab-content" data-tab-content="warehouse-inventory" role="tabpanel">
-    <!-- Summary Metrics -->
-    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
-        <div class="card">
-            <div class="summary-card-title"><i class="fas fa-warehouse icon-info"></i> Active Warehouses</div>
-            <div class="metric-block metric-border-info mb-0">
-                <div class="metric-value" id="warehouseActiveCount">0</div>
-                <div class="metric-label">Operating Locations</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - General Manager | Warehouse Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="page-transition">
+    <div class="app-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
+                    Tenebrowse
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="summary-card-title"><i class="fas fa-boxes icon-success"></i> Stored Materials</div>
-            <div class="metric-block metric-border-success mb-0">
-                <div class="metric-value" id="warehouseTotalStock">0</div>
-                <div class="metric-label">Total Units In Stock</div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item" data-url="gm-dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</li>
+                    <li class="nav-item" data-url="gm-requests.html"><i class="fas fa-clipboard-list"></i> Requests</li>
+                    <li class="nav-item active"><i class="fas fa-chart-line"></i> Monitoring</li>
+                    <li class="nav-item" data-url="gm-settings.html"><i class="fas fa-cog"></i> Settings</li>
+                    <li class="nav-item logout-item" data-url="index.html"><i class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
+                    <h2 class="page-title">Warehouse Monitoring</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="notification-wrapper">
+                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                            <i class="far fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        <div class="dropdown-menu" id="notifMenu">
+                            <div class="dropdown-header">System Notifications</div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
+                                <div>
+                                    <div class="notif-title">Warehouse Alert</div>
+                                    <div class="notif-desc">Warehouse stock for several items is below minimum levels.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-menu-container">
+                        <button class="profile-trigger">
+                            <div class="profile-avatar">ST</div>
+                            <div class="profile-info">
+                                <div class="profile-name">Saturn Torres</div>
+                                <div class="profile-role">General Manager</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                <div class="breadcrumb">
+                    <a href="#" data-url="gm-dashboard.html">Tenebrowse Control</a>
+                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                    <span>Warehouse Monitoring</span>
+                </div>
+
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Warehouse Sections">
+                    <button type="button" class="tab-btn active" data-tab="warehouse-overview" role="tab" aria-selected="true" aria-controls="warehouse-overview-tab">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Warehouse Overview</span>
+                    </button>
+                </div>
+
+                <section id="warehouse-overview-tab" class="tab-content active" data-tab-content="warehouse-overview" role="tabpanel">
+                    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
+                            <div class="metric-block metric-border-info mb-0"><div class="metric-value" id="warehouseTotalCount">0</div><div class="metric-label">Tracked SKUs</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
+                            <div class="metric-block metric-border-success mb-0"><div class="metric-value" id="warehouseAvailableCount">0</div><div class="metric-label">In Stock / Overstocked</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
+                            <div class="metric-block metric-border-secondary mb-0"><div class="metric-value" id="warehouseLowCount">0</div><div class="metric-label">Below Minimum</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
+                            <div class="metric-block metric-border-danger mb-0"><div class="metric-value" id="warehouseOutCount">0</div><div class="metric-label">Depleted</div></div>
+                        </div>
+                    </div>
+
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="warehouseSearchInput" class="form-control" placeholder="Search Material ID or Name...">
+                            </div>
+                            <select id="warehouseCategoryFilter" class="form-control filter-select">
+                                <option value="All">All Categories</option>
+                                <option value="Structural">Structural</option>
+                                <option value="Electrical">Electrical</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Finishing">Finishing</option>
+                                <option value="Hardware">Hardware</option>
+                            </select>
+                            <select id="warehouseLocationFilter" class="form-control filter-select">
+                                <option value="All">All Warehouses</option>
+                                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+                            </select>
+                            <select id="warehouseStatusFilter" class="form-control filter-select">
+                                <option value="All">All Statuses</option>
+                                <option value="In Stock">In Stock</option>
+                                <option value="Low Stock">Low Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                                <option value="Overstocked">Overstocked</option>
+                                <option value="Damaged">Damaged</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="warehouseExportBtn"><i class="fas fa-file-export"></i> Export Warehouse Report</button>
+                        </div>
+                    </div>
+
+                    <div class="gm-readonly-banner mb-3">
+                        <i class="fas fa-eye"></i>
+                        <span><strong>Read-only warehouse overview.</strong> Quantity updates, stock receipts, damage logging, and transfers remain with Warehouse Staff.</span>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Warehouse Inventory <span class="badge badge-info ml-2" id="warehouseLocationBadge">All Warehouses</span></h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="gmWarehouseTable">
+                                <thead>
+                                    <tr>
+                                        <th>Material ID</th>
+                                        <th>Material Name</th>
+                                        <th>Category</th>
+                                        <th>Current Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Warehouse Location</th>
+                                        <th>Min. Level</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gmWarehouseBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
-        <div class="card">
-            <div class="summary-card-title"><i class="fas fa-chart-pie icon-secondary"></i> Capacity Utilization</div>
-            <div class="metric-block metric-border-secondary mb-0">
-                <div class="metric-value" id="warehouseCapacityUsed">0%</div>
-                <div class="metric-label">Overall Space Used</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-danger"></i> Stock Alerts</div>
-            <div class="metric-block metric-border-danger mb-0">
-                <div class="metric-value" id="warehouseAlertCount">0</div>
-                <div class="metric-label">Low & Depleted Items</div>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Toolbar Filters & Actions -->
-    <div class="module-toolbar">
-        <div class="toolbar-filters">
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" id="warehouseSearchInput" class="form-control" placeholder="Search Warehouse ID, Name, or Zone...">
-            </div>
-            <select id="warehouseSelectFilter" class="form-control filter-select">
-                <option value="All">All Warehouses</option>
-                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
-                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
-                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
-            </select>
-            <select id="warehouseZoneFilter" class="form-control filter-select">
-                <option value="All">All Zones</option>
-                <option value="Zone A">Zone A — Reception / Staging</option>
-                <option value="Zone B">Zone B — High-Density Storage</option>
-                <option value="Zone C">Zone C — Bulk Materials</option>
-                <option value="Zone D">Zone D — Quarantine / Returns</option>
-            </select>
-            <select id="warehouseStatusFilter" class="form-control filter-select">
-                <option value="All">All Operational Statuses</option>
-                <option value="Optimal">Optimal Capacity</option>
-                <option value="Near Capacity">Near Capacity</option>
-                <option value="Over Capacity">Over Capacity</option>
-                <option value="Maintenance">Under Maintenance</option>
-            </select>
-        </div>
-        <div class="toolbar-actions">
-            <button type="button" class="btn btn-outline" id="warehouseExportBtn">
-                <i class="fas fa-file-export"></i> Export Warehouse Report
-            </button>
-        </div>
-    </div>
-
-    <!-- Read-only Banner -->
-    <div class="gm-readonly-banner mb-3">
-        <i class="fas fa-eye"></i>
-        <span><strong>Read-only warehouse overview.</strong> Space assignments, bin relocations, capacity adjustments, and facility management remain with Warehouse Staff.</span>
-    </div>
-
-    <!-- Data Table -->
-    <div class="card">
-        <h3 class="section-title mb-2">
-            <i class="fas fa-table section-icon icon-primary"></i> Warehouse Storage Overview 
-            <span class="badge badge-info ml-2" id="warehouseOverviewBadge">All Facilities</span>
-        </h3>
-        <div class="table-wrapper">
-            <table class="table" id="gmWarehouseTable">
-                <thead>
-                    <tr>
-                        <th>Warehouse ID</th>
-                        <th>Facility Name</th>
-                        <th>Primary Zone</th>
-                        <th>Total SKUs Stored</th>
-                        <th>Total Quantity</th>
-                        <th>Capacity Usage</th>
-                        <th>Supervisor</th>
-                        <th>Status</th>
-                        <th>Last Inspected</th>
-                    </tr>
-                </thead>
-                <tbody id="gmWarehouseBody"></tbody>
-            </table>
-        </div>
-    </div>
-</section>
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="js/app.js"></script>
+    <script src="js/gm-monitoring.js"></script>
+</body>
+</html>
