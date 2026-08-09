@@ -427,6 +427,10 @@
             font-size: 0.8rem;
         }
 
+        /* =========================
+           QUICK ACTIONS
+        ========================= */
+
         .section-title {
             font-size: 1.1rem;
             font-weight: 700;
@@ -434,6 +438,36 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action {
+            border: 1px solid var(--border-color);
+            background: #F8FAFC;
+            border-radius: 9px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
+
+        .quick-action:hover {
+            background: #FFF7F2;
+            border-color: var(--color-secondary);
+            transform: translateY(-1px);
+        }
+
+        .quick-action i {
+            color: var(--color-primary);
         }
 
         /* =========================
@@ -787,6 +821,10 @@
             .grid-cols-3 {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 1024px) {
@@ -828,6 +866,10 @@
 
             .grid-cols-3,
             .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
                 grid-template-columns: 1fr;
             }
 
@@ -1078,6 +1120,72 @@
 
 
             <!-- =========================
+                 QUICK ACTIONS
+            ========================== -->
+
+            <div class="card mb-3">
+
+                <h3 class="section-title mb-2">
+                    <i class="fas fa-bolt icon-primary"></i>
+                    Quick Actions
+                </h3>
+
+                <div class="quick-actions">
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-purchase-orders.html')"
+                    >
+                        <i class="fas fa-file-circle-plus"></i>
+                        Create / Manage Purchase Order
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-suppliers.html')"
+                    >
+                        <i class="fas fa-user-plus"></i>
+                        Assign Supplier
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-deliveries.html')"
+                    >
+                        <i class="fas fa-truck"></i>
+                        Update Delivery Status
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-substitutions.html')"
+                    >
+                        <i class="fas fa-right-left"></i>
+                        Process Substitution
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-warehouse.html')"
+                    >
+                        <i class="fas fa-warehouse"></i>
+                        View Warehouse Transfers
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        onclick="transitionTo('po-suppliers.html')"
+                    >
+                        <i class="fas fa-address-book"></i>
+                        Open Supplier Directory
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
                  KPI CARDS
             ========================== -->
 
@@ -1108,3 +1216,840 @@
                     </div>
 
                 </div>
+
+
+                <!-- Ordered -->
+
+                <div class="card kpi-card">
+
+                    <div class="kpi-header">
+
+                        <div class="kpi-title">
+                            Ordered Purchase Orders
+                        </div>
+
+                        <div class="kpi-icon primary">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="kpi-value">
+                        42
+                    </div>
+
+                    <div class="kpi-description">
+                        Confirmed and sent to suppliers
+                    </div>
+
+                </div>
+
+
+                <!-- Delivering -->
+
+                <div class="card kpi-card">
+
+                    <div class="kpi-header">
+
+                        <div class="kpi-title">
+                            Delivering Orders
+                        </div>
+
+                        <div class="kpi-icon info">
+                            <i class="fas fa-truck-fast"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="kpi-value">
+                        16
+                    </div>
+
+                    <div class="kpi-description">
+                        Currently in delivery
+                    </div>
+
+                </div>
+
+
+                <!-- Completed -->
+
+                <div class="card kpi-card">
+
+                    <div class="kpi-header">
+
+                        <div class="kpi-title">
+                            Completed Deliveries
+                        </div>
+
+                        <div class="kpi-icon success">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="kpi-value">
+                        128
+                    </div>
+
+                    <div class="kpi-description">
+                        Successfully received
+                    </div>
+
+                </div>
+
+
+                <!-- Delayed -->
+
+                <div class="card kpi-card">
+
+                    <div class="kpi-header">
+
+                        <div class="kpi-title">
+                            Delayed Deliveries
+                        </div>
+
+                        <div class="kpi-icon danger">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="kpi-value">
+                        5
+                    </div>
+
+                    <div class="kpi-description">
+                        Require supplier follow-up
+                    </div>
+
+                </div>
+
+
+                <!-- Warehouse Verification -->
+
+                <div class="card kpi-card">
+
+                    <div class="kpi-header">
+
+                        <div class="kpi-title">
+                            Pending Verification
+                        </div>
+
+                        <div class="kpi-icon orange">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="kpi-value">
+                        9
+                    </div>
+
+                    <div class="kpi-description">
+                        Awaiting warehouse verification
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 FULFILLMENT SOURCE
+            ========================== -->
+
+            <div class="card mb-3">
+
+                <div class="summary-card-title">
+                    <i class="fas fa-route icon-primary"></i>
+                    Fulfillment Source
+                </div>
+
+                <div class="fulfillment-box">
+
+                    <div class="fulfillment-option">
+
+                        <i class="fas fa-warehouse"></i>
+
+                        <h4>
+                            Internal Warehouse Transfer
+                        </h4>
+
+                        <p>
+                            Materials fulfilled from the company's available
+                            warehouse inventory.
+                        </p>
+
+                        <div class="fulfillment-count">
+                            31
+                        </div>
+
+                        <div class="metric-label">
+                            Active Transfers
+                        </div>
+
+                    </div>
+
+
+                    <div class="fulfillment-option">
+
+                        <i class="fas fa-truck"></i>
+
+                        <h4>
+                            External Vendor Purchase
+                        </h4>
+
+                        <p>
+                            Materials procured from external suppliers through
+                            Purchase Orders.
+                        </p>
+
+                        <div class="fulfillment-count">
+                            74
+                        </div>
+
+                        <div class="metric-label">
+                            Active Vendor Purchases
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 LOWER DASHBOARD
+            ========================== -->
+
+            <div class="dashboard-lower-grid mb-3">
+
+
+                <!-- SUPPLIER PERFORMANCE -->
+
+                <div class="card">
+
+                    <h3 class="section-title mb-2">
+
+                        <i class="fas fa-chart-column icon-primary"></i>
+
+                        Supplier Performance Summary
+
+                    </h3>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th>Completed</th>
+                                    <th>Delayed</th>
+                                    <th>Performance</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td class="supplier-name">
+                                        ABC Steel Supply
+                                    </td>
+
+                                    <td>
+                                        42
+                                    </td>
+
+                                    <td>
+                                        2
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-success">
+                                            98%
+                                        </span>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td class="supplier-name">
+                                        Prime Hardware
+                                    </td>
+
+                                    <td>
+                                        37
+                                    </td>
+
+                                    <td>
+                                        4
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-success">
+                                            92%
+                                        </span>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td class="supplier-name">
+                                        Metro Industrial
+                                    </td>
+
+                                    <td>
+                                        29
+                                    </td>
+
+                                    <td>
+                                        7
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-warning">
+                                            85%
+                                        </span>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td class="supplier-name">
+                                        BuildPro Materials
+                                    </td>
+
+                                    <td>
+                                        21
+                                    </td>
+
+                                    <td>
+                                        8
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-danger">
+                                            79%
+                                        </span>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WAREHOUSE STATUS -->
+
+                <div class="card">
+
+                    <h3 class="section-title mb-2">
+
+                        <i class="fas fa-warehouse icon-primary"></i>
+
+                        Warehouse Status
+
+                    </h3>
+
+                    <div class="warehouse-list">
+
+
+                        <!-- Warehouse 1 -->
+
+                        <div class="warehouse-item">
+
+                            <div class="warehouse-header">
+
+                                <div class="warehouse-name">
+                                    Warehouse 1
+                                </div>
+
+                                <div class="warehouse-status good">
+                                    Operational
+                                </div>
+
+                            </div>
+
+                            <div class="warehouse-description">
+                                Small items such as nails, screws, bolts, and
+                                small tools.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Warehouse 2 -->
+
+                        <div class="warehouse-item">
+
+                            <div class="warehouse-header">
+
+                                <div class="warehouse-name">
+                                    Warehouse 2
+                                </div>
+
+                                <div class="warehouse-status warning">
+                                    62% Stock Level
+                                </div>
+
+                            </div>
+
+                            <div class="warehouse-description">
+                                Large materials such as pipes, paint, and
+                                bulky equipment.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Warehouse 3 -->
+
+                        <div class="warehouse-item">
+
+                            <div class="warehouse-header">
+
+                                <div class="warehouse-name">
+                                    Warehouse 3
+                                </div>
+
+                                <div class="warehouse-status danger">
+                                    14 Damaged Items
+                                </div>
+
+                            </div>
+
+                            <div class="warehouse-description">
+                                Damaged materials awaiting return,
+                                replacement, or supplier processing.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 ORDERING / WAREHOUSE
+            ========================== -->
+
+            <div class="grid grid-cols-2 mb-3">
+
+
+                <!-- ORDERING STATUS -->
+
+                <div class="card">
+
+                    <div class="summary-card-title">
+
+                        <i class="fas fa-file-circle-check icon-primary"></i>
+
+                        Ordering & Approval Status
+
+                    </div>
+
+                    <div class="metric-sub-grid">
+
+                        <div class="metric-block metric-border-warning">
+
+                            <div class="metric-value">
+                                12
+                            </div>
+
+                            <div class="metric-label">
+                                Pending Requests
+                            </div>
+
+                        </div>
+
+                        <div class="metric-block metric-border-success">
+
+                            <div class="metric-value">
+                                28
+                            </div>
+
+                            <div class="metric-label">
+                                Approved Requests
+                            </div>
+
+                        </div>
+
+                        <div class="metric-block metric-border-danger">
+
+                            <div class="metric-value">
+                                3
+                            </div>
+
+                            <div class="metric-label">
+                                Cancelled
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <p class="feed-meta" style="margin-top: 16px;">
+                        Approved material requests are forwarded to the
+                        Purchasing Officer for procurement processing.
+                    </p>
+
+                </div>
+
+
+                <!-- WAREHOUSE VERIFICATION -->
+
+                <div class="card">
+
+                    <div class="summary-card-title">
+
+                        <i class="fas fa-clipboard-check icon-success"></i>
+
+                        Warehouse Verification
+
+                    </div>
+
+                    <div class="metric-sub-grid">
+
+                        <div class="metric-block metric-border-warning">
+
+                            <div class="metric-value">
+                                9
+                            </div>
+
+                            <div class="metric-label">
+                                Pending
+                            </div>
+
+                        </div>
+
+                        <div class="metric-block metric-border-success">
+
+                            <div class="metric-value">
+                                116
+                            </div>
+
+                            <div class="metric-label">
+                                Verified
+                            </div>
+
+                        </div>
+
+                        <div class="metric-block metric-border-danger">
+
+                            <div class="metric-value">
+                                7
+                            </div>
+
+                            <div class="metric-label">
+                                Discrepancies
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <p class="feed-meta" style="margin-top: 16px;">
+                        Delivered external purchases require warehouse
+                        verification before completion.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 RECENT ACTIVITY
+            ========================== -->
+
+            <div class="card">
+
+                <h3 class="section-title mb-2">
+
+                    <i class="fas fa-bolt icon-primary"></i>
+
+                    Recent Procurement Activity
+
+                </h3>
+
+
+                <div class="notification-feed">
+
+
+                    <!-- New PO -->
+
+                    <div class="feed-item success">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-file-circle-check"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                New Purchase Order Approved
+                            </div>
+
+                            <div class="feed-meta">
+                                PO-2026-108 is ready for supplier assignment.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Substitution -->
+
+                    <div class="feed-item warning">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-right-left"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                Material Substitution Approved
+                            </div>
+
+                            <div class="feed-meta">
+                                SR-2026-014 requires procurement processing.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery -->
+
+                    <div class="feed-item success">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-truck-ramp-box"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                Delivery Completed
+                            </div>
+
+                            <div class="feed-meta">
+                                PO-2026-102 delivered. Warehouse verification
+                                is required.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delayed -->
+
+                    <div class="feed-item danger">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-triangle-exclamation"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                Delayed Shipment
+                            </div>
+
+                            <div class="feed-meta">
+                                PO-2026-099 is delayed by 2 days and requires
+                                supplier follow-up.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Warehouse -->
+
+                    <div class="feed-item info">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-warehouse"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                Warehouse Verification Pending
+                            </div>
+
+                            <div class="feed-meta">
+                                PO-2026-096 has been delivered and is awaiting
+                                warehouse verification.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Discrepancy -->
+
+                    <div class="feed-item danger">
+
+                        <div class="feed-icon-wrapper">
+
+                            <i class="fas fa-box-open"></i>
+
+                        </div>
+
+                        <div class="feed-body">
+
+                            <div class="feed-title">
+                                Material Discrepancy Reported
+                            </div>
+
+                            <div class="feed-meta">
+                                PO-2026-091 has a shortage of 10 units.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       PAGE TRANSITION
+    ========================== */
+
+    function transitionTo(url) {
+
+        document.body.classList.add('page-exit');
+
+        setTimeout(() => {
+
+            window.location.href = url;
+
+        }, 300);
+
+    }
+
+
+    /* =========================
+       NOTIFICATION DROPDOWN
+    ========================== */
+
+    function toggleNotifications() {
+
+        const wrapper =
+            document.getElementById('notificationWrapper');
+
+        wrapper.classList.toggle('open');
+
+    }
+
+
+    /* =========================
+       MARK NOTIFICATIONS READ
+    ========================== */
+
+    function markAllRead() {
+
+        const badge =
+            document.querySelector('.badge-dot');
+
+        if (badge) {
+            badge.style.display = 'none';
+        }
+
+        const wrapper =
+            document.getElementById('notificationWrapper');
+
+        wrapper.classList.remove('open');
+
+    }
+
+
+    /* =========================
+       CLOSE NOTIFICATION
+       WHEN CLICKING OUTSIDE
+    ========================== */
+
+    document.addEventListener('click', function(event) {
+
+        const wrapper =
+            document.getElementById('notificationWrapper');
+
+        if (!wrapper.contains(event.target)) {
+
+            wrapper.classList.remove('open');
+
+        }
+
+    });
+
+
+    /* =========================
+       MOBILE MENU
+    ========================== */
+
+    const menuToggle =
+        document.querySelector('.menu-toggle');
+
+    const sidebar =
+        document.querySelector('.sidebar');
+
+    if (menuToggle) {
+
+        menuToggle.addEventListener('click', function() {
+
+            sidebar.classList.toggle('mobile-open');
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
