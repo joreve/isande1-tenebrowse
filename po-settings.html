@@ -15,6 +15,65 @@
     
     <!-- Core Design System CSS Reference -->
     <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* Standalone Fallback Styles to Ensure Modal & Grid Visibility */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease-in-out;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 480px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+    </style>
 </head>
 <body class="page-transition">
 
@@ -253,8 +312,8 @@
                 Are you sure you want to apply these settings? Changes to security and notification rules will take effect immediately.
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Cancel</button>
-                <button class="btn btn-primary" id="confirmSaveBtn" data-modal-close>Apply Settings</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmSaveBtn" data-modal-close>Apply Settings</button>
             </div>
         </div>
     </div>
@@ -267,8 +326,8 @@
                 Warning: This will discard any unsaved changes and revert all preferences back to system defaults. Proceed?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Cancel</button>
-                <button class="btn btn-danger" id="confirmResetBtn" data-modal-close>Reset Defaults</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmResetBtn" data-modal-close>Reset Defaults</button>
             </div>
         </div>
     </div>
@@ -281,36 +340,67 @@
 
     <!-- Page Specific Vanilla JS Logic -->
     <script>
+        // Smooth page transition helper
         function transitionTo(url) {
             document.body.classList.add('page-exit');
             setTimeout(() => window.location.href = url, 300);
         }
 
+        // Toast Notification Fallback
+        if (typeof window.showToast !== 'function') {
+            window.showToast = function(title, message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                const toast = document.createElement('div');
+                toast.style.cssText = 'background:#1f2937; color:#fff; padding:12px 16px; margin-top:8px; border-radius:6px; font-size:14px; box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+                toast.innerHTML = `<strong>${title}</strong>: ${message}`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            
             const settingsForm = document.getElementById('settingsForm');
             const confirmSaveBtn = document.getElementById('confirmSaveBtn');
             const confirmResetBtn = document.getElementById('confirmResetBtn');
             const themeToggle = document.getElementById('themeToggle');
 
+            // Modal Trigger Event Handlers
+            document.querySelectorAll('[data-modal-target]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
+                    if (modal) modal.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('[data-modal-close]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal-overlay');
+                    if (modal) modal.classList.remove('active');
+                });
+            });
+
+            // Save Confirmation Event
             confirmSaveBtn.addEventListener('click', () => {
                 const newPass = document.getElementById('newPassword').value;
                 const confPass = document.getElementById('confirmPassword').value;
 
                 if (newPass || confPass) {
                     if (newPass !== confPass) {
-                        if(window.showToast) window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
+                        window.showToast('Validation Error', 'New passwords do not match. Please try again.', 'danger');
                         return;
                     }
                 }
 
-                if(window.showToast) window.showToast('Settings Saved', 'Purchasing Officer preferences and profile details updated successfully.', 'success');
+                window.showToast('Settings Saved', 'Purchasing Officer preferences and profile details updated successfully.', 'success');
                 
                 document.getElementById('currentPassword').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmPassword').value = '';
             });
 
+            // Reset Confirmation Event
             confirmResetBtn.addEventListener('click', () => {
                 settingsForm.reset();
                 
@@ -327,15 +417,18 @@
                     document.body.classList.remove('dark-theme');
                 }
 
-                if(window.showToast) window.showToast('Defaults Restored', 'All configuration settings have been reverted to system defaults.', 'info');
+                window.showToast('Defaults Restored', 'All configuration settings have been reverted to system defaults.', 'info');
             });
 
+            // Theme Switcher Event
             themeToggle.addEventListener('change', (e) => {
-                if(e.target.checked) {
-                    if(window.showToast) window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
+                if (e.target.checked) {
+                    document.body.classList.add('dark-theme');
+                    window.showToast('Theme Updated', 'Dark mode enabled. Remember to save changes.', 'primary');
+                } else {
+                    document.body.classList.remove('dark-theme');
                 }
             });
-
         });
     </script>
 </body>
