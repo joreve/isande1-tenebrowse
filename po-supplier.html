@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Supplier Management</title>
+
+    <!-- Google Fonts: League Spartan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --color-primary: #d44f00;
+            --color-primary-light: #f65e03;
+            --color-secondary: #e19c74;
+            --color-secondary-light: #f9cda4;
+
+            --color-success: #16A34A;
+            --color-success-light: #DCFCE7;
+
+            --color-danger: #DC2626;
+            --color-danger-light: #FEE2E2;
+
+            --color-warning: #D97706;
+            --color-warning-light: #FEF3C7;
+
+            --color-info: #2563EB;
+            --color-info-light: #DBEAFE;
+
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.page-exit {
+            opacity: 0;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav {
+            padding: 10px 16px;
+            flex-grow: 1;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748B;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .nav-item.active:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .logout-item {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 70px;
+            background-color: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+        }
+
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--color-danger);
+            border-radius: 50%;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .profile-info {
+            text-align: left;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .profile-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           PAGE CONTAINER & CARDS
+        ========================= */
+
+        .page-container {
+            padding: 0 32px 32px 32px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb-icon {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .mb-2 { margin-bottom: 16px; }
+        .mb-3 { margin-bottom: 24px; }
+
+        /* KPI / Metric Cards Overview */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background-color: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kpi-info h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .kpi-info p {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .kpi-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .kpi-primary { background: #FFF0E8; color: var(--color-primary); }
+        .kpi-success { background: var(--color-success-light); color: var(--color-success); }
+        .kpi-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .kpi-info-box { background: var(--color-info-light); color: var(--color-info); }
+
+        /* Controls Bar */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .select-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .btn-secondary {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E2E8F0;
+        }
+
+        .btn-outline-danger {
+            background-color: transparent;
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .btn-outline-danger:hover {
+            background-color: var(--color-danger-light);
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #F8FAFC;
+        }
+
+        .supplier-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-email {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-info { background: var(--color-info-light); color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
+
+        .rating-stars {
+            color: #F59E0B;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            border-color: var(--color-primary);
+        }
+
+        /* Progress Bar for Metrics */
+        .performance-bar {
+            width: 100px;
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .performance-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* =========================
+           DRAWER & MODAL STYLES
+        ========================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            z-index: 2000;
+            justify-content: flex-end;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .drawer {
+            width: 760px;
+            max-width: 92vw;
+            background-color: #FFFFFF;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.25s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F8FAFC;
+        }
+
+        .drawer-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .drawer-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .drawer-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .detail-section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            background: #FFFFFF;
+        }
+
+        .detail-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+        }
+
+        .metric-score-card {
+            background-color: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .metric-score-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .metric-score-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Notification Wrapper */
+        .notification-wrapper { position: relative; }
+        .notification-panel {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 350px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            z-index: 1000;
+            padding: 16px;
+        }
+        .notification-wrapper.open .notification-panel { display: block; }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar-logo span, .nav-item span { display: none; }
+            .nav-item { justify-content: center; padding: 13px; }
+        }
+
+        @media (max-width: 768px) {
+            .topbar { padding: 0 20px; }
+            .page-container { padding: 0 20px 25px; }
+            .profile-info { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                <span>Tenebrowse</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-main.html')">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Purchase Orders</span>
+                </li>
+                <li class="nav-item active">
+                    <i class="fas fa-building"></i>
+                    <span>Suppliers</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-deliveries.html')">
+                    <i class="fas fa-truck"></i>
+                    <span>Deliveries</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-warehouse.html')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-substitutions.html')">
+                    <i class="fas fa-random"></i>
+                    <span>Substitutions</span>
+                </li>
+                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <i class="fas fa-bars menu-toggle"></i>
+                <h2 class="page-title">Supplier Management & Directory</h2>
+            </div>
+
+            <div class="topbar-right">
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </button>
+                    <div class="notification-panel">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <h4>Notifications</h4>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="font-size:0.85rem;"><strong>Apex Industrial</strong> updated delivery lead time</div>
+                            <div style="font-size:0.85rem;"><strong>New Supplier Request</strong> under compliance review</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-trigger">
+                    <div class="profile-avatar">PT</div>
+                    <div class="profile-info">
+                        <div class="profile-name">Purchasing Officer Tolentino</div>
+                        <div class="profile-role">Purchasing Officer</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+
+            <div class="breadcrumb">
+                <a href="#">Tenebrowse Control</a>
+                <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                <span>Suppliers Directory</span>
+            </div>
+
+            <!-- KPI OVERVIEW CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-info">
+                        <h3>24</h3>
+                        <p>Active Vendors</p>
+                    </div>
+                    <div class="kpi-icon kpi-primary">
+                        <i class="fas fa-building"></i>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-info">
+                        <h3>95.4%</h3>
+                        <p>Avg On-Time Delivery</p>
+                    </div>
+                    <div class="kpi-icon kpi-success">
+                        <i class="fas fa-truck-ramp-box"></i>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-info">
+                        <h3>4.7 / 5</h3>
+                        <p>Avg Quality Rating</p>
+                    </div>
+                    <div class="kpi-icon kpi-warning">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-info">
+                        <h3>2</h3>
+                        <p>Pending Compliance Review</p>
+                    </div>
+                    <div class="kpi-icon kpi-info-box">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- DIRECTORY TABLE CARD -->
+            <div class="card">
+
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search Supplier Name, Category, Contact..." id="supplierSearch" onkeyup="filterSuppliers()">
+                    </div>
+
+                    <div class="filter-group">
+                        <select class="select-input" id="statusFilter" onchange="filterSuppliers()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Active">Active / Preferred</option>
+                            <option value="Under Review">Under Review</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+
+                        <select class="select-input" id="categoryFilter" onchange="filterSuppliers()">
+                            <option value="ALL">All Categories</option>
+                            <option value="Steel">Steel & Rebar</option>
+                            <option value="Concrete">Concrete & Aggregates</option>
+                            <option value="Hardware">General Hardware</option>
+                            <option value="Chemicals">Chemicals & Paints</option>
+                        </select>
+
+                        <button class="btn btn-primary" onclick="openAddSupplierDrawer()">
+                            <i class="fas fa-plus"></i> Add New Supplier
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- TABLE OF SUPPLIERS -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Supplier Name</th>
+                                <th>Category</th>
+                                <th>Contact Representative</th>
+                                <th>Status</th>
+                                <th>Performance (On-Time)</th>
+                                <th>Quality Score</th>
+                                <th>Active POs</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplierTableBody">
+
+                            <!-- Supplier 1 -->
+                            <tr data-status="Active" data-category="Steel">
+                                <td>
+                                    <div class="supplier-name">
+                                        <i class="fas fa-shield-halved" style="color:var(--color-primary)" title="Preferred Supplier"></i>
+                                        Apex Industrial Supply
+                                    </div>
+                                    <span class="contact-email">orders@apexindustrial.com</span>
+                                </td>
+                                <td><span class="status-badge status-neutral">Steel & Metals</span></td>
+                                <td>
+                                    <strong>Mark Anthony Reyes</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted)">+63 917 555 0192</span>
+                                </td>
+                                <td><span class="status-badge status-success">Active (Preferred)</span></td>
+                                <td>
+                                    <div>
+                                        <div class="performance-bar"><div class="performance-fill" style="width:98.5%; background:var(--color-success)"></div></div>
+                                        <strong>98.5%</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i>
+                                        <span style="color:var(--text-dark); font-weight:700; margin-left:4px;">4.8</span>
+                                    </div>
+                                </td>
+                                <td><strong>3 Orders</strong></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openSupplierDetailDrawer('SUP-101')" title="View Details & History"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon" onclick="openEditSupplierDrawer('SUP-101')" title="Edit Supplier"><i class="fas fa-pen"></i></button>
+                                        <button class="btn-icon" onclick="assignToPo('Apex Industrial Supply')" title="Assign to Pending PO"><i class="fas fa-link"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Supplier 2 -->
+                            <tr data-status="Active" data-category="Hardware">
+                                <td>
+                                    <div class="supplier-name">
+                                        BuildPro Hardware Corp.
+                                    </div>
+                                    <span class="contact-email">sales@buildpro.ph</span>
+                                </td>
+                                <td><span class="status-badge status-neutral">General Hardware</span></td>
+                                <td>
+                                    <strong>Elena Soriano</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted)">+63 918 222 4910</span>
+                                </td>
+                                <td><span class="status-badge status-success">Active</span></td>
+                                <td>
+                                    <div>
+                                        <div class="performance-bar"><div class="performance-fill" style="width:92.0%; background:var(--color-success)"></div></div>
+                                        <strong>92.0%</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                        <span style="color:var(--text-dark); font-weight:700; margin-left:4px;">4.1</span>
+                                    </div>
+                                </td>
+                                <td><strong>1 Order</strong></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openSupplierDetailDrawer('SUP-102')" title="View Details & History"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon" onclick="openEditSupplierDrawer('SUP-102')" title="Edit Supplier"><i class="fas fa-pen"></i></button>
+                                        <button class="btn-icon" onclick="assignToPo('BuildPro Hardware Corp.')" title="Assign to Pending PO"><i class="fas fa-link"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Supplier 3 -->
+                            <tr data-status="Under Review" data-category="Concrete">
+                                <td>
+                                    <div class="supplier-name">
+                                        Vanguard Logistics & Ready-Mix
+                                    </div>
+                                    <span class="contact-email">dispatch@vanguardreadymix.com</span>
+                                </td>
+                                <td><span class="status-badge status-neutral">Concrete & Aggregates</span></td>
+                                <td>
+                                    <strong>Carlos Mendoza</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted)">+63 922 888 3011</span>
+                                </td>
+                                <td><span class="status-badge status-warning">Under Review</span></td>
+                                <td>
+                                    <div>
+                                        <div class="performance-bar"><div class="performance-fill" style="width:84.5%; background:var(--color-warning)"></div></div>
+                                        <strong>84.5%</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i><i class="far fa-star"></i>
+                                        <span style="color:var(--text-dark); font-weight:700; margin-left:4px;">3.6</span>
+                                    </div>
+                                </td>
+                                <td><strong>0 Orders</strong></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openSupplierDetailDrawer('SUP-103')" title="View Details & History"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon" onclick="openEditSupplierDrawer('SUP-103')" title="Edit Supplier"><i class="fas fa-pen"></i></button>
+                                        <button class="btn-icon" onclick="assignToPo('Vanguard Logistics')" title="Assign to Pending PO"><i class="fas fa-link"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Supplier 4 -->
+                            <tr data-status="Inactive" data-category="Chemicals">
+                                <td>
+                                    <div class="supplier-name">
+                                        Global Chemical Coating Inc.
+                                    </div>
+                                    <span class="contact-email">support@globalchem.com</span>
+                                </td>
+                                <td><span class="status-badge status-neutral">Chemicals & Coatings</span></td>
+                                <td>
+                                    <strong>David Tan</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted)">+63 905 111 7833</span>
+                                </td>
+                                <td><span class="status-badge status-danger">Inactive</span></td>
+                                <td>
+                                    <div>
+                                        <div class="performance-bar"><div class="performance-fill" style="width:70.0%; background:var(--color-danger)"></div></div>
+                                        <strong>70.0%</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                        <span style="color:var(--text-dark); font-weight:700; margin-left:4px;">3.0</span>
+                                    </div>
+                                </td>
+                                <td><strong>0 Orders</strong></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openSupplierDetailDrawer('SUP-104')" title="View Details & History"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon" onclick="openEditSupplierDrawer('SUP-104')" title="Edit Supplier"><i class="fas fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     SUPPLIER DETAILS & PERFORMANCE DRAWER
+========================== -->
+
+<div class="modal-overlay" id="supplierDetailDrawerOverlay">
+    <div class="drawer">
+
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="detailSupplierTitle">Apex Industrial Supply</div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Supplier Code: <strong id="detailSupplierCode">SUP-101</strong></div>
+            </div>
+            <button class="drawer-close" onclick="closeSupplierDetailDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <!-- Contact & Profile Details -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-address-card"></i> Contact & Company Details</span>
+                    <span class="status-badge status-success" id="detailSupplierStatus">Active (Preferred)</span>
+                </div>
+                <div class="form-grid">
+                    <div>
+                        <span class="form-label" style="color:var(--text-muted)">Contact Person</span>
+                        <div style="font-weight:700; margin-top:2px;" id="detailContactPerson">Mark Anthony Reyes</div>
+                    </div>
+                    <div>
+                        <span class="form-label" style="color:var(--text-muted)">Phone / Mobile</span>
+                        <div style="font-weight:700; margin-top:2px;" id="detailPhone">+63 917 555 0192</div>
+                    </div>
+                    <div>
+                        <span class="form-label" style="color:var(--text-muted)">Email Address</span>
+                        <div style="font-weight:700; margin-top:2px;" id="detailEmail">orders@apexindustrial.com</div>
+                    </div>
+                    <div>
+                        <span class="form-label" style="color:var(--text-muted)">Tax Identification Number (TIN)</span>
+                        <div style="font-weight:700; margin-top:2px;">008-123-456-000</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <span class="form-label" style="color:var(--text-muted)">Business Address</span>
+                        <div style="font-weight:600; margin-top:2px;">Building 4, Industrial Zone, Metro Manila, Philippines</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Performance Overview -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-chart-line"></i> Supplier Performance Metrics</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">Calculated from last 12 months</span>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:16px;">
+                    <div class="metric-score-card">
+                        <div class="metric-score-val" style="color:var(--color-success);">98.5%</div>
+                        <div class="metric-score-lbl">On-Time Delivery Rate</div>
+                    </div>
+                    <div class="metric-score-card">
+                        <div class="metric-score-val" style="color:var(--color-primary);">4.8 / 5</div>
+                        <div class="metric-score-lbl">Quality & Compliance Score</div>
+                    </div>
+                    <div class="metric-score-card">
+                        <div class="metric-score-val" style="color:var(--color-info);">3.2 Days</div>
+                        <div class="metric-score-lbl">Average Fulfillment Time</div>
+                    </div>
+                </div>
+
+                <div style="font-size:0.85rem; color:var(--text-muted);">
+                    <i class="fas fa-circle-check" style="color:var(--color-success)"></i> Vendor is verified and qualified for high-volume Purchase Orders assignment.
+                </div>
+            </div>
+
+            <!-- Purchase Order History -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-history"></i> Purchase Order History</span>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Date Issued</th>
+                                <th>Item / Materials</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="po-code" style="font-weight:700; color:var(--color-primary)">PO-2026-107</span></td>
+                                <td>Aug 5, 2026</td>
+                                <td>Deformed Steel Bars 18mm</td>
+                                <td>$14,500.00</td>
+                                <td><span class="status-badge status-info">In Delivery</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="po-code" style="font-weight:700; color:var(--color-primary)">PO-2026-088</span></td>
+                                <td>Jul 18, 2026</td>
+                                <td>Grade 60 Structural Steel</td>
+                                <td>$28,900.00</td>
+                                <td><span class="status-badge status-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="po-code" style="font-weight:700; color:var(--color-primary)">PO-2026-042</span></td>
+                                <td>Jun 02, 2026</td>
+                                <td>Tie Wires & Steel Plates</td>
+                                <td>$6,200.00</td>
+                                <td><span class="status-badge status-success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-secondary" onclick="closeSupplierDetailDrawer()">Close</button>
+            <button class="btn btn-primary" onclick="assignToPoFromDrawer()">
+                <i class="fas fa-link"></i> Assign to Purchase Order
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- =========================
+     ADD / EDIT SUPPLIER FORM DRAWER
+========================== -->
+
+<div class="modal-overlay" id="supplierFormDrawerOverlay">
+    <div class="drawer">
+
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="formDrawerTitle">Add New Supplier</div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Register a new vendor for purchase order assignments</div>
+            </div>
+            <button class="drawer-close" onclick="closeSupplierFormDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <form id="supplierForm">
+                <!-- Section 1: Basic Supplier Information -->
+                <div class="detail-section mb-3">
+                    <div class="detail-section-title">
+                        <span><i class="fas fa-building"></i> Company Information</span>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Supplier Name *</label>
+                            <input type="text" class="form-control" id="inputSupplierName" placeholder="e.g. Apex Industrial Supply" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Primary Category *</label>
+                            <select class="form-control" id="inputCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Steel & Metals">Steel & Metals</option>
+                                <option value="Concrete & Aggregates">Concrete & Aggregates</option>
+                                <option value="General Hardware">General Hardware</option>
+                                <option value="Chemicals & Coatings">Chemicals & Coatings</option>
+                                <option value="Heavy Equipment">Heavy Equipment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-control" id="inputStatus">
+                                <option value="Active">Active</option>
+                                <option value="Under Review">Under Review</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tax ID (TIN)</label>
+                            <input type="text" class="form-control" id="inputTin" placeholder="000-000-000-000">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Company Address</label>
+                            <input type="text" class="form-control" id="inputAddress" placeholder="Street, City, Province, Zip">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Contact Information -->
+                <div class="detail-section mb-3">
+                    <div class="detail-section-title">
+                        <span><i class="fas fa-user-tag"></i> Representative Contact Details</span>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Contact Person Name *</label>
+                            <input type="text" class="form-control" id="inputContactPerson" placeholder="Full Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="text" class="form-control" id="inputPhone" placeholder="+63 9XX XXX XXXX" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="inputEmail" placeholder="supplier@domain.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Initial Performance & Payment Terms -->
+                <div class="detail-section">
+                    <div class="detail-section-title">
+                        <span><i class="fas fa-credit-card"></i> Terms & Lead Times</span>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Payment Terms</label>
+                            <select class="form-control" id="inputPaymentTerms">
+                                <option value="Net 30">Net 30 Days</option>
+                                <option value="Net 60">Net 60 Days</option>
+                                <option value="COD">Cash on Delivery (COD)</option>
+                                <option value="Advance">Advance Payment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Standard Lead Time (Days)</label>
+                            <input type="number" class="form-control" id="inputLeadTime" value="3" min="1">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-secondary" onclick="closeSupplierFormDrawer()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveSupplier()">
+                <i class="fas fa-floppy-disk"></i> Save Supplier Details
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = url;
+        }, 200);
+    }
+
+    // Filter Logic
+    function filterSuppliers() {
+        const searchValue = document.getElementById('supplierSearch').value.toLowerCase();
+        const statusValue = document.getElementById('statusFilter').value;
+        const categoryValue = document.getElementById('categoryFilter').value;
+
+        const rows = document.querySelectorAll('#supplierTableBody tr');
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const status = row.getAttribute('data-status');
+            const category = row.getAttribute('data-category');
+
+            const matchesSearch = text.includes(searchValue);
+            const matchesStatus = statusValue === 'ALL' || status.includes(statusValue);
+            const matchesCategory = categoryValue === 'ALL' || category.includes(categoryValue);
+
+            if (matchesSearch && matchesStatus && matchesCategory) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Drawers Controls
+    function openSupplierDetailDrawer(supplierCode) {
+        if (supplierCode === 'SUP-101') {
+            document.getElementById('detailSupplierTitle').innerText = 'Apex Industrial Supply';
+            document.getElementById('detailSupplierCode').innerText = 'SUP-101';
+            document.getElementById('detailContactPerson').innerText = 'Mark Anthony Reyes';
+            document.getElementById('detailPhone').innerText = '+63 917 555 0192';
+            document.getElementById('detailEmail').innerText = 'orders@apexindustrial.com';
+        } else if (supplierCode === 'SUP-102') {
+            document.getElementById('detailSupplierTitle').innerText = 'BuildPro Hardware Corp.';
+            document.getElementById('detailSupplierCode').innerText = 'SUP-102';
+            document.getElementById('detailContactPerson').innerText = 'Elena Soriano';
+            document.getElementById('detailPhone').innerText = '+63 918 222 4910';
+            document.getElementById('detailEmail').innerText = 'sales@buildpro.ph';
+        }
+        document.getElementById('supplierDetailDrawerOverlay').classList.add('open');
+    }
+
+    function closeSupplierDetailDrawer() {
+        document.getElementById('supplierDetailDrawerOverlay').classList.remove('open');
+    }
+
+    function openAddSupplierDrawer() {
+        document.getElementById('formDrawerTitle').innerText = 'Add New Supplier';
+        document.getElementById('supplierForm').reset();
+        document.getElementById('supplierFormDrawerOverlay').classList.add('open');
+    }
+
+    function openEditSupplierDrawer(supplierCode) {
+        document.getElementById('formDrawerTitle').innerText = 'Edit Supplier (' + supplierCode + ')';
+        if (supplierCode === 'SUP-101') {
+            document.getElementById('inputSupplierName').value = 'Apex Industrial Supply';
+            document.getElementById('inputCategory').value = 'Steel & Metals';
+            document.getElementById('inputStatus').value = 'Active';
+            document.getElementById('inputContactPerson').value = 'Mark Anthony Reyes';
+            document.getElementById('inputPhone').value = '+63 917 555 0192';
+            document.getElementById('inputEmail').value = 'orders@apexindustrial.com';
+        }
+        document.getElementById('supplierFormDrawerOverlay').classList.add('open');
+    }
+
+    function closeSupplierFormDrawer() {
+        document.getElementById('supplierFormDrawerOverlay').classList.remove('open');
+    }
+
+    function saveSupplier() {
+        const name = document.getElementById('inputSupplierName').value;
+        if (!name) {
+            alert('Please provide the supplier name.');
+            return;
+        }
+        alert('Supplier details for "' + name + '" have been saved successfully.');
+        closeSupplierFormDrawer();
+    }
+
+    // Direct Integration with Assign Supplier function in Purchase Orders
+    function assignToPo(supplierName) {
+        if (confirm('Assign "' + supplierName + '" to pending Purchase Order (PO-2026-108)?')) {
+            alert('Supplier ' + supplierName + ' successfully assigned to PO-2026-108. Redirecting to Purchase Orders processing...');
+            transitionTo('po-main.html');
+        }
+    }
+
+    function assignToPoFromDrawer() {
+        const name = document.getElementById('detailSupplierTitle').innerText;
+        closeSupplierDetailDrawer();
+        assignToPo(name);
+    }
+</script>
+
+</body>
+</html>
