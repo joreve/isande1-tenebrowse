@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Warehouse | Inventory Overview</title>
+    <title>Tenebrowse - Warehouse Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="page-transition">
     <div class="app-wrapper">
+        <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -18,7 +19,7 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item active" data-url="warehouse-inventory.html"><i class="fas fa-boxes"></i> Inventory</li>
+                    <li class="nav-item active" data-url="warehouse-management.html"><i class="fas fa-boxes"></i> Inventory</li>
                     <li class="nav-item" data-url="warehouse-receiving.html"><i class="fas fa-truck-loading"></i> Receiving</li>
                     <li class="nav-item" data-url="warehouse-transfers.html"><i class="fas fa-exchange-alt"></i> Transfers</li>
                     <li class="nav-item" data-url="warehouse-settings.html"><i class="fas fa-cog"></i> Settings</li>
@@ -27,11 +28,13 @@
             </nav>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="main-content">
+            <!-- Topbar Header -->
             <header class="topbar">
                 <div class="topbar-left">
                     <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Warehouse Inventory Overview</h2>
+                    <h2 class="page-title">Warehouse Management</h2>
                 </div>
                 <div class="topbar-right">
                     <div class="notification-wrapper">
@@ -45,7 +48,7 @@
                                 <i class="fas fa-exclamation-triangle icon-secondary"></i>
                                 <div>
                                     <div class="notif-title">Inventory Alert</div>
-                                    <div class="notif-desc">Several materials are below minimum stock levels.</div>
+                                    <div class="notif-desc">Several items are running below minimum levels.</div>
                                 </div>
                             </div>
                         </div>
@@ -55,47 +58,62 @@
                             <div class="profile-avatar">WS</div>
                             <div class="profile-info">
                                 <div class="profile-name">Warehouse Staff</div>
-                                <div class="profile-role">Inventory Operator</div>
+                                <div class="profile-role">Inventory Control</div>
                             </div>
                         </button>
                     </div>
                 </div>
             </header>
 
+            <!-- Page Body -->
             <div class="page-container">
                 <div class="breadcrumb">
-                    <a href="#" data-url="warehouse-inventory.html">Warehouse Control</a>
+                    <a href="#" data-url="warehouse-management.html">Warehouse Operations</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Inventory Overview</span>
+                    <span>Material Inventory</span>
                 </div>
 
-                <div class="tabs-nav mb-3" role="tablist" aria-label="Inventory Sections">
-                    <button type="button" class="tab-btn active" data-tab="inventory-overview" role="tab" aria-selected="true" aria-controls="inventory-overview-tab">
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Warehouse Sections">
+                    <button type="button" class="tab-btn active" data-tab="material-inventory" role="tab" aria-selected="true" aria-controls="material-inventory-tab">
                         <i class="fas fa-boxes"></i>
-                        <span>Inventory Overview</span>
+                        <span>Material Inventory</span>
                     </button>
                 </div>
 
-                <section id="inventory-overview-tab" class="tab-content active" data-tab-content="inventory-overview" role="tabpanel">
-                    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
+                <section id="material-inventory-tab" class="tab-content active" data-tab-content="material-inventory" role="tabpanel">
+                    <!-- Metric Cards -->
+                    <div class="grid grid-cols-4 mb-3">
                         <div class="card">
                             <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
-                            <div class="metric-block metric-border-info mb-0"><div class="metric-value" id="inventoryTotalCount">0</div><div class="metric-label">Tracked SKUs</div></div>
+                            <div class="metric-block metric-border-info mb-0">
+                                <div class="metric-value" id="inventoryTotalCount">0</div>
+                                <div class="metric-label">Tracked SKUs</div>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
-                            <div class="metric-block metric-border-success mb-0"><div class="metric-value" id="inventoryAvailableCount">0</div><div class="metric-label">In Stock / Overstocked</div></div>
+                            <div class="metric-block metric-border-success mb-0">
+                                <div class="metric-value" id="inventoryAvailableCount">0</div>
+                                <div class="metric-label">In Stock / Overstocked</div>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
-                            <div class="metric-block metric-border-secondary mb-0"><div class="metric-value" id="inventoryLowCount">0</div><div class="metric-label">Below Minimum</div></div>
+                            <div class="metric-block metric-border-secondary mb-0">
+                                <div class="metric-value" id="inventoryLowCount">0</div>
+                                <div class="metric-label">Below Minimum</div>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
-                            <div class="metric-block metric-border-danger mb-0"><div class="metric-value" id="inventoryOutCount">0</div><div class="metric-label">Depleted</div></div>
+                            <div class="metric-block metric-border-danger mb-0">
+                                <div class="metric-value" id="inventoryOutCount">0</div>
+                                <div class="metric-label">Depleted</div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Toolbar Filters -->
                     <div class="module-toolbar">
                         <div class="toolbar-filters">
                             <div class="search-container">
@@ -112,9 +130,9 @@
                             </select>
                             <select id="inventoryWarehouseFilter" class="form-control filter-select">
                                 <option value="All">All Warehouses</option>
-                                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
-                                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
-                                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+                                <option value="Warehouse 1">Warehouse 1 - Small Items</option>
+                                <option value="Warehouse 2">Warehouse 2 - Large Materials</option>
+                                <option value="Warehouse 3">Warehouse 3 - Quarantined</option>
                             </select>
                             <select id="inventoryStatusFilter" class="form-control filter-select">
                                 <option value="All">All Statuses</option>
@@ -126,12 +144,18 @@
                             </select>
                         </div>
                         <div class="toolbar-actions">
-                            <button type="button" class="btn btn-outline" id="inventoryExportBtn"><i class="fas fa-file-export"></i> Export Inventory Report</button>
+                            <button type="button" class="btn btn-outline" id="inventoryExportBtn">
+                                <i class="fas fa-file-export"></i> Export Report
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Material Inventory Card Table -->
                     <div class="card">
-                        <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory <span class="badge badge-info ml-2" id="inventoryWarehouseBadge">All Warehouses</span></h3>
+                        <h3 class="section-title mb-2">
+                            <i class="fas fa-table section-icon icon-primary"></i> Material Inventory 
+                            <span class="badge badge-info ml-2" id="inventoryWarehouseBadge">All Warehouses</span>
+                        </h3>
                         <div class="table-wrapper">
                             <table class="table" id="inventoryTable">
                                 <thead>
@@ -158,6 +182,6 @@
 
     <div class="toast-container" id="toastContainer"></div>
     <script src="js/app.js"></script>
-    <script src="js/warehouse-inventory.js"></script>
+    <script src="js/warehouse-management.js"></script>
 </body>
 </html>
