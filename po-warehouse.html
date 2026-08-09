@@ -4,184 +4,973 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenebrowse - Warehouse Management</title>
+
+    <!-- Google Fonts: League Spartan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        :root {
+            --color-primary: #d44f00;
+            --color-primary-light: #f65e03;
+            --color-secondary: #e19c74;
+            --color-secondary-light: #f9cda4;
+
+            --color-success: #16A34A;
+            --color-success-light: #DCFCE7;
+
+            --color-danger: #DC2626;
+            --color-danger-light: #FEE2E2;
+
+            --color-warning: #D97706;
+            --color-warning-light: #FEF3C7;
+
+            --color-info: #2563EB;
+            --color-info-light: #DBEAFE;
+
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.page-exit {
+            opacity: 0;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav {
+            padding: 10px 16px;
+            flex-grow: 1;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748B;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .nav-item.active:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .logout-item {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 70px;
+            background-color: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+        }
+
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--color-danger);
+            border-radius: 50%;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .profile-info {
+            text-align: left;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .profile-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           NOTIFICATION DROPDOWN
+        ========================= */
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-panel {
+            display: none;
+            position: absolute;
+            top: 46px;
+            right: 0;
+            width: 300px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            z-index: 50;
+        }
+
+        .notification-wrapper.open .notification-panel {
+            display: block;
+        }
+
+        /* =========================
+           PAGE CONTAINER
+        ========================= */
+
+        .page-container {
+            padding: 0 32px 32px 32px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb-icon {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .mb-2 { margin-bottom: 16px; }
+        .mb-3 { margin-bottom: 24px; }
+
+        /* =========================
+           GRID
+        ========================= */
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* =========================
+           SUMMARY / METRIC CARDS
+        ========================= */
+
+        .summary-card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-block {
+            padding: 16px 8px;
+            background-color: #F8FAFC;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 3px solid transparent;
+        }
+
+        .metric-border-info { border-top-color: var(--color-info); }
+        .metric-border-success { border-top-color: var(--color-success); }
+        .metric-border-secondary { border-top-color: var(--color-secondary); }
+        .metric-border-danger { border-top-color: var(--color-danger); }
+
+        .metric-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .icon-info { color: var(--color-info); }
+        .icon-success { color: var(--color-success); }
+        .icon-secondary { color: var(--color-secondary); }
+        .icon-danger { color: var(--color-danger); }
+        .icon-primary { color: var(--color-primary); }
+
+        /* =========================
+           CONTROLS BAR / FILTERS
+        ========================= */
+
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .select-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E2E8F0;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background-color: #F8FAFC;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .material-id {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger  { background: var(--color-danger-light);  color: var(--color-danger); }
+        .status-info    { background: var(--color-info-light);    color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
+
+        .badge-count {
+            background: var(--color-info-light);
+            color: var(--color-info);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1080px) {
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .menu-toggle { display: block; }
+            .profile-info { display: none; }
+            .grid-cols-4 { grid-template-columns: 1fr; }
+            .controls-bar { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: none; }
+        }
+    </style>
 </head>
 <body class="page-transition">
-    <div class="app-wrapper">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
-                    Tenebrowse
-                </div>
+<div class="app-wrapper">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img
+                    src="assets/logo.png"
+                    alt="Icon"
+                    class="brand-logo"
+                    onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'"
+                >
+                <span>Tenebrowse</span>
             </div>
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item active" data-url="warehouse-management.html"><i class="fas fa-boxes"></i> Inventory</li>
-                    <li class="nav-item" data-url="warehouse-receiving.html"><i class="fas fa-truck-loading"></i> Receiving</li>
-                    <li class="nav-item" data-url="warehouse-transfers.html"><i class="fas fa-exchange-alt"></i> Transfers</li>
-                    <li class="nav-item" data-url="warehouse-settings.html"><i class="fas fa-cog"></i> Settings</li>
-                    <li class="nav-item logout-item" data-url="index.html"><i class="fas fa-sign-out-alt"></i> Logout</li>
-                </ul>
-            </nav>
-        </aside>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Topbar Header -->
-            <header class="topbar">
-                <div class="topbar-left">
-                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Warehouse Management</h2>
-                </div>
-                <div class="topbar-right">
-                    <div class="notification-wrapper">
-                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
-                            <i class="far fa-bell"></i>
-                            <span class="badge-dot"></span>
-                        </button>
-                        <div class="dropdown-menu" id="notifMenu">
-                            <div class="dropdown-header">System Notifications</div>
-                            <div class="dropdown-item">
-                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
-                                <div>
-                                    <div class="notif-title">Inventory Alert</div>
-                                    <div class="notif-desc">Several items are running below minimum levels.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-menu-container">
-                        <button class="profile-trigger">
-                            <div class="profile-avatar">WS</div>
-                            <div class="profile-info">
-                                <div class="profile-name">Warehouse Staff</div>
-                                <div class="profile-role">Inventory Control</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </header>
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-purchase-orders.html')">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Purchase Orders</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-suppliers.html')">
+                    <i class="fas fa-building"></i>
+                    <span>Suppliers</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-deliveries.html')">
+                    <i class="fas fa-truck"></i>
+                    <span>Deliveries</span>
+                </li>
+                <li class="nav-item active">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-substitutions.html')">
+                    <i class="fas fa-random"></i>
+                    <span>Substitutions</span>
+                </li>
+                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
 
-            <!-- Page Body -->
-            <div class="page-container">
-                <div class="breadcrumb">
-                    <a href="#" data-url="warehouse-management.html">Warehouse Operations</a>
-                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Material Inventory</span>
-                </div>
 
-                <div class="tabs-nav mb-3" role="tablist" aria-label="Warehouse Sections">
-                    <button type="button" class="tab-btn active" data-tab="material-inventory" role="tab" aria-selected="true" aria-controls="material-inventory-tab">
-                        <i class="fas fa-boxes"></i>
-                        <span>Material Inventory</span>
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <i class="fas fa-bars menu-toggle"></i>
+                <h2 class="page-title">Warehouse Management</h2>
+            </div>
+
+            <div class="topbar-right">
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
                     </button>
+                    <div class="notification-panel">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <h4>Notifications</h4>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="font-size:0.85rem;"><strong>Low Stock Alert</strong> — several materials are below minimum level</div>
+                            <div style="font-size:0.85rem;"><strong>Warehouse 2</strong> nearing full capacity</div>
+                        </div>
+                    </div>
                 </div>
 
-                <section id="material-inventory-tab" class="tab-content active" data-tab-content="material-inventory" role="tabpanel">
-                    <!-- Metric Cards -->
-                    <div class="grid grid-cols-4 mb-3">
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
-                            <div class="metric-block metric-border-info mb-0">
-                                <div class="metric-value" id="inventoryTotalCount">0</div>
-                                <div class="metric-label">Tracked SKUs</div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
-                            <div class="metric-block metric-border-success mb-0">
-                                <div class="metric-value" id="inventoryAvailableCount">0</div>
-                                <div class="metric-label">In Stock / Overstocked</div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
-                            <div class="metric-block metric-border-secondary mb-0">
-                                <div class="metric-value" id="inventoryLowCount">0</div>
-                                <div class="metric-label">Below Minimum</div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
-                            <div class="metric-block metric-border-danger mb-0">
-                                <div class="metric-value" id="inventoryOutCount">0</div>
-                                <div class="metric-label">Depleted</div>
-                            </div>
-                        </div>
+                <div class="profile-trigger">
+                    <div class="profile-avatar">PT</div>
+                    <div class="profile-info">
+                        <div class="profile-name">Purchasing Officer Tolentino</div>
+                        <div class="profile-role">Purchasing Officer</div>
                     </div>
-
-                    <!-- Toolbar Filters -->
-                    <div class="module-toolbar">
-                        <div class="toolbar-filters">
-                            <div class="search-container">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="inventorySearchInput" class="form-control" placeholder="Search Material ID or Name...">
-                            </div>
-                            <select id="inventoryCategoryFilter" class="form-control filter-select">
-                                <option value="All">All Categories</option>
-                                <option value="Structural">Structural</option>
-                                <option value="Electrical">Electrical</option>
-                                <option value="Plumbing">Plumbing</option>
-                                <option value="Finishing">Finishing</option>
-                                <option value="Hardware">Hardware</option>
-                            </select>
-                            <select id="inventoryWarehouseFilter" class="form-control filter-select">
-                                <option value="All">All Warehouses</option>
-                                <option value="Warehouse 1">Warehouse 1 - Small Items</option>
-                                <option value="Warehouse 2">Warehouse 2 - Large Materials</option>
-                                <option value="Warehouse 3">Warehouse 3 - Quarantined</option>
-                            </select>
-                            <select id="inventoryStatusFilter" class="form-control filter-select">
-                                <option value="All">All Statuses</option>
-                                <option value="In Stock">In Stock</option>
-                                <option value="Low Stock">Low Stock</option>
-                                <option value="Out of Stock">Out of Stock</option>
-                                <option value="Overstocked">Overstocked</option>
-                                <option value="Damaged">Damaged</option>
-                            </select>
-                        </div>
-                        <div class="toolbar-actions">
-                            <button type="button" class="btn btn-outline" id="inventoryExportBtn">
-                                <i class="fas fa-file-export"></i> Export Report
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Material Inventory Card Table -->
-                    <div class="card">
-                        <h3 class="section-title mb-2">
-                            <i class="fas fa-table section-icon icon-primary"></i> Material Inventory 
-                            <span class="badge badge-info ml-2" id="inventoryWarehouseBadge">All Warehouses</span>
-                        </h3>
-                        <div class="table-wrapper">
-                            <table class="table" id="inventoryTable">
-                                <thead>
-                                    <tr>
-                                        <th>Material ID</th>
-                                        <th>Material Name</th>
-                                        <th>Category</th>
-                                        <th>Current Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Warehouse Location</th>
-                                        <th>Min. Level</th>
-                                        <th>Status</th>
-                                        <th>Last Updated</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="inventoryBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
-        </main>
-    </div>
+        </header>
 
-    <div class="toast-container" id="toastContainer"></div>
-    <script src="js/app.js"></script>
-    <script src="js/warehouse-management.js"></script>
+
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+
+            <div class="breadcrumb">
+                <a href="#" onclick="transitionTo('po-dashboard.html')">Tenebrowse Control</a>
+                <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                <span>Warehouse Management</span>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="grid grid-cols-4 mb-3">
+                <div class="card">
+                    <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
+                    <div class="metric-block metric-border-info mb-0">
+                        <div class="metric-value" id="inventoryTotalCount">0</div>
+                        <div class="metric-label">Tracked SKUs</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
+                    <div class="metric-block metric-border-success mb-0">
+                        <div class="metric-value" id="inventoryAvailableCount">0</div>
+                        <div class="metric-label">In Stock / Overstocked</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
+                    <div class="metric-block metric-border-secondary mb-0">
+                        <div class="metric-value" id="inventoryLowCount">0</div>
+                        <div class="metric-label">Below Minimum</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
+                    <div class="metric-block metric-border-danger mb-0">
+                        <div class="metric-value" id="inventoryOutCount">0</div>
+                        <div class="metric-label">Depleted</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MATERIAL INVENTORY CARD -->
+            <div class="card">
+
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="inventorySearchInput" placeholder="Search Material ID or Name..." onkeyup="filterInventory()">
+                    </div>
+
+                    <div class="filter-group">
+                        <select class="select-input" id="inventoryCategoryFilter" onchange="filterInventory()">
+                            <option value="All">All Categories</option>
+                            <option value="Structural">Structural</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Finishing">Finishing</option>
+                            <option value="Hardware">Hardware</option>
+                        </select>
+
+                        <select class="select-input" id="inventoryWarehouseFilter" onchange="filterInventory()">
+                            <option value="All">All Warehouses</option>
+                            <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                            <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                            <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+                        </select>
+
+                        <select class="select-input" id="inventoryStatusFilter" onchange="filterInventory()">
+                            <option value="All">All Statuses</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                            <option value="Overstocked">Overstocked</option>
+                            <option value="Damaged">Damaged</option>
+                        </select>
+
+                        <button class="btn btn-secondary" onclick="exportInventory()">
+                            <i class="fas fa-file-export"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <h3 class="section-title mb-2">
+                    <i class="fas fa-table icon-primary"></i> Material Inventory
+                    <span class="badge-count" id="inventoryResultCount">0 items</span>
+                </h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Material ID</th>
+                                <th>Material Name</th>
+                                <th>Category</th>
+                                <th>Current Quantity</th>
+                                <th>Unit</th>
+                                <th>Warehouse Location</th>
+                                <th>Min. Level</th>
+                                <th>Status</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+
+                            <tr data-id="MAT-1001" data-name="Portland Cement (40kg)" data-category="Structural" data-warehouse="Warehouse 2" data-status="In Stock">
+                                <td class="material-id">MAT-1001</td>
+                                <td>Portland Cement (40kg)</td>
+                                <td>Structural</td>
+                                <td>860</td>
+                                <td>bags</td>
+                                <td>Warehouse 2 — Large Materials</td>
+                                <td>200</td>
+                                <td><span class="status-badge status-success">In Stock</span></td>
+                                <td>Aug 08, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1002" data-name="Deformed Steel Rebar 12mm" data-category="Structural" data-warehouse="Warehouse 2" data-status="Low Stock">
+                                <td class="material-id">MAT-1002</td>
+                                <td>Deformed Steel Rebar 12mm</td>
+                                <td>Structural</td>
+                                <td>45</td>
+                                <td>pcs</td>
+                                <td>Warehouse 2 — Large Materials</td>
+                                <td>100</td>
+                                <td><span class="status-badge status-warning">Low Stock</span></td>
+                                <td>Aug 09, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1003" data-name="THHN Copper Wire #12" data-category="Electrical" data-warehouse="Warehouse 1" data-status="In Stock">
+                                <td class="material-id">MAT-1003</td>
+                                <td>THHN Copper Wire #12</td>
+                                <td>Electrical</td>
+                                <td>1,240</td>
+                                <td>meters</td>
+                                <td>Warehouse 1 — Small Items</td>
+                                <td>300</td>
+                                <td><span class="status-badge status-success">In Stock</span></td>
+                                <td>Aug 07, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1004" data-name="Circuit Breaker 20A" data-category="Electrical" data-warehouse="Warehouse 1" data-status="Out of Stock">
+                                <td class="material-id">MAT-1004</td>
+                                <td>Circuit Breaker 20A</td>
+                                <td>Electrical</td>
+                                <td>0</td>
+                                <td>pcs</td>
+                                <td>Warehouse 1 — Small Items</td>
+                                <td>50</td>
+                                <td><span class="status-badge status-danger">Out of Stock</span></td>
+                                <td>Aug 06, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1005" data-name="PVC Pipe 4-inch (Class D)" data-category="Plumbing" data-warehouse="Warehouse 2" data-status="Overstocked">
+                                <td class="material-id">MAT-1005</td>
+                                <td>PVC Pipe 4-inch (Class D)</td>
+                                <td>Plumbing</td>
+                                <td>2,100</td>
+                                <td>pcs</td>
+                                <td>Warehouse 2 — Large Materials</td>
+                                <td>500</td>
+                                <td><span class="status-badge status-info">Overstocked</span></td>
+                                <td>Aug 09, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1006" data-name="Gate Valve 2-inch" data-category="Plumbing" data-warehouse="Warehouse 1" data-status="Low Stock">
+                                <td class="material-id">MAT-1006</td>
+                                <td>Gate Valve 2-inch</td>
+                                <td>Plumbing</td>
+                                <td>18</td>
+                                <td>pcs</td>
+                                <td>Warehouse 1 — Small Items</td>
+                                <td>40</td>
+                                <td><span class="status-badge status-warning">Low Stock</span></td>
+                                <td>Aug 05, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1007" data-name="Ceramic Floor Tiles 60x60" data-category="Finishing" data-warehouse="Warehouse 3" data-status="Damaged">
+                                <td class="material-id">MAT-1007</td>
+                                <td>Ceramic Floor Tiles 60x60</td>
+                                <td>Finishing</td>
+                                <td>32</td>
+                                <td>boxes</td>
+                                <td>Warehouse 3 — Quarantined</td>
+                                <td>60</td>
+                                <td><span class="status-badge status-neutral">Damaged</span></td>
+                                <td>Aug 04, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1008" data-name="Interior Latex Paint (White, 4L)" data-category="Finishing" data-warehouse="Warehouse 2" data-status="In Stock">
+                                <td class="material-id">MAT-1008</td>
+                                <td>Interior Latex Paint (White, 4L)</td>
+                                <td>Finishing</td>
+                                <td>310</td>
+                                <td>cans</td>
+                                <td>Warehouse 2 — Large Materials</td>
+                                <td>100</td>
+                                <td><span class="status-badge status-success">In Stock</span></td>
+                                <td>Aug 08, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1009" data-name="Stainless Hex Bolts M10x50" data-category="Hardware" data-warehouse="Warehouse 1" data-status="In Stock">
+                                <td class="material-id">MAT-1009</td>
+                                <td>Stainless Hex Bolts M10x50</td>
+                                <td>Hardware</td>
+                                <td>4,500</td>
+                                <td>pcs</td>
+                                <td>Warehouse 1 — Small Items</td>
+                                <td>1000</td>
+                                <td><span class="status-badge status-success">In Stock</span></td>
+                                <td>Aug 09, 2026</td>
+                            </tr>
+
+                            <tr data-id="MAT-1010" data-name="Padlock Heavy Duty 50mm" data-category="Hardware" data-warehouse="Warehouse 1" data-status="Out of Stock">
+                                <td class="material-id">MAT-1010</td>
+                                <td>Padlock Heavy Duty 50mm</td>
+                                <td>Hardware</td>
+                                <td>0</td>
+                                <td>pcs</td>
+                                <td>Warehouse 1 — Small Items</td>
+                                <td>80</td>
+                                <td><span class="status-badge status-danger">Out of Stock</span></td>
+                                <td>Aug 03, 2026</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = url;
+        }, 200);
+    }
+
+    // Filter Logic
+    function filterInventory() {
+        const searchValue = document.getElementById('inventorySearchInput').value.toLowerCase();
+        const categoryValue = document.getElementById('inventoryCategoryFilter').value;
+        const warehouseValue = document.getElementById('inventoryWarehouseFilter').value;
+        const statusValue = document.getElementById('inventoryStatusFilter').value;
+
+        const rows = document.querySelectorAll('#inventoryBody tr');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const id = row.getAttribute('data-id').toLowerCase();
+            const name = row.getAttribute('data-name').toLowerCase();
+            const category = row.getAttribute('data-category');
+            const warehouse = row.getAttribute('data-warehouse');
+            const status = row.getAttribute('data-status');
+
+            const matchesSearch = id.includes(searchValue) || name.includes(searchValue);
+            const matchesCategory = categoryValue === 'All' || category === categoryValue;
+            const matchesWarehouse = warehouseValue === 'All' || warehouse === warehouseValue;
+            const matchesStatus = statusValue === 'All' || status === statusValue;
+
+            if (matchesSearch && matchesCategory && matchesWarehouse && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        document.getElementById('inventoryResultCount').innerText = visibleCount + (visibleCount === 1 ? ' item' : ' items');
+    }
+
+    // Summary Metric Calculation (based on full dataset, not filtered view)
+    function updateSummaryMetrics() {
+        const rows = document.querySelectorAll('#inventoryBody tr');
+        let total = 0, available = 0, low = 0, out = 0;
+
+        rows.forEach(row => {
+            total++;
+            const status = row.getAttribute('data-status');
+            if (status === 'In Stock' || status === 'Overstocked') available++;
+            if (status === 'Low Stock') low++;
+            if (status === 'Out of Stock') out++;
+        });
+
+        document.getElementById('inventoryTotalCount').innerText = total;
+        document.getElementById('inventoryAvailableCount').innerText = available;
+        document.getElementById('inventoryLowCount').innerText = low;
+        document.getElementById('inventoryOutCount').innerText = out;
+    }
+
+    function exportInventory() {
+        alert('Inventory report export started. You will be notified once the file is ready to download.');
+    }
+
+    // Initialize on load
+    updateSummaryMetrics();
+    filterInventory();
+</script>
+
 </body>
 </html>
