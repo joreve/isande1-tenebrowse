@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDropdowns();
     initModals();
     initGuidedAccess();
+    initWarehouseGuidedModalLayout();
     initNavigation();
     initLoginPage();
 });
@@ -83,6 +84,57 @@ function initDropdowns() {
 }
 
 // ==========================================
+// Warehouse Guided Access + Modal Layout
+// ==========================================
+function syncWarehouseGuidedModalLayout() {
+    const body = document.body;
+
+    if (!body || !body.classList.contains('warehouse-staff-page')) {
+        return;
+    }
+
+    const guide = document.querySelector('.guided-helper-card');
+    const activeModal = document.querySelector(
+        '.modal-overlay.active:not(.modal-parent-suspended), ' +
+        '.modal-overlay.modal-closing:not(.modal-parent-suspended)'
+    );
+
+    const guideIsVisible = Boolean(
+        guide &&
+        body.classList.contains('guided-access-enabled') &&
+        !guide.classList.contains('hidden')
+    );
+
+    const shouldReserveGuideSpace = Boolean(activeModal && guideIsVisible);
+    const shouldAutoCollapseGuide = shouldReserveGuideSpace && window.innerWidth <= 1240;
+
+    body.classList.toggle('warehouse-guide-modal-layout', shouldReserveGuideSpace);
+
+    if (guide) {
+        guide.classList.toggle('modal-auto-collapsed', shouldAutoCollapseGuide);
+    }
+}
+
+function initWarehouseGuidedModalLayout() {
+    const body = document.body;
+    if (!body || !body.classList.contains('warehouse-staff-page')) return;
+
+    const guide = document.querySelector('.guided-helper-card');
+
+    if (guide) {
+        new MutationObserver(syncWarehouseGuidedModalLayout).observe(guide, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+
+    window.addEventListener('resize', syncWarehouseGuidedModalLayout);
+    syncWarehouseGuidedModalLayout();
+}
+
+window.syncWarehouseGuidedModalLayout = syncWarehouseGuidedModalLayout;
+
+// ==========================================
 // Reusable Confirmation Modal & Scroll Lock System
 // ==========================================
 function updateBodyScrollLock() {
@@ -94,6 +146,8 @@ function updateBodyScrollLock() {
         document.body.style.overflow = '';
         document.body.classList.remove('modal-open');
     }
+
+    syncWarehouseGuidedModalLayout();
 }
 
 function openModal(modalId) {
@@ -106,10 +160,30 @@ function openModal(modalId) {
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) {
+    if (!modal) return;
+
+    const isWarehouseGuidedLayout = Boolean(
+        document.body.classList.contains('warehouse-staff-page') &&
+        document.body.classList.contains('warehouse-guide-modal-layout') &&
+        modal.classList.contains('active')
+    );
+
+    if (isWarehouseGuidedLayout) {
+        // Preserve the guide-reserved modal position while the overlay fades out.
+        // Without this, the modal briefly jumps back to the center before disappearing.
+        modal.classList.add('modal-closing');
         modal.classList.remove('active');
         updateBodyScrollLock();
+
+        window.setTimeout(() => {
+            modal.classList.remove('modal-closing');
+            syncWarehouseGuidedModalLayout();
+        }, 280);
+        return;
     }
+
+    modal.classList.remove('active');
+    updateBodyScrollLock();
 }
 
 window.openModal = openModal;

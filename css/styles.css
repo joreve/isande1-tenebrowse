@@ -2817,3 +2817,109 @@ body.warehouse-staff-page .guided-helper-btn {
 body.warehouse-staff-page .guided-restore-btn {
     white-space: nowrap;
 }
+
+
+/* ==========================================================================
+   Warehouse Staff - Guided Access Modal Collision Prevention
+   ========================================================================== */
+
+/*
+   Large screens:
+   Reserve a fixed right-side rail for Guided Access whenever a Warehouse
+   Staff modal is open. This keeps the guide visible without covering modal
+   tables, action buttons, or form controls.
+*/
+@media (min-width: 1241px) {
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended),
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) {
+        padding-left: 1rem;
+        padding-right: 360px;
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended) .modal,
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) .modal {
+        width: 100%;
+    }
+}
+
+/*
+   Smaller desktop / tablet:
+   Do not squeeze complex verification tables into a narrow side-by-side
+   layout. The guide temporarily becomes header-only while a modal is open,
+   and a small bottom rail is reserved so even the collapsed guide does not
+   cover modal footer controls. This temporary state does not overwrite the
+   user's saved collapsed/expanded preference.
+*/
+@media (max-width: 1240px) {
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .guided-helper-card.modal-auto-collapsed {
+        right: 1rem;
+        bottom: 1rem;
+        width: min(300px, calc(100vw - 2rem));
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .guided-helper-card.modal-auto-collapsed .guided-helper-body {
+        display: none;
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended),
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) {
+        padding: 1rem 1rem 5.75rem;
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended) .modal,
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) .modal {
+        max-height: calc(100vh - 6.75rem);
+    }
+}
+
+/*
+   Very narrow screens:
+   Keep the temporary guide header compact while preserving an obvious
+   minimize/expand affordance.
+*/
+@media (max-width: 640px) {
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .guided-helper-card.modal-auto-collapsed {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        width: auto;
+        max-width: none;
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended),
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) {
+        padding: 0.75rem 0.75rem 5.5rem;
+    }
+
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.active:not(.modal-parent-suspended) .modal,
+    body.warehouse-staff-page.warehouse-guide-modal-layout
+    .modal-overlay.modal-closing:not(.modal-parent-suspended) .modal {
+        max-height: calc(100vh - 6.25rem);
+    }
+}
+
+
+/* Keep Warehouse Staff modals in their guide-adjusted position until fade-out ends. */
+body.warehouse-staff-page .modal-overlay.modal-closing {
+    opacity: 0;
+    visibility: visible;
+    pointer-events: none;
+}
+
+body.warehouse-staff-page .modal-overlay.modal-closing .modal {
+    transform: scale(1);
+}

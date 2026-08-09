@@ -1,6 +1,6 @@
 /**
  * Tenebrowse - Warehouse Staff
- * Deliveries Page Logic (v4.3.2 – Deliveries Navigation and Action Repair)
+ * Deliveries Page Logic (v4.3.3 – Verification Guide Completion Fix)
  *
  * Extends the Purchase Order-centric Deliveries workflow by implementing:
  * - Fixed tab-switching behavior between Purchase Orders and Delivery Activity
@@ -961,19 +961,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const GUIDED_VERIFICATION_STEPS = 5;
+
     const setGuidedStep = (activeStep) => {
-        for (let i = 1; i <= 6; i++) {
+        const verificationComplete = activeStep > GUIDED_VERIFICATION_STEPS;
+
+        for (let i = 1; i <= GUIDED_VERIFICATION_STEPS; i++) {
             const el = document.getElementById(`step${i}Badge`);
             if (!el) continue;
+
             el.classList.remove('active', 'completed');
-            if (i < activeStep) {
+
+            if (verificationComplete || i < activeStep) {
                 el.classList.add('completed');
             } else if (i === activeStep) {
                 el.classList.add('active');
             }
         }
+
         if (guidedSubbadge) {
-            guidedSubbadge.textContent = `Step ${activeStep} of 6`;
+            guidedSubbadge.textContent = verificationComplete
+                ? 'Verification Complete'
+                : `Step ${activeStep} of ${GUIDED_VERIFICATION_STEPS}`;
         }
     };
 
@@ -1768,7 +1777,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderDeliveriesTable();
         updateSummaryMetrics();
-        setGuidedStep(4);
+
+        // Verification is complete whether or not a discrepancy was found.
+        // Any discrepancy/return handling is an optional follow-up workflow.
+        setGuidedStep(GUIDED_VERIFICATION_STEPS + 1);
     };
 
     // ==========================================
@@ -2192,15 +2204,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirmButton) confirmButton.disabled = true;
             if (moreReceipts) moreReceipts.value = 'Yes';
             if (outstandingGroup) outstandingGroup.style.display = 'none';
+            setGuidedStep(4);
             openExclusiveModal('verifyConfirmModal');
         });
 
         closeConfirm?.addEventListener('click', () => {
             if (verifyConfirmModal && typeof window.closeModal === 'function') window.closeModal('verifyConfirmModal');
         });
-        verifyBack?.addEventListener('click', () => openExclusiveModal('verifyModal'));
+        verifyBack?.addEventListener('click', () => {
+            setGuidedStep(3);
+            openExclusiveModal('verifyModal');
+        });
         confirmCheckbox?.addEventListener('change', () => {
             if (confirmButton) confirmButton.disabled = !confirmCheckbox.checked;
+            setGuidedStep(confirmCheckbox.checked ? 5 : 4);
         });
         moreReceipts?.addEventListener('change', () => {
             const remaining = parseSafeInt(document.getElementById('poOutstandingQtyDisplay')?.textContent);

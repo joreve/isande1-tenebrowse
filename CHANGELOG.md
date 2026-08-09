@@ -81,3 +81,7 @@
 ## v4.3 Visual Changes for Warehouse Staff
 - Improved Status Badge and Action Button Consistency Across Interfaces
 - Standardized Labels
+
+## v4.4 Fixes
+- Fixed Workflow Issue for Guided Access in Deliveries
+- Fixed Guided Access blocking buttons
