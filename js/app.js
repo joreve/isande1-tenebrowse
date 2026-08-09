@@ -368,9 +368,6 @@ function initLoginPage() {
                     case 'ac':
                         targetDashboard = 'ac-dashboard.html';
                         break;
-                    case 'admin':
-                        targetDashboard = 'admin-dashboard.html';
-                        break;
                     default:
                         targetDashboard = 'index.html';
                 }
