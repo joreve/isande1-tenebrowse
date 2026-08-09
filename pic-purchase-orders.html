@@ -25,19 +25,19 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('pic-dashboard.html')">
+                    <li class="nav-item" data-url="pic-dashboard.html">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-material-requests.html')">
+                    <li class="nav-item" data-url="pic-material-requests.html">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
                     <li class="nav-item active">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-settings.html')">
+                    <li class="nav-item" data-url="pic-settings.html">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -92,7 +92,7 @@
                 
                 <!-- Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('dashboard.html')">Tenebrowse Control</a>
+                    <a href="#" data-url="pic-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Purchase Orders</span>
                 </div>
@@ -107,8 +107,9 @@
                         <select id="statusFilter" class="form-control filter-select">
                             <option value="All">All Statuses</option>
                             <option value="Ordered">Ordered</option>
-                            <option value="Delivering">Delivering</option>
-                            <option value="Received">Received</option>
+                            <option value="Partially Delivered">Partially Delivered</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Closed with Outstanding Quantity">Closed with Outstanding Quantity</option>
                         </select>
                     </div>
                     <div class="toolbar-actions">
@@ -124,11 +125,12 @@
                             <thead>
                                 <tr>
                                     <th>PO Number</th>
-                                    <th>Supplier</th>
+                                    <th>Supplier(s)</th>
                                     <th>Date Ordered</th>
                                     <th>Expected Delivery</th>
                                     <th>Status</th>
                                     <th>Remarks</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="poTableBody">
@@ -138,68 +140,22 @@
                     </div>
                 </div>
 
-                <!-- Substitution Request Form Component -->
-                <div class="card card-highlight-secondary">
-                    <h3 class="section-title mb-2"><i class="fas fa-exchange-alt section-icon icon-secondary"></i> Material Substitution Request</h3>
-                    <p class="section-description">File a variance request when original materials are unavailable or delayed to maintain project schedules.</p>
-                    
-                    <form id="substitutionForm">
-                        <div class="sub-form-grid">
-                            
-                            <div class="form-group">
-                                <label class="form-label">Original Material</label>
-                                <input type="text" id="origMaterial" class="form-control" placeholder="e.g., Structural Steel I-Beam (Grade 50)" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Replacement Material</label>
-                                <input type="text" id="repMaterial" class="form-control" placeholder="e.g., Structural Steel H-Beam (Grade 50)" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Quantity Required</label>
-                                <input type="number" id="subQty" class="form-control" placeholder="0" min="1" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Reason for Substitution</label>
-                                <select id="subReason" class="form-control" required>
-                                    <option value="" disabled selected>Select reason...</option>
-                                    <option value="Supply Chain Delay">Supply Chain Delay</option>
-                                    <option value="Material Discontinued">Material Discontinued</option>
-                                    <option value="Engineering Variation">Engineering Variation</option>
-                                    <option value="Cost Optimization">Cost Optimization</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label class="form-label">Supporting Notes & Technical Specifications</label>
-                                <textarea id="subNotes" class="form-control" placeholder="Detail any structural, architectural, or cost impacts..."></textarea>
-                            </div>
-
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" id="btnSaveDraft">Save Draft</button>
-                            <button type="button" class="btn btn-primary" data-modal-target="subModal">Submit Request</button>
-                        </div>
-                    </form>
-                </div>
-
             </div>
         </main>
     </div>
 
-    <!-- Submission Confirmation Modal -->
-    <div class="modal-overlay" id="subModal">
-        <div class="modal">
-            <div class="modal-header">Confirm Substitution</div>
-            <div class="modal-body">
-                Are you sure you want to submit this material substitution request? It will be forwarded to the Head Manager for final approval.
+    <!-- Purchase Order Details Modal -->
+    <div class="modal-overlay" id="poDetailsModal" role="dialog" aria-modal="true" aria-labelledby="poDetailsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="poDetailsTitle"><i class="fas fa-file-invoice icon-primary"></i> Purchase Order Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="poDetailsBody">
+                <!-- Populated by js/pic-purchase-orders.js -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Cancel</button>
-                <button class="btn btn-primary" id="confirmSubBtn" data-modal-close>Confirm & Submit</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
             </div>
         </div>
     </div>
@@ -207,99 +163,8 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Core App JS Hook -->
+    <!-- Shared and Page-Specific Scripts -->
     <script src="js/app.js"></script>
-
-    <!-- Page Specific Vanilla JS Logic -->
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            const poData = [
-                { id: 'PO-2026-770', supplier: 'Global Logistics Foundry', dateOrdered: 'Jul 10, 2026', expDelivery: 'Jul 15, 2026', status: 'Delivering', remarks: 'In Transit - Route 4' },
-                { id: 'PO-2026-768', supplier: 'Metro Steelwork', dateOrdered: 'Jul 08, 2026', expDelivery: 'Jul 14, 2026', status: 'Ordered', remarks: 'Awaiting Dispatch' },
-                { id: 'PO-2026-750', supplier: 'Prime Cement Corp', dateOrdered: 'Jul 01, 2026', expDelivery: 'Jul 05, 2026', status: 'Received', remarks: 'Offloaded at Dock A' },
-                { id: 'PO-2026-745', supplier: 'Electra Wire Solutions', dateOrdered: 'Jun 28, 2026', expDelivery: 'Jul 02, 2026', status: 'Received', remarks: 'Verified & Stored' },
-                { id: 'PO-2026-782', supplier: 'Timberland Suppliers', dateOrdered: 'Jul 12, 2026', expDelivery: 'Jul 20, 2026', status: 'Ordered', remarks: 'Pending Supplier Confirmation' }
-            ];
-
-            const tableBody = document.getElementById('poTableBody');
-            const searchInput = document.getElementById('searchInput');
-            const statusFilter = document.getElementById('statusFilter');
-            const btnExport = document.getElementById('btnExport');
-            
-            const substitutionForm = document.getElementById('substitutionForm');
-            const btnSaveDraft = document.getElementById('btnSaveDraft');
-            const confirmSubBtn = document.getElementById('confirmSubBtn');
-
-            const renderPOTable = () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                const filterStatus = statusFilter.value;
-
-                tableBody.innerHTML = '';
-
-                const filteredData = poData.filter(po => {
-                    const matchesSearch = po.id.toLowerCase().includes(searchTerm) || po.supplier.toLowerCase().includes(searchTerm);
-                    const matchesStatus = filterStatus === 'All' || po.status === filterStatus;
-                    return matchesSearch && matchesStatus;
-                });
-
-                if (filteredData.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6" class="empty-state-row">No purchase orders match your criteria.</td></tr>`;
-                    return;
-                }
-
-                filteredData.forEach(po => {
-                    let badgeClass = '';
-                    if (po.status === 'Ordered') badgeClass = 'badge-info';
-                    else if (po.status === 'Delivering') badgeClass = 'badge-warning';
-                    else if (po.status === 'Received') badgeClass = 'badge-success';
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${po.id}</strong></td>
-                        <td>${po.supplier}</td>
-                        <td>${po.dateOrdered}</td>
-                        <td>${po.expDelivery}</td>
-                        <td><span class="badge ${badgeClass}">${po.status}</span></td>
-                        <td class="text-muted-sm">${po.remarks}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-            };
-
-            searchInput.addEventListener('input', renderPOTable);
-            statusFilter.addEventListener('change', renderPOTable);
-
-            btnExport.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Export Started', 'Generating PO tracking report in CSV format...', 'primary');
-            });
-
-            btnSaveDraft.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Draft Saved', 'Substitution request draft has been saved locally.', 'info');
-            });
-
-            confirmSubBtn.addEventListener('click', () => {
-                const origMat = document.getElementById('origMaterial').value.trim();
-                const repMat = document.getElementById('repMaterial').value.trim();
-                const qty = document.getElementById('subQty').value;
-                const reason = document.getElementById('subReason').value;
-
-                if (!origMat || !repMat || !qty || !reason) {
-                    if(window.showToast) window.showToast('Incomplete Form', 'Please fill out all required fields before submitting.', 'danger');
-                    return;
-                }
-
-                if(window.showToast) window.showToast('Request Submitted', 'Substitution Variance Request has been forwarded to Head Manager.', 'success');
-                substitutionForm.reset();
-            });
-
-            renderPOTable();
-        });
-    </script>
+    <script src="js/pic-purchase-orders.js"></script>
 </body>
 </html>

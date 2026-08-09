@@ -28,16 +28,16 @@
                     <li class="nav-item active">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-material-requests.html')">
+                    <li class="nav-item" data-url="pic-material-requests.html">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-purchase-orders.html')">
+                    <li class="nav-item" data-url="pic-purchase-orders.html">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-settings.html')">
+                    <li class="nav-item" data-url="pic-settings.html">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -311,11 +311,5 @@
 
     <!-- Core Interactions Application Scripts Hook -->
     <script src="js/app.js"></script>
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-    </script>
 </body>
 </html>

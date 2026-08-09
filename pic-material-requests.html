@@ -25,19 +25,19 @@
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-list">
-                    <li class="nav-item" onclick="transitionTo('pic-dashboard.html')">
+                    <li class="nav-item" data-url="pic-dashboard.html">
                         <i class="fas fa-chart-pie"></i> Dashboard
                     </li>
                     <li class="nav-item active">
                         <i class="fas fa-box-open"></i> Material Requests
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-purchase-orders.html')">
+                    <li class="nav-item" data-url="pic-purchase-orders.html">
                         <i class="fas fa-file-invoice"></i> Purchase Orders
                     </li>
-                    <li class="nav-item" onclick="transitionTo('pic-settings.html')">
+                    <li class="nav-item" data-url="pic-settings.html">
                         <i class="fas fa-cog"></i> Settings
                     </li>
-                    <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <li class="nav-item logout-item" data-url="index.html">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </li>
                 </ul>
@@ -93,267 +93,462 @@
                 
                 <!-- System Structural Breadcrumbs -->
                 <div class="breadcrumb">
-                    <a href="javascript:transitionTo('dashboard.html')">Tenebrowse Control</a>
+                    <a href="#" data-url="pic-dashboard.html">Tenebrowse Control</a>
                     <i class="fas fa-chevron-right breadcrumb-icon"></i>
                     <span>Material Requests</span>
                 </div>
 
-                <!-- Top Module Toolbar -->
-                <div class="module-toolbar">
-                    <div class="toolbar-filters">
-                        <div class="search-container">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search requested materials...">
+                <!-- Pending Material Requests Status -->
+                <div class="pending-request-status-card mb-3" id="pendingRequestStatusCard">
+                    <div class="pending-request-status-main">
+                        <div class="pending-request-status-icon">
+                            <i class="fas fa-hourglass-half"></i>
                         </div>
-                        <select id="categoryFilter" class="form-control filter-select">
-                            <option value="All">All Categories</option>
-                            <option value="Masonry">Masonry</option>
-                            <option value="Metals">Metals & Steel</option>
-                            <option value="Plumbing">Plumbing</option>
-                            <option value="Electrical">Electrical</option>
-                            <option value="Woodwork">Woodwork</option>
-                        </select>
+                        <div>
+                            <div class="pending-request-status-title">Pending Material Requests</div>
+                            <div class="pending-request-status-text" id="pendingRequestStatusText">
+                                Loading requests awaiting General Manager approval...
+                            </div>
+                        </div>
                     </div>
-                    <div class="toolbar-actions">
-                        <button class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export CSV</button>
-                        <button class="btn btn-outline" id="btnSaveDraft"><i class="fas fa-save"></i> Save Draft</button>
-                        <button class="btn btn-primary" data-modal-target="submitReqModal"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    <div class="pending-request-status-actions">
+                        <div class="pending-request-status-count">
+                            <span class="pending-request-count-value" id="pendingRequestCount">0</span>
+                            <span class="pending-request-count-label">Pending</span>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" id="btnViewPendingRequests">
+                            <i class="fas fa-search"></i> View Pending
+                        </button>
                     </div>
                 </div>
 
-                <!-- Material Entry Form -->
-                <div class="card entry-form-card mb-3">
-                    <h3 class="section-title mb-2"><i class="fas fa-plus-circle section-icon icon-primary"></i> Add Material Line Item</h3>
-                    
-                    <form id="materialForm" class="form-grid">
-                        
-                        <!-- Hybrid Datalist: Acts as Dropdown OR Manual Entry -->
-                        <div class="form-group mb-0">
-                            <label class="form-label">Material Name</label>
-                            <input type="text" id="matName" class="form-control" list="materialCatalog" placeholder="Select or type new..." required>
-                            <datalist id="materialCatalog">
-                                <option value="Portland Cement Type 1">
-                                <option value="Deformed Rebar 16mm x 6m">
-                                <option value="PVC Pipe 4'' Series 1000">
-                                <option value="Marine Plywood 3/4''">
-                                <option value="THHN Copper Wire 3.5mm">
-                            </datalist>
-                        </div>
+                <!-- Requisition Tabs - follows Warehouse Management tab design -->
+                <div class="tabs-nav mb-3" role="tablist" aria-label="Material Request Sections">
+                    <button type="button" class="tab-btn active" data-tab="material-requests" role="tab"
+                            aria-selected="true" aria-controls="material-requests-tab" id="tab-btn-material">
+                        <i class="fas fa-box-open"></i>
+                        <span>Material Requests</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="request-tracking" role="tab"
+                            aria-selected="false" aria-controls="request-tracking-tab" id="tab-btn-tracking">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Request Tracking</span>
+                    </button>
+                </div>
 
-                        <div class="form-group mb-0">
-                            <label class="form-label">Category</label>
-                            <select id="matCategory" class="form-control" required>
-                                <option value="" disabled selected>Select...</option>
+                <!-- TAB 1: Material Requests -->
+                <div id="material-requests-tab" class="tab-content active" role="tabpanel"
+                     aria-labelledby="tab-btn-material" data-tab-content="material-requests">
+
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search requested materials...">
+                            </div>
+                            <select id="categoryFilter" class="form-control filter-select">
+                                <option value="All">All Categories</option>
                                 <option value="Masonry">Masonry</option>
-                                <option value="Metals">Metals & Steel</option>
+                                <option value="Metals">Metals &amp; Steel</option>
                                 <option value="Plumbing">Plumbing</option>
                                 <option value="Electrical">Electrical</option>
                                 <option value="Woodwork">Woodwork</option>
-                                <option value="Other">Other</option>
                             </select>
                         </div>
-
-                        <div class="form-group mb-0">
-                            <label class="form-label">Unit</label>
-                            <input type="text" id="matUnit" class="form-control" placeholder="e.g., Bags, Pcs" required>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="btnExport"><i class="fas fa-file-export"></i> Export CSV</button>
+                            <button type="button" class="btn btn-outline" id="btnSaveDraft"><i class="fas fa-save"></i> Save Draft</button>
+                            <button type="button" class="btn btn-primary" id="btnOpenSubmitReq"><i class="fas fa-paper-plane"></i> Submit Request</button>
                         </div>
+                    </div>
 
-                        <div class="form-group mb-0">
-                            <label class="form-label">Quantity</label>
-                            <input type="number" id="matQty" class="form-control" min="1" placeholder="0" required>
+                    <div class="card entry-form-card mb-3">
+                        <h3 class="section-title mb-2"><i class="fas fa-plus-circle section-icon icon-primary"></i> Add Material Line Item</h3>
+
+                        <form id="materialForm" class="form-grid">
+                            <div class="form-group mb-0">
+                                <label class="form-label" for="matName">Material Name</label>
+                                <select id="matName" class="form-control" required>
+                                    <option value="">Select material...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label" for="matCategory">Category</label>
+                                <input type="text" id="matCategory" class="form-control" placeholder="Auto-filled" readonly>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label" for="matUnit">Unit</label>
+                                <input type="text" id="matUnit" class="form-control" placeholder="Auto-filled" readonly>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label" for="matQty">Quantity</label>
+                                <input type="number" id="matQty" class="form-control" min="1" placeholder="0" required>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label" for="matRemarks">Remarks</label>
+                                <input type="text" id="matRemarks" class="form-control" placeholder="Optional notes...">
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <button type="submit" class="btn btn-primary btn-block" id="btnAddMaterial"><i class="fas fa-plus"></i> Add</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card mb-3">
+                        <h3 class="section-title mb-2">Draft Material Requests</h3>
+                        <div class="table-wrapper">
+                            <table class="table" id="materialsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Material ID</th>
+                                        <th>Material Name</th>
+                                        <th>Category</th>
+                                        <th>Unit</th>
+                                        <th>Quantity</th>
+                                        <th>Remarks</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Populated by js/pic-material-requests.js -->
+                                </tbody>
+                            </table>
                         </div>
-
-                        <div class="form-group mb-0">
-                            <label class="form-label">Remarks</label>
-                            <input type="text" id="matRemarks" class="form-control" placeholder="Optional notes...">
-                        </div>
-
-                        <div class="form-group mb-0">
-                            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-plus"></i> Add</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Data Table Component -->
-                <div class="card">
-                    <h3 class="section-title mb-2">Draft Requisition Manifest</h3>
-                    <div class="table-wrapper">
-                        <table class="table" id="materialsTable">
-                            <thead>
-                                <tr>
-                                    <th>Material ID</th>
-                                    <th>Material Name</th>
-                                    <th>Category</th>
-                                    <th>Unit</th>
-                                    <th>Quantity</th>
-                                    <th>Remarks</th>
-                                    <th class="text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
+
+
+                <!-- TAB 2: Request Tracking -->
+                <div id="request-tracking-tab" class="tab-content" role="tabpanel"
+                     aria-labelledby="tab-btn-tracking" data-tab-content="request-tracking">
+
+                    <div class="grid grid-cols-4 mb-3 request-tracking-summary">
+                        <div class="metric-block metric-border-secondary">
+                            <div class="metric-value" id="trackingPendingCount">0</div>
+                            <div class="metric-label">Pending Review</div>
+                        </div>
+                        <div class="metric-block metric-border-success">
+                            <div class="metric-value" id="trackingApprovedCount">0</div>
+                            <div class="metric-label">Approved</div>
+                        </div>
+                        <div class="metric-block metric-border-info">
+                            <div class="metric-value" id="trackingRevisionCount">0</div>
+                            <div class="metric-label">Needs Revision</div>
+                        </div>
+                        <div class="metric-block metric-border-danger">
+                            <div class="metric-value" id="trackingRejectedCount">0</div>
+                            <div class="metric-label">Rejected</div>
+                        </div>
+                    </div>
+
+                    <div class="module-toolbar">
+                        <div class="toolbar-filters">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="trackingSearchInput" class="form-control" placeholder="Search request ID or material...">
+                            </div>
+                            <select id="trackingTypeFilter" class="form-control filter-select">
+                                <option value="All">All Request Types</option>
+                                <option value="Material Request">Material Requests</option>
+                                <option value="Substitution Request">Substitution Requests</option>
+                            </select>
+                            <select id="trackingStatusFilter" class="form-control filter-select">
+                                <option value="All">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Needs Revision">Needs Revision</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button type="button" class="btn btn-outline" id="btnExportTracking">
+                                <i class="fas fa-file-export"></i> Export Request Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title mb-1">
+                            <i class="fas fa-clipboard-list section-icon icon-primary"></i> Request Tracking
+                        </h3>
+                        <p class="text-muted-sm mb-2">Monitor submitted material requests, General Manager decisions, and any substitution request linked to an approved material request.</p>
+
+                        <div class="table-wrapper">
+                            <table class="table" id="requestTrackingTable">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Request Type</th>
+                                        <th>Date Submitted</th>
+                                        <th>Request Summary</th>
+                                        <th>Status</th>
+                                        <th>Reviewed By</th>
+                                        <th>Last Updated</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestTrackingTableBody">
+                                    <!-- Populated by js/pic-material-requests.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Submit Confirmation Modal Component -->
-    <div class="modal-overlay" id="submitReqModal">
+    <!-- Submit Confirmation Modal -->
+    <div class="modal-overlay" id="submitReqModal" role="dialog" aria-modal="true" aria-labelledby="submitReqTitle">
         <div class="modal">
-            <div class="modal-header">Finalize Material Request</div>
+            <div class="modal-header">
+                <span id="submitReqTitle"><i class="fas fa-paper-plane icon-primary"></i> Finalize Material Request</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
             <div class="modal-body">
-                You are about to submit this requisition manifest to the Head Manager. Modifications will not be possible once submitted without a formal revision request. Proceed?
+                <p class="mb-2">You are about to submit this requisition manifest to the General Manager for approval.</p>
+
+                <div class="pending-request-submit-summary">
+                    <div class="pending-request-submit-item">
+                        <span class="pending-request-submit-label">Currently Pending</span>
+                        <strong id="submitPendingCurrent">0</strong>
+                    </div>
+                    <i class="fas fa-arrow-right pending-request-submit-arrow" aria-hidden="true"></i>
+                    <div class="pending-request-submit-item">
+                        <span class="pending-request-submit-label">After Submission</span>
+                        <strong id="submitPendingAfter">1</strong>
+                    </div>
+                </div>
+
+                <div class="pending-request-submit-note">
+                    <i class="fas fa-info-circle"></i>
+                    <span>This is a soft warning only. You may continue submitting legitimate project requirements, but review existing pending requests first to reduce duplicate submissions.</span>
+                </div>
+
+                <p class="text-muted-sm mt-2">Once submitted, this draft will be cleared and routed for General Manager review.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" data-modal-close>Review Draft</button>
-                <button class="btn btn-primary" id="confirmSubmitBtn" data-modal-close>Confirm & Submit</button>
+                <button type="button" class="btn btn-outline" data-modal-close>Review Draft</button>
+                <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Confirm &amp; Submit</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Material Modal -->
+    <div class="modal-overlay" id="editMaterialModal" role="dialog" aria-modal="true" aria-labelledby="editMaterialTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="editMaterialTitle"><i class="fas fa-edit icon-primary"></i> Edit Material Line Item</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="editMaterialForm">
+                <div class="modal-body">
+                    <div class="edit-material-banner mb-3">
+                        <div>
+                            <span class="text-muted-sm">Material Line ID</span>
+                            <div class="font-semibold" id="editMaterialIdDisplay">-</div>
+                        </div>
+                        <div class="text-muted-sm">Changes are only applied after you click <strong>Save Changes</strong>. Cancelling will keep the original line item unchanged.</div>
+                    </div>
+
+                    <div class="modal-form-grid">
+                        <div class="form-group full-span-2">
+                            <label class="form-label" for="editMatName">Material Name</label>
+                            <select id="editMatName" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMatCategory">Category</label>
+                            <input type="text" id="editMatCategory" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMatUnit">Unit</label>
+                            <input type="text" id="editMatUnit" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editMatQty">Quantity</label>
+                            <input type="number" id="editMatQty" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group full-span-2">
+                            <label class="form-label" for="editMatRemarks">Remarks</label>
+                            <input type="text" id="editMatRemarks" class="form-control" placeholder="Optional notes...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Material Confirmation Modal -->
+    <div class="modal-overlay" id="deleteMaterialModal" role="dialog" aria-modal="true" aria-labelledby="deleteMaterialTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="deleteMaterialTitle"><i class="fas fa-exclamation-triangle icon-danger"></i> Remove Material?</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove <strong id="deleteMaterialName">this material</strong> from the draft requisition?</p>
+                <p class="text-muted-sm mt-1">This action only affects the current draft and cannot be undone after confirmation.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteMaterialBtn"><i class="fas fa-trash-alt"></i> Remove Material</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Tracking Details Modal -->
+    <div class="modal-overlay" id="requestDetailsModal" role="dialog" aria-modal="true" aria-labelledby="requestDetailsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="requestDetailsTitle"><i class="fas fa-clipboard-check icon-primary"></i> Request Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="request-detail-header mb-3">
+                    <div>
+                        <span class="text-muted-sm">Request ID</span>
+                        <div class="request-detail-id" id="requestDetailsId">-</div>
+                    </div>
+                    <span class="badge" id="requestDetailsStatus">-</span>
+                </div>
+
+                <div class="request-detail-grid mb-3">
+                    <div class="request-detail-field">
+                        <span>Request Type</span>
+                        <strong id="requestDetailsType">-</strong>
+                    </div>
+                    <div class="request-detail-field">
+                        <span>Date Submitted</span>
+                        <strong id="requestDetailsDate">-</strong>
+                    </div>
+                    <div class="request-detail-field">
+                        <span>Reviewed By</span>
+                        <strong id="requestDetailsReviewer">-</strong>
+                    </div>
+                    <div class="request-detail-field">
+                        <span>Last Updated</span>
+                        <strong id="requestDetailsUpdated">-</strong>
+                    </div>
+                </div>
+
+                <div class="request-details-content mb-3">
+                    <h4 class="section-title mb-1">Request Contents</h4>
+                    <p class="text-muted-sm mb-2" id="requestDetailsHelper"></p>
+                    <div id="requestDetailsContent"></div>
+                </div>
+
+                <div class="request-review-comment">
+                    <div class="request-review-comment-title"><i class="fas fa-comment-alt"></i> General Manager Review</div>
+                    <div id="requestDetailsComment">No review comments yet.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Contextual Material Substitution Request Modal
+         Nested after Request Details so it opens above the source request view. -->
+    <div class="modal-overlay nested-workflow-modal" id="substitutionRequestModal" role="dialog" aria-modal="true" aria-labelledby="substitutionRequestTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="substitutionRequestTitle"><i class="fas fa-exchange-alt icon-secondary"></i> Request Material Substitution</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+
+            <form id="substitutionRequestForm">
+                <div class="modal-body">
+                    <div class="substitution-source-banner mb-3">
+                        <div>
+                            <span class="text-muted-sm">Source Material Request</span>
+                            <strong id="subSourceRequestId">-</strong>
+                        </div>
+                        <div class="substitution-source-note">
+                            Create one substitution request for this approved material request. Select every material that needs an alternative and submit them together.
+                        </div>
+                    </div>
+
+                    <div class="pending-request-submit-note mb-3">
+                        <i class="fas fa-info-circle"></i>
+                        <span>A material request can have only one substitution request. You may include one or multiple approved materials in that single request.</span>
+                    </div>
+
+                    <div class="substitution-materials-header">
+                        <div>
+                            <h4 class="section-title mb-0">Materials to Substitute</h4>
+                            <p class="text-muted-sm">Select the affected materials, then choose a replacement and quantity for each selected row.</p>
+                        </div>
+                        <span class="badge badge-info" id="substitutionSelectionCount">0 materials selected</span>
+                    </div>
+
+                    <div class="table-wrapper substitution-items-wrapper mb-3">
+                        <table class="table substitution-items-table" id="substitutionItemsTable">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Original Material</th>
+                                    <th>Approved Quantity</th>
+                                    <th>Replacement Material</th>
+                                    <th>Quantity to Substitute</th>
+                                </tr>
+                            </thead>
+                            <tbody id="substitutionItemsBody">
+                                <!-- Populated by js/pic-material-requests.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="modal-form-grid">
+                        <div class="form-group full-span-2">
+                            <label class="form-label" for="subReason">Reason for Substitution Request</label>
+                            <select id="subReason" class="form-control" required>
+                                <option value="" disabled selected>Select reason...</option>
+                                <option value="Supply Chain Delay">Supply Chain Delay</option>
+                                <option value="Material Discontinued">Material Discontinued</option>
+                                <option value="Engineering Variation">Engineering Variation</option>
+                                <option value="Cost Optimization">Cost Optimization</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-span-2">
+                            <label class="form-label" for="subNotes">Supporting Notes &amp; Technical Specifications</label>
+                            <textarea id="subNotes" class="form-control" placeholder="Explain why the selected approved materials need alternatives and note any technical or project impact."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pending-request-submit-note">
+                        <i class="fas fa-info-circle"></i>
+                        <span>The approved material request remains unchanged until the General Manager reviews this substitution request.</span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="confirmSubBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Substitution Request
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Core Interactions Application Scripts Hook -->
+    <!-- Shared and Page-Specific Scripts -->
     <script src="js/app.js"></script>
-
-    <!-- Page Specific Logic (Vanilla JS) -->
-    <script>
-        function transitionTo(url) {
-            document.body.classList.add('page-exit');
-            setTimeout(() => window.location.href = url, 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // Core Data State (Pre-populated with realistic construction materials)
-            let materialList = [
-                { id: 'MAT-8012', name: 'Portland Cement Type 1', category: 'Masonry', unit: 'Bags (50kg)', qty: 450, remarks: 'Site A Foundation Pour' },
-                { id: 'MAT-8013', name: 'Deformed Rebar 16mm x 6m', category: 'Metals', unit: 'Pieces', qty: 1200, remarks: 'Structural Columns' },
-                { id: 'MAT-8014', name: 'PVC Pipe 4" Series 1000', category: 'Plumbing', unit: 'Lengths', qty: 85, remarks: 'Underground Drainage' },
-                { id: 'MAT-8015', name: 'Marine Plywood 3/4"', category: 'Woodwork', unit: 'Sheets', qty: 150, remarks: 'Concrete Formworks' }
-            ];
-
-            let nextIdCounter = 8016;
-
-            const tableBody = document.getElementById('tableBody');
-            const materialForm = document.getElementById('materialForm');
-            const searchInput = document.getElementById('searchInput');
-            const categoryFilter = document.getElementById('categoryFilter');
-            
-            const btnExport = document.getElementById('btnExport');
-            const btnSaveDraft = document.getElementById('btnSaveDraft');
-            const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
-
-            const inName = document.getElementById('matName');
-            const inCategory = document.getElementById('matCategory');
-            const inUnit = document.getElementById('matUnit');
-            const inQty = document.getElementById('matQty');
-            const inRemarks = document.getElementById('matRemarks');
-
-            const renderTable = () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                const filterCat = categoryFilter.value;
-
-                tableBody.innerHTML = '';
-
-                const filteredData = materialList.filter(item => {
-                    const matchesSearch = item.name.toLowerCase().includes(searchTerm) || item.id.toLowerCase().includes(searchTerm);
-                    const matchesCat = filterCat === 'All' || item.category === filterCat;
-                    return matchesSearch && matchesCat;
-                });
-
-                if (filteredData.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="7" class="empty-state-row">No materials found matching your criteria.</td></tr>`;
-                    return;
-                }
-
-                filteredData.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${item.id}</strong></td>
-                        <td>${item.name}</td>
-                        <td><span class="badge badge-info">${item.category}</span></td>
-                        <td>${item.unit}</td>
-                        <td class="font-semibold">${item.qty}</td>
-                        <td class="text-muted-sm">${item.remarks || '-'}</td>
-                        <td class="text-right">
-                            <button class="action-btn edit" onclick="editMaterial('${item.id}')" title="Edit"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete" onclick="deleteMaterial('${item.id}')" title="Remove"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-            };
-
-            window.deleteMaterial = (id) => {
-                materialList = materialList.filter(item => item.id !== id);
-                renderTable();
-                if(window.showToast) window.showToast('Item Removed', `Material ID ${id} was removed from the manifest.`, 'info');
-            };
-
-            window.editMaterial = (id) => {
-                const item = materialList.find(m => m.id === id);
-                if (item) {
-                    inName.value = item.name;
-                    inCategory.value = item.category;
-                    inUnit.value = item.unit;
-                    inQty.value = item.qty;
-                    inRemarks.value = item.remarks;
-                    
-                    materialList = materialList.filter(m => m.id !== id);
-                    renderTable();
-                    if(window.showToast) window.showToast('Edit Mode', 'Material loaded into form. Modify and click Add.', 'info');
-                }
-            };
-
-            materialForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const newItem = {
-                    id: `MAT-${nextIdCounter++}`,
-                    name: inName.value.trim(),
-                    category: inCategory.value,
-                    unit: inUnit.value.trim(),
-                    qty: parseInt(inQty.value, 10),
-                    remarks: inRemarks.value.trim()
-                };
-
-                materialList.push(newItem);
-                materialForm.reset();
-                renderTable();
-                
-                if(window.showToast) window.showToast('Material Added', `${newItem.name} appended to request manifest.`, 'success');
-            });
-
-            searchInput.addEventListener('input', renderTable);
-            categoryFilter.addEventListener('change', renderTable);
-
-            btnExport.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Export Initiated', 'Manifest is downloading as CSV format...', 'primary');
-            });
-
-            btnSaveDraft.addEventListener('click', () => {
-                if(window.showToast) window.showToast('Draft Saved', 'Your requisition progress has been securely cached.', 'success');
-            });
-
-            confirmSubmitBtn.addEventListener('click', () => {
-                if(materialList.length === 0) {
-                    if(window.showToast) window.showToast('Submission Failed', 'Cannot submit an empty requisition manifest.', 'danger');
-                    return;
-                }
-                
-                materialList = [];
-                renderTable();
-                if(window.showToast) window.showToast('Request Submitted', 'Requisition successfully routed to Head Manager.', 'success');
-            });
-
-            renderTable();
-        });
-    </script>
+    <script src="js/pic-material-requests.js"></script>
 </body>
 </html>
