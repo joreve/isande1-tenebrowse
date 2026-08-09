@@ -3,161 +3,1234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Warehouse | Inventory Overview</title>
+    <title>Tenebrowse - Purchase Orders Management</title>
+
+    <!-- Google Fonts: League Spartan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        :root {
+            --color-primary: #d44f00;
+            --color-primary-light: #f65e03;
+            --color-secondary: #e19c74;
+            --color-secondary-light: #f9cda4;
+
+            --color-success: #16A34A;
+            --color-success-light: #DCFCE7;
+
+            --color-danger: #DC2626;
+            --color-danger-light: #FEE2E2;
+
+            --color-warning: #D97706;
+            --color-warning-light: #FEF3C7;
+
+            --color-info: #2563EB;
+            --color-info-light: #DBEAFE;
+
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.page-exit {
+            opacity: 0;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav {
+            padding: 10px 16px;
+            flex-grow: 1;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748B;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .nav-item.active:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .logout-item {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 70px;
+            background-color: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+        }
+
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--color-danger);
+            border-radius: 50%;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .profile-info {
+            text-align: left;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .profile-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           PAGE CONTAINER
+        ========================= */
+
+        .page-container {
+            padding: 0 32px 32px 32px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb-icon {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           CARDS & UTILS
+        ========================= */
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .mb-2 { margin-bottom: 16px; }
+        .mb-3 { margin-bottom: 24px; }
+
+        /* Controls / Filter Bar */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .select-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .btn-secondary {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #E2E8F0;
+        }
+
+        .btn-outline-danger {
+            background-color: transparent;
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .btn-outline-danger:hover {
+            background-color: var(--color-danger-light);
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #F8FAFC;
+        }
+
+        .po-code {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .req-code {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-info { background: var(--color-info-light); color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
+
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            border-color: var(--color-primary);
+        }
+
+        /* =========================
+           DRAWER / MODAL STYLES
+        ========================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            z-index: 2000;
+            justify-content: flex-end;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .drawer {
+            width: 720px;
+            max-width: 90vw;
+            background-color: #FFFFFF;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.25s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F8FAFC;
+        }
+
+        .drawer-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .drawer-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .drawer-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .detail-section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            background: #FFFFFF;
+        }
+
+        .detail-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .info-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Fulfillment Choice Box */
+        .fulfillment-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .fulfillment-card {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .fulfillment-card:hover {
+            border-color: var(--color-secondary);
+        }
+
+        .fulfillment-card.selected {
+            border-color: var(--color-primary);
+            background-color: #FFF0E8;
+        }
+
+        .fulfillment-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+        }
+
+        .fulfillment-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .fulfillment-card .check-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            color: var(--color-primary);
+            display: none;
+        }
+
+        .fulfillment-card.selected .check-icon {
+            display: block;
+        }
+
+        /* History Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            font-size: 0.85rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .timeline-text {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* =========================
+           NOTIFICATION DROPDOWN
+        ========================= */
+
+        .notification-wrapper { position: relative; }
+        .notification-panel {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 350px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .notification-wrapper.open .notification-panel { display: block; }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar-logo span, .nav-item span { display: none; }
+            .nav-item { justify-content: center; padding: 13px; }
+        }
+
+        @media (max-width: 768px) {
+            .topbar { padding: 0 20px; }
+            .page-container { padding: 0 20px 25px; }
+            .profile-info { display: none; }
+            .fulfillment-selector { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-<body class="page-transition">
-    <div class="app-wrapper">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <img src="assets/logo.png" alt="Icon" class="brand-logo">
-                    Tenebrowse
-                </div>
+
+<body>
+
+<div class="app-wrapper">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                <span>Tenebrowse</span>
             </div>
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item active" data-url="warehouse-inventory.html"><i class="fas fa-boxes"></i> Inventory</li>
-                    <li class="nav-item" data-url="warehouse-receiving.html"><i class="fas fa-truck-loading"></i> Receiving</li>
-                    <li class="nav-item" data-url="warehouse-transfers.html"><i class="fas fa-exchange-alt"></i> Transfers</li>
-                    <li class="nav-item" data-url="warehouse-settings.html"><i class="fas fa-cog"></i> Settings</li>
-                    <li class="nav-item logout-item" data-url="index.html"><i class="fas fa-sign-out-alt"></i> Logout</li>
-                </ul>
-            </nav>
-        </aside>
+        </div>
 
-        <main class="main-content">
-            <header class="topbar">
-                <div class="topbar-left">
-                    <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
-                    <h2 class="page-title">Warehouse Inventory Overview</h2>
-                </div>
-                <div class="topbar-right">
-                    <div class="notification-wrapper">
-                        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
-                            <i class="far fa-bell"></i>
-                            <span class="badge-dot"></span>
-                        </button>
-                        <div class="dropdown-menu" id="notifMenu">
-                            <div class="dropdown-header">System Notifications</div>
-                            <div class="dropdown-item">
-                                <i class="fas fa-exclamation-triangle icon-secondary"></i>
-                                <div>
-                                    <div class="notif-title">Inventory Alert</div>
-                                    <div class="notif-desc">Several materials are below minimum stock levels.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-menu-container">
-                        <button class="profile-trigger">
-                            <div class="profile-avatar">PO</div>
-                            <div class="profile-info">
-                                <div class="profile-name">Purchase Officer</div>
-                                <div class="profile-role">Warehouse - Purchasing</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </header>
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item active">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Purchase Orders</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-suppliers.html')">
+                    <i class="fas fa-building"></i>
+                    <span>Suppliers</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-deliveries.html')">
+                    <i class="fas fa-truck"></i>
+                    <span>Deliveries</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-warehouse.html')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-substitutions.html')">
+                    <i class="fas fa-random"></i>
+                    <span>Substitutions</span>
+                </li>
+                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
 
-            <div class="page-container">
-                <div class="breadcrumb">
-                    <a href="#" data-url="warehouse-inventory.html">Warehouse Control</a>
-                    <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                    <span>Inventory Overview</span>
-                </div>
 
-                <div class="tabs-nav mb-3" role="tablist" aria-label="Inventory Sections">
-                    <button type="button" class="tab-btn active" data-tab="inventory-overview" role="tab" aria-selected="true" aria-controls="inventory-overview-tab">
-                        <i class="fas fa-boxes"></i>
-                        <span>Inventory Overview</span>
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <i class="fas fa-bars menu-toggle"></i>
+                <h2 class="page-title">Purchase Orders & Processing</h2>
+            </div>
+
+            <div class="topbar-right">
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
                     </button>
+                    <div class="notification-panel">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <h4>Notifications</h4>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="font-size:0.85rem;"><strong>PO-2026-108</strong> pending supplier dispatch</div>
+                            <div style="font-size:0.85rem;"><strong>SR-2026-014</strong> material substitution approved</div>
+                        </div>
+                    </div>
                 </div>
 
-                <section id="inventory-overview-tab" class="tab-content active" data-tab-content="inventory-overview" role="tabpanel">
-                    <div class="grid grid-cols-4 mb-3">
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-cubes icon-info"></i> Total Materials</div>
-                            <div class="metric-block metric-border-info mb-0"><div class="metric-value" id="inventoryTotalCount">0</div><div class="metric-label">Tracked SKUs</div></div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-check-circle icon-success"></i> Available Stock</div>
-                            <div class="metric-block metric-border-success mb-0"><div class="metric-value" id="inventoryAvailableCount">0</div><div class="metric-label">In Stock / Overstocked</div></div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-secondary"></i> Low-Stock Items</div>
-                            <div class="metric-block metric-border-secondary mb-0"><div class="metric-value" id="inventoryLowCount">0</div><div class="metric-label">Below Minimum</div></div>
-                        </div>
-                        <div class="card">
-                            <div class="summary-card-title"><i class="fas fa-times-circle icon-danger"></i> Out-of-Stock Items</div>
-                            <div class="metric-block metric-border-danger mb-0"><div class="metric-value" id="inventoryOutCount">0</div><div class="metric-label">Depleted</div></div>
-                        </div>
+                <div class="profile-trigger">
+                    <div class="profile-avatar">PT</div>
+                    <div class="profile-info">
+                        <div class="profile-name">Purchasing Officer Tolentino</div>
+                        <div class="profile-role">Purchasing Officer</div>
                     </div>
-
-                    <div class="module-toolbar">
-                        <div class="toolbar-filters">
-                            <div class="search-container">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="inventorySearchInput" class="form-control" placeholder="Search Material ID or Name...">
-                            </div>
-                            <select id="inventoryCategoryFilter" class="form-control filter-select">
-                                <option value="All">All Categories</option>
-                                <option value="Structural">Structural</option>
-                                <option value="Electrical">Electrical</option>
-                                <option value="Plumbing">Plumbing</option>
-                                <option value="Finishing">Finishing</option>
-                                <option value="Hardware">Hardware</option>
-                            </select>
-                            <select id="inventoryWarehouseFilter" class="form-control filter-select">
-                                <option value="All">All Warehouses</option>
-                                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
-                                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
-                                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
-                            </select>
-                            <select id="inventoryStatusFilter" class="form-control filter-select">
-                                <option value="All">All Statuses</option>
-                                <option value="In Stock">In Stock</option>
-                                <option value="Low Stock">Low Stock</option>
-                                <option value="Out of Stock">Out of Stock</option>
-                                <option value="Overstocked">Overstocked</option>
-                                <option value="Damaged">Damaged</option>
-                            </select>
-                        </div>
-                        <div class="toolbar-actions">
-                            <button type="button" class="btn btn-outline" id="inventoryExportBtn"><i class="fas fa-file-export"></i> Export Inventory Report</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="section-title mb-2"><i class="fas fa-table section-icon icon-primary"></i> Material Inventory <span class="badge badge-info ml-2" id="inventoryWarehouseBadge">All Warehouses</span></h3>
-                        <div class="table-wrapper">
-                            <table class="table" id="inventoryTable">
-                                <thead>
-                                    <tr>
-                                        <th>Material ID</th>
-                                        <th>Material Name</th>
-                                        <th>Category</th>
-                                        <th>Current Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Warehouse Location</th>
-                                        <th>Min. Level</th>
-                                        <th>Status</th>
-                                        <th>Last Updated</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="inventoryBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
-        </main>
-    </div>
+        </header>
 
-    <div class="toast-container" id="toastContainer"></div>
-    <script src="js/app.js"></script>
-    <script src="js/warehouse-inventory.js"></script>
+
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+
+            <div class="breadcrumb">
+                <a href="#">Tenebrowse Control</a>
+                <i class="fas fa-chevron-right breadcrumb-icon"></i>
+                <span>Purchase Orders</span>
+            </div>
+
+
+            <!-- CONTROLS & TABLE CARD -->
+            <div class="card">
+
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search PO #, MR #, Material or Supplier..." id="poSearch">
+                    </div>
+
+                    <div class="filter-group">
+                        <select class="select-input" id="statusFilter">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Approved">Approved Request (Pending Processing)</option>
+                            <option value="Internal Transfer">Internal Transfer</option>
+                            <option value="Ordered">Ordered / Sent to Supplier</option>
+                            <option value="Substitution">Substituted</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                        <button class="btn btn-secondary" onclick="resetFilters()">
+                            <i class="fas fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- TABLE OF PURCHASE ORDERS -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Material Request</th>
+                                <th>Requested Material</th>
+                                <th>Qty Needed</th>
+                                <th>Fulfillment Source</th>
+                                <th>Assigned Supplier</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="poTableBody">
+
+                            <!-- Row 1: Approved MR pending processing -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-108</span></td>
+                                <td><span class="req-code">MR-2026-042</span></td>
+                                <td><strong>Portland Cement Grade 42.5</strong></td>
+                                <td>500 Bags</td>
+                                <td><span class="status-badge status-warning"><i class="fas fa-hourglass"></i> Unassigned</span></td>
+                                <td><em style="color:var(--text-muted)">Not Assigned</em></td>
+                                <td><span class="status-badge status-warning">Pending Review</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-108')">
+                                            <i class="fas fa-sliders"></i> Process PO
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2: Approved Substitution Request -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-107</span></td>
+                                <td><span class="req-code">MR-2026-039</span> <span class="status-badge status-info" style="font-size:0.65rem; padding:2px 6px;">Substituted</span></td>
+                                <td><strong>Deformed Steel Bars 16mm (Sub: 18mm High-Grade)</strong></td>
+                                <td>250 Pcs</td>
+                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                <td>Apex Industrial Supply</td>
+                                <td><span class="status-badge status-info">Ready to Dispatch</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-107')">
+                                            <i class="fas fa-pen-to-square"></i> Review / Edit
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3: Internal Transfer -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-105</span></td>
+                                <td><span class="req-code">MR-2026-035</span></td>
+                                <td><strong>Hydraulic Plywood 3/4"</strong></td>
+                                <td>120 Sheets</td>
+                                <td><span class="status-badge status-success"><i class="fas fa-boxes-stacked"></i> Internal Warehouse</span></td>
+                                <td>Warehouse 3 (Internal)</td>
+                                <td><span class="status-badge status-success">Transfer Issued</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-105')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4: Ordered to External Supplier -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-101</span></td>
+                                <td><span class="req-code">MR-2026-028</span></td>
+                                <td><strong>Ready-Mix Concrete 3000 PSI</strong></td>
+                                <td>40 Cu.m</td>
+                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                <td>BuildPro Hardware</td>
+                                <td><span class="status-badge status-info">Ordered (Sent)</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-101')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 5: Cancelled PO -->
+                            <tr>
+                                <td><span class="po-code" style="text-decoration:line-through;">PO-2026-098</span></td>
+                                <td><span class="req-code">MR-2026-019</span></td>
+                                <td><strong>Industrial Solvent 20L</strong></td>
+                                <td>15 Drums</td>
+                                <td><em style="color:var(--text-muted)">N/A</em></td>
+                                <td><em style="color:var(--text-muted)">N/A</em></td>
+                                <td><span class="status-badge status-danger">Cancelled</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-098')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     PROCESS / EDIT PO DRAWER
+========================== -->
+
+<div class="modal-overlay" id="poDrawerOverlay">
+    <div class="drawer">
+
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="drawerPoTitle">Process Purchase Order PO-2026-108</div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Origin: Material Request <strong id="drawerMrCode">MR-2026-042</strong></div>
+            </div>
+            <button class="drawer-close" onclick="closePODrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <!-- 1. Original Material Request & Approvals -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-clipboard-check"></i> Request & Approval Information</span>
+                    <span class="status-badge status-success" id="drawerApproveStatus">Approved by Management</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Requesting Department / Site</span>
+                        <span class="info-value">Tower B Construction Site</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Project Manager Approver</span>
+                        <span class="info-value">Engr. R. Santos (Approved Aug 8, 2026)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Material Requested</span>
+                        <span class="info-value" id="drawerMaterialName">Portland Cement Grade 42.5</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Requested Quantity</span>
+                        <span class="info-value" id="drawerMaterialQty">500 Bags</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 2. Process Approved Material Substitutions -->
+            <div class="detail-section" style="border-left: 4px solid var(--color-info);">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-random"></i> Material Substitution Check</span>
+                    <span class="status-badge status-info">Substitution System</span>
+                </div>
+                <div style="font-size:0.85rem; color:var(--text-dark); margin-bottom:10px;">
+                    Is there an approved engineering material substitution active for this item?
+                </div>
+                <select class="select-input" style="width:100%;" id="substitutionSelect" onchange="onSubstitutionChange()">
+                    <option value="none">No Substitution - Procure Original Spec (Portland Cement Grade 42.5)</option>
+                    <option value="sub1">Approved Substitution: Type 1P Blended Cement (Approved SR-2026-014)</option>
+                </select>
+                <div id="substitutionNotice" style="display:none; margin-top:10px; font-size:0.8rem; background:#DBEAFE; padding:10px; border-radius:6px; color:#1E40AF;">
+                    <i class="fas fa-info-circle"></i> Item spec updated in PO header to <strong>Type 1P Blended Cement</strong> as per approved Substitution SR-2026-014.
+                </div>
+            </div>
+
+
+            <!-- 3. Check Warehouse Availability & Select Fulfillment Source -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-warehouse"></i> Warehouse Availability & Fulfillment Source</span>
+                </div>
+
+                <div style="background:#F8FAFC; padding:12px; border-radius:8px; margin-bottom:14px; font-size:0.85rem;">
+                    <strong>Real-Time Stock Query:</strong>
+                    <ul style="margin-left:20px; margin-top:6px; color:var(--text-muted);">
+                        <li><strong>Warehouse 1:</strong> 120 Bags available</li>
+                        <li><strong>Warehouse 2:</strong> 0 Bags (Out of Stock)</li>
+                        <li><strong>Warehouse 3:</strong> 650 Bags available <span style="color:var(--color-success); font-weight:700;">(Sufficient Stock)</span></li>
+                    </ul>
+                </div>
+
+                <div style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">Select Fulfillment Route:</div>
+
+                <div class="fulfillment-selector">
+                    <!-- Option A: Internal Transfer -->
+                    <div class="fulfillment-card" id="cardInternal" onclick="selectFulfillment('INTERNAL')">
+                        <i class="fas fa-check-circle check-icon"></i>
+                        <h4><i class="fas fa-boxes-stacked" style="color:var(--color-primary)"></i> Internal Transfer</h4>
+                        <p>Transfer existing stock from <strong>Warehouse 3</strong> to site directly.</p>
+                    </div>
+
+                    <!-- Option B: External Vendor Purchase -->
+                    <div class="fulfillment-card selected" id="cardExternal" onclick="selectFulfillment('EXTERNAL')">
+                        <i class="fas fa-check-circle check-icon"></i>
+                        <h4><i class="fas fa-cart-shopping" style="color:var(--color-primary)"></i> External Purchase</h4>
+                        <p>Issue formal PO to an approved third-party supplier.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 4. Supplier Selection & Edit PO Details -->
+            <div class="detail-section" id="supplierSection">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-building"></i> Assign Supplier & Edit Purchase Details</span>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label class="info-label" style="margin-bottom:4px; display:block;">Select Approved Supplier</label>
+                        <select class="select-input" style="width:100%;" id="supplierSelect">
+                            <option value="">-- Select Vendor --</option>
+                            <option value="Apex Industrial Supply" selected>Apex Industrial Supply (On-Time: 98.5%)</option>
+                            <option value="BuildPro Hardware">BuildPro Hardware (On-Time: 92.0%)</option>
+                            <option value="Vanguard Logistics Corp">Vanguard Logistics Corp (On-Time: 84.5%)</option>
+                        </select>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label class="info-label" style="margin-bottom:4px; display:block;">Unit Price ($)</label>
+                            <input type="number" class="search-input" value="12.50" id="unitPriceInput" style="padding-left:12px;">
+                        </div>
+                        <div>
+                            <label class="info-label" style="margin-bottom:4px; display:block;">Target Delivery Date</label>
+                            <input type="date" class="search-input" value="2026-08-15" style="padding-left:12px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 5. Change History / Audit Trail -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-history"></i> PO Change History & Audit Trail</span>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-text">Material Request MR-2026-042 Approved by Site Mgr</div>
+                        <div class="timeline-time">Aug 8, 2026 - 14:20 PM</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-text">PO Draft Auto-Generated (PO-2026-108)</div>
+                        <div class="timeline-time">Aug 8, 2026 - 14:22 PM</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-text">Purchasing Officer Review initiated</div>
+                        <div class="timeline-time">Aug 9, 2026 - 09:15 AM</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- DRAWER FOOTER ACTIONS -->
+        <div class="drawer-footer">
+            <button class="btn btn-outline-danger" onclick="cancelPO()">
+                <i class="fas fa-ban"></i> Cancel PO
+            </button>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" onclick="savePODraft()">
+                    <i class="fas fa-floppy-disk"></i> Save Draft
+                </button>
+                <button class="btn btn-primary" onclick="confirmAndSendPO()">
+                    <i class="fas fa-paper-plane"></i> Confirm & Send PO
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = url;
+        }, 200);
+    }
+
+    // Drawer Logic
+    let currentFulfillment = 'EXTERNAL';
+
+    function openPODrawer(poNum) {
+        document.getElementById('drawerPoTitle').innerText = 'Process Purchase Order ' + poNum;
+        document.getElementById('poDrawerOverlay').classList.add('open');
+    }
+
+    function closePODrawer() {
+        document.getElementById('poDrawerOverlay').classList.remove('open');
+    }
+
+    function selectFulfillment(type) {
+        currentFulfillment = type;
+        const cardInt = document.getElementById('cardInternal');
+        const cardExt = document.getElementById('cardExternal');
+        const supplierSec = document.getElementById('supplierSection');
+
+        if (type === 'INTERNAL') {
+            cardInt.classList.add('selected');
+            cardExt.classList.remove('selected');
+            supplierSec.style.opacity = '0.5';
+            supplierSec.style.pointerEvents = 'none';
+        } else {
+            cardExt.classList.add('selected');
+            cardInt.classList.remove('selected');
+            supplierSec.style.opacity = '1';
+            supplierSec.style.pointerEvents = 'auto';
+        }
+    }
+
+    function onSubstitutionChange() {
+        const val = document.getElementById('substitutionSelect').value;
+        const notice = document.getElementById('substitutionNotice');
+        if (val === 'sub1') {
+            notice.style.display = 'block';
+            document.getElementById('drawerMaterialName').innerText = 'Type 1P Blended Cement (Substituted)';
+        } else {
+            notice.style.display = 'none';
+            document.getElementById('drawerMaterialName').innerText = 'Portland Cement Grade 42.5';
+        }
+    }
+
+    function savePODraft() {
+        alert('Purchase Order progress saved successfully as Draft.');
+        closePODrawer();
+    }
+
+    function confirmAndSendPO() {
+        if (currentFulfillment === 'EXTERNAL') {
+            const supplier = document.getElementById('supplierSelect').value;
+            if (!supplier) {
+                alert('Please assign a supplier before sending the Purchase Order.');
+                return;
+            }
+            alert('PO Confirmed and sent to supplier: ' + supplier);
+        } else {
+            alert('Internal Warehouse Transfer Request Issued successfully to Warehouse 3.');
+        }
+        closePODrawer();
+    }
+
+    function cancelPO() {
+        if (confirm('Are you sure you want to cancel this Purchase Order?')) {
+            alert('Purchase Order has been cancelled and recorded.');
+            closePODrawer();
+        }
+    }
+
+    function resetFilters() {
+        document.getElementById('poSearch').value = '';
+        document.getElementById('statusFilter').value = 'ALL';
+    }
+</script>
+
 </body>
 </html>
