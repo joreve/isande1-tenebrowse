@@ -1,0 +1,100 @@
+<section id="warehouse-inventory-tab" class="tab-content" data-tab-content="warehouse-inventory" role="tabpanel">
+    <!-- Summary Metrics -->
+    <div class="grid grid-cols-4 mb-3 gm-monitoring-summary">
+        <div class="card">
+            <div class="summary-card-title"><i class="fas fa-warehouse icon-info"></i> Active Warehouses</div>
+            <div class="metric-block metric-border-info mb-0">
+                <div class="metric-value" id="warehouseActiveCount">0</div>
+                <div class="metric-label">Operating Locations</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="summary-card-title"><i class="fas fa-boxes icon-success"></i> Stored Materials</div>
+            <div class="metric-block metric-border-success mb-0">
+                <div class="metric-value" id="warehouseTotalStock">0</div>
+                <div class="metric-label">Total Units In Stock</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="summary-card-title"><i class="fas fa-chart-pie icon-secondary"></i> Capacity Utilization</div>
+            <div class="metric-block metric-border-secondary mb-0">
+                <div class="metric-value" id="warehouseCapacityUsed">0%</div>
+                <div class="metric-label">Overall Space Used</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="summary-card-title"><i class="fas fa-exclamation-triangle icon-danger"></i> Stock Alerts</div>
+            <div class="metric-block metric-border-danger mb-0">
+                <div class="metric-value" id="warehouseAlertCount">0</div>
+                <div class="metric-label">Low & Depleted Items</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toolbar Filters & Actions -->
+    <div class="module-toolbar">
+        <div class="toolbar-filters">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="warehouseSearchInput" class="form-control" placeholder="Search Warehouse ID, Name, or Zone...">
+            </div>
+            <select id="warehouseSelectFilter" class="form-control filter-select">
+                <option value="All">All Warehouses</option>
+                <option value="Warehouse 1">Warehouse 1 — Small Items</option>
+                <option value="Warehouse 2">Warehouse 2 — Large Materials</option>
+                <option value="Warehouse 3">Warehouse 3 — Quarantined</option>
+            </select>
+            <select id="warehouseZoneFilter" class="form-control filter-select">
+                <option value="All">All Zones</option>
+                <option value="Zone A">Zone A — Reception / Staging</option>
+                <option value="Zone B">Zone B — High-Density Storage</option>
+                <option value="Zone C">Zone C — Bulk Materials</option>
+                <option value="Zone D">Zone D — Quarantine / Returns</option>
+            </select>
+            <select id="warehouseStatusFilter" class="form-control filter-select">
+                <option value="All">All Operational Statuses</option>
+                <option value="Optimal">Optimal Capacity</option>
+                <option value="Near Capacity">Near Capacity</option>
+                <option value="Over Capacity">Over Capacity</option>
+                <option value="Maintenance">Under Maintenance</option>
+            </select>
+        </div>
+        <div class="toolbar-actions">
+            <button type="button" class="btn btn-outline" id="warehouseExportBtn">
+                <i class="fas fa-file-export"></i> Export Warehouse Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Read-only Banner -->
+    <div class="gm-readonly-banner mb-3">
+        <i class="fas fa-eye"></i>
+        <span><strong>Read-only warehouse overview.</strong> Space assignments, bin relocations, capacity adjustments, and facility management remain with Warehouse Staff.</span>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card">
+        <h3 class="section-title mb-2">
+            <i class="fas fa-table section-icon icon-primary"></i> Warehouse Storage Overview 
+            <span class="badge badge-info ml-2" id="warehouseOverviewBadge">All Facilities</span>
+        </h3>
+        <div class="table-wrapper">
+            <table class="table" id="gmWarehouseTable">
+                <thead>
+                    <tr>
+                        <th>Warehouse ID</th>
+                        <th>Facility Name</th>
+                        <th>Primary Zone</th>
+                        <th>Total SKUs Stored</th>
+                        <th>Total Quantity</th>
+                        <th>Capacity Usage</th>
+                        <th>Supervisor</th>
+                        <th>Status</th>
+                        <th>Last Inspected</th>
+                    </tr>
+                </thead>
+                <tbody id="gmWarehouseBody"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
