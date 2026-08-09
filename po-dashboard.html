@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Purchasing Officer Dashboard</title>
+    <title>Tenebrowse - Purchase Orders Management</title>
 
     <!-- Google Fonts: League Spartan -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,7 +67,7 @@
         }
 
         /* =========================
-           SIDEBAR
+           SIDEBAR (CLICKABLE TABS)
         ========================= */
 
         .sidebar {
@@ -101,6 +101,8 @@
         .sidebar-nav {
             padding: 10px 16px;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .nav-list {
@@ -108,6 +110,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            height: 100%;
         }
 
         .nav-item {
@@ -119,7 +122,8 @@
             font-weight: 600;
             color: #64748B;
             border-radius: 10px;
-            cursor: pointer;
+            cursor: pointer; /* Ensures pointer hand appears */
+            user-select: none;
             transition: all 0.2s ease;
         }
 
@@ -140,6 +144,12 @@
         .logout-item {
             margin-top: auto;
             margin-bottom: 20px;
+            color: var(--color-danger);
+        }
+
+        .logout-item:hover {
+            background-color: var(--color-danger-light);
+            color: var(--color-danger);
         }
 
         /* =========================
@@ -153,10 +163,6 @@
             overflow-x: hidden;
         }
 
-        /* =========================
-           TOPBAR WITH BORDER LINE
-        ========================= */
-
         .topbar {
             height: 70px;
             background-color: #FFFFFF;
@@ -164,7 +170,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
-            border-bottom: 1px solid #E2E8F0; /* Clean divider line matching image */
+            border-bottom: 1px solid #E2E8F0;
         }
 
         .topbar-left {
@@ -173,10 +179,17 @@
             gap: 16px;
         }
 
+        .menu-toggle {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: none;
+        }
+
         .page-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #0F172A; 
+            color: #0F172A;
         }
 
         .topbar-right {
@@ -244,7 +257,7 @@
         }
 
         /* =========================
-           PAGE CONTAINER
+           PAGE CONTAINER & CARDS
         ========================= */
 
         .page-container {
@@ -272,10 +285,6 @@
             color: var(--text-muted);
         }
 
-        /* =========================
-           CARDS
-        ========================= */
-
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -284,240 +293,104 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
-        .mb-3 {
-            margin-bottom: 24px;
-        }
+        .mb-3 { margin-bottom: 24px; }
 
-        /* =========================
-           WELCOME BANNER
-        ========================= */
-
-        .welcome-card-dark {
-            background-color: #0F172A;
-            border: none;
-            border-radius: 12px;
-            padding: 32px;
-            color: #FFFFFF;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-badge {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #F97316;
-            border: 1px solid rgba(249, 115, 22, 0.4);
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 14px;
-        }
-
-        .welcome-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #FFFFFF;
-        }
-
-        .welcome-text {
-            color: #94A3B8;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            max-width: 800px;
-        }
-
-        /* =========================
-           GRID
-        ========================= */
-
-        .grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .grid-cols-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        /* =========================
-           KPI CARDS
-        ========================= */
-
-        .kpi-card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .kpi-header {
+        .controls-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .kpi-title {
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--text-muted);
         }
 
-        .kpi-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 9px;
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .filter-group {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+            gap: 10px;
         }
 
-        .kpi-icon.primary {
-            background: var(--color-info-light);
-            color: var(--color-info);
-        }
-
-        .kpi-icon.success {
-            background: var(--color-success-light);
-            color: var(--color-success);
-        }
-
-        .kpi-icon.warning {
-            background: var(--color-warning-light);
-            color: var(--color-warning);
-        }
-
-        .kpi-icon.danger {
-            background: var(--color-danger-light);
-            color: var(--color-danger);
-        }
-
-        .kpi-icon.orange {
-            background: #FFF0E8;
-            color: var(--color-primary);
-        }
-
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: 700;
+        .select-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #FFFFFF;
             color: var(--text-dark);
+            outline: none;
+            cursor: pointer;
         }
 
-        .kpi-description {
-            margin-top: 5px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        /* =========================
-           MIDDLE SUMMARY CARDS
-        ========================= */
-
-        .summary-card-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            display: flex;
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: background-color 0.2s;
         }
 
-        .metric-sub-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
         }
 
-        .metric-block {
-            padding: 16px 8px;
-            background-color: #F8FAFC;
-            border-radius: 8px;
-            text-align: center;
-            border-top: 3px solid transparent;
+        .btn-primary:hover {
+            background-color: var(--color-primary-light);
         }
 
-        .metric-border-warning {
-            border-top-color: var(--color-warning);
-        }
-
-        .metric-border-success {
-            border-top-color: var(--color-success);
-        }
-
-        .metric-border-danger {
-            border-top-color: var(--color-danger);
-        }
-
-        .metric-border-info {
-            border-top-color: var(--color-info);
-        }
-
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .btn-secondary {
+            background-color: #F1F5F9;
             color: var(--text-dark);
-        }
-
-        .metric-label {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .fulfillment-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .fulfillment-option {
-            padding: 20px;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: #F8FAFC;
         }
 
-        .fulfillment-option i {
-            font-size: 1.4rem;
-            color: var(--color-primary);
-            margin-bottom: 10px;
+        .btn-secondary:hover {
+            background-color: #E2E8F0;
         }
 
-        .fulfillment-option h4 {
-            font-size: 0.95rem;
-            margin-bottom: 5px;
+        .btn-outline-danger {
+            background-color: transparent;
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
         }
 
-        .fulfillment-option p {
-            color: var(--text-muted);
-            font-size: 0.78rem;
-            line-height: 1.4;
+        .btn-outline-danger:hover {
+            background-color: var(--color-danger-light);
         }
 
-        .fulfillment-count {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 10px;
-        }
-
-        /* =========================
-           LOWER GRID
-        ========================= */
-
-        .dashboard-lower-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 20px;
-        }
-
+        /* TABLE */
         .table-container {
             overflow-x: auto;
         }
@@ -529,153 +402,294 @@
 
         th {
             text-align: left;
-            padding: 12px 10px;
+            padding: 14px 12px;
             font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.5px;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border-color);
         }
 
         td {
-            padding: 14px 10px;
+            padding: 16px 12px;
             font-size: 0.88rem;
             border-bottom: 1px solid #F1F5F9;
             color: var(--text-dark);
+            vertical-align: middle;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        tr:hover td {
+            background-color: #F8FAFC;
         }
 
-        .supplier-name {
+        .po-code {
             font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .req-code {
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .status-badge {
             display: inline-flex;
             align-items: center;
-            padding: 5px 9px;
+            gap: 5px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-        }
-
-        .status-success {
-            background: var(--color-success-light);
-            color: var(--color-success);
-        }
-
-        .status-warning {
-            background: var(--color-warning-light);
-            color: var(--color-warning);
-        }
-
-        .status-danger {
-            background: var(--color-danger-light);
-            color: var(--color-danger);
-        }
-
-        .warehouse-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .warehouse-item {
-            padding: 15px;
-            background: #F8FAFC;
-            border-radius: 9px;
-            border: 1px solid #EEF2F7;
-        }
-
-        .warehouse-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 7px;
-        }
-
-        .warehouse-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .warehouse-description {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .warehouse-status {
             font-size: 0.75rem;
             font-weight: 700;
         }
 
-        .warehouse-status.good {
-            color: var(--color-success);
-        }
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-info { background: var(--color-info-light); color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
 
-        .warehouse-status.warning {
-            color: var(--color-warning);
-        }
-
-        .notification-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .feed-item {
+        .action-btns {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            border-radius: 8px;
-            background-color: #F8FAFC;
+            gap: 8px;
         }
 
-        .feed-icon-wrapper {
+        .btn-icon {
             width: 32px;
             height: 32px;
-            border-radius: 50%;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .feed-item.success .feed-icon-wrapper {
-            background-color: var(--color-success-light);
-            color: var(--color-success);
+        .btn-icon:hover {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            border-color: var(--color-primary);
         }
 
-        .feed-item.warning .feed-icon-wrapper {
-            background-color: var(--color-warning-light);
-            color: var(--color-warning);
+        /* =========================
+           DRAWER / MODAL STYLES
+        ========================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            z-index: 2000;
+            justify-content: flex-end;
         }
 
-        .feed-item.info .feed-icon-wrapper {
-            background-color: var(--color-info-light);
-            color: var(--color-info);
+        .modal-overlay.open {
+            display: flex;
         }
 
-        .feed-title {
-            font-size: 0.9rem;
+        .drawer {
+            width: 720px;
+            max-width: 90vw;
+            background-color: #FFFFFF;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.25s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F8FAFC;
+        }
+
+        .drawer-title {
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-dark);
         }
 
-        .feed-meta {
-            font-size: 0.78rem;
+        .drawer-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
             color: var(--text-muted);
-            margin-top: 2px;
+            cursor: pointer;
         }
 
-        .notification-wrapper {
+        .drawer-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .drawer-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .detail-section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            background: #FFFFFF;
+        }
+
+        .detail-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .info-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Fulfillment Choice Box */
+        .fulfillment-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .fulfillment-card {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
             position: relative;
         }
 
+        .fulfillment-card:hover {
+            border-color: var(--color-secondary);
+        }
+
+        .fulfillment-card.selected {
+            border-color: var(--color-primary);
+            background-color: #FFF0E8;
+        }
+
+        .fulfillment-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+        }
+
+        .fulfillment-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .fulfillment-card .check-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            color: var(--color-primary);
+            display: none;
+        }
+
+        .fulfillment-card.selected .check-icon {
+            display: block;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            font-size: 0.85rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .timeline-text {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Notification Dropdown */
+        .notification-wrapper { position: relative; }
         .notification-panel {
             display: none;
             position: absolute;
@@ -690,72 +704,19 @@
             padding: 16px;
         }
 
-        .notification-wrapper.open .notification-panel {
-            display: block;
-        }
-
-        .notification-panel-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .notification-panel-header h4 {
-            font-size: 1rem;
-        }
-
-        .notification-panel-header span {
-            font-size: 0.75rem;
-            color: var(--color-primary);
-            cursor: pointer;
-        }
-
-        @media (max-width: 1200px) {
-            .grid-cols-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+        .notification-wrapper.open .notification-panel { display: block; }
 
         @media (max-width: 1024px) {
-            .dashboard-lower-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                width: 80px;
-            }
-
-            .sidebar-logo span,
-            .nav-item span {
-                display: none;
-            }
-
-            .sidebar-header {
-                padding: 24px;
-            }
-
-            .nav-item {
-                justify-content: center;
-                padding: 13px;
-            }
+            .sidebar { width: 80px; }
+            .sidebar-logo span, .nav-item span { display: none; }
+            .nav-item { justify-content: center; padding: 13px; }
         }
 
         @media (max-width: 768px) {
-            .profile-info {
-                display: none;
-            }
-
-            .grid-cols-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .metric-sub-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .fulfillment-box {
-                grid-template-columns: 1fr;
-            }
+            .topbar { padding: 0 20px; }
+            .page-container { padding: 20px; }
+            .profile-info { display: none; }
+            .fulfillment-selector { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -764,47 +725,45 @@
 
 <div class="app-wrapper">
 
-    <!-- SIDEBAR -->
+    <!-- =========================
+         SIDEBAR (INTERACTIVE)
+    ========================== -->
+
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img
-                    src="assets/logo.png"
-                    alt="Icon"
-                    class="brand-logo"
-                    onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'"
-                >
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
                 <span>Tenebrowse</span>
             </div>
         </div>
 
         <nav class="sidebar-nav">
             <ul class="nav-list">
-                <li class="nav-item active">
+                <li class="nav-item" onclick="switchTab(this, 'Dashboard')">
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active" onclick="switchTab(this, 'Purchase Orders')">
                     <i class="fas fa-file-invoice"></i>
                     <span>Purchase Orders</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" onclick="switchTab(this, 'Suppliers')">
                     <i class="fas fa-building"></i>
                     <span>Suppliers</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" onclick="switchTab(this, 'Deliveries')">
                     <i class="fas fa-truck"></i>
                     <span>Deliveries</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" onclick="switchTab(this, 'Warehouse')">
                     <i class="fas fa-warehouse"></i>
                     <span>Warehouse</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" onclick="switchTab(this, 'Substitutions')">
                     <i class="fas fa-random"></i>
                     <span>Substitutions</span>
                 </li>
-                <li class="nav-item logout-item">
+                <li class="nav-item logout-item" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </li>
@@ -812,13 +771,18 @@
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
     <main class="main-content">
 
-        <!-- TOPBAR WITH DIVIDER LINE -->
+        <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar-left">
-                <h2 class="page-title">Purchasing Officer Dashboard</h2>
+                <i class="fas fa-bars menu-toggle"></i>
+                <h2 class="page-title" id="currentPageTitle">Purchase Orders & Processing</h2>
             </div>
 
             <div class="topbar-right">
@@ -827,289 +791,392 @@
                         <i class="far fa-bell"></i>
                         <span class="badge-dot"></span>
                     </button>
-
                     <div class="notification-panel">
-                        <div class="notification-panel-header">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                             <h4>Notifications</h4>
-                            <span onclick="markAllRead()">Mark all as read</span>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
                         </div>
-                        <div class="notification-feed">
-                            <div class="feed-item success">
-                                <div class="feed-icon-wrapper">
-                                    <i class="fas fa-file-circle-check"></i>
-                                </div>
-                                <div>
-                                    <div class="feed-title">New Purchase Order Approved</div>
-                                    <div class="feed-meta">PO-2026-108 is ready for supplier assignment.</div>
-                                </div>
-                            </div>
-                            <div class="feed-item warning">
-                                <div class="feed-icon-wrapper">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </div>
-                                <div>
-                                    <div class="feed-title">Substitution Approved</div>
-                                    <div class="feed-meta">SR-2026-014 requires procurement processing.</div>
-                                </div>
-                            </div>
-                            <div class="feed-item danger">
-                                <div class="feed-icon-wrapper">
-                                    <i class="fas fa-truck-ramp-box"></i>
-                                </div>
-                                <div>
-                                    <div class="feed-title">Delivery Delayed</div>
-                                    <div class="feed-meta">PO-2026-099 requires supplier follow-up.</div>
-                                </div>
-                            </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="font-size:0.85rem;"><strong>PO-2026-108</strong> pending supplier dispatch</div>
+                            <div style="font-size:0.85rem;"><strong>SR-2026-014</strong> material substitution approved</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="profile-trigger">
-                    <div class="profile-avatar">JT</div>
+                    <div class="profile-avatar">PT</div>
                     <div class="profile-info">
-                        <div class="profile-name">Jess Tolentino</div>
+                        <div class="profile-name">Purchasing Officer Tolentino</div>
                         <div class="profile-role">Purchasing Officer</div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- PAGE -->
+
+        <!-- PAGE CONTAINER -->
         <div class="page-container">
+
             <div class="breadcrumb">
                 <a href="#">Tenebrowse Control</a>
                 <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                <span>Dashboard</span>
+                <span id="breadcrumbCurrent">Purchase Orders</span>
             </div>
 
-            <!-- WELCOME -->
-            <div class="welcome-card-dark mb-3">
-                <span class="welcome-badge">Procurement & Warehouse Operations</span>
-                <h1 class="welcome-title">Welcome Back, Jess Tolentino</h1>
-                <p class="welcome-text">
-                    Coordinate approved material requests, assign suppliers, manage purchase orders, monitor deliveries, and ensure materials reach the warehouse for inventory verification.
-                </p>
+
+            <!-- CONTROLS & TABLE CARD -->
+            <div class="card">
+
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search PO #, MR #, Material or Supplier..." id="poSearch">
+                    </div>
+
+                    <div class="filter-group">
+                        <select class="select-input" id="statusFilter">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Approved">Approved Request (Pending Processing)</option>
+                            <option value="Internal Transfer">Internal Transfer</option>
+                            <option value="Ordered">Ordered / Sent to Supplier</option>
+                            <option value="Substitution">Substituted</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                        <button class="btn btn-secondary" onclick="resetFilters()">
+                            <i class="fas fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- TABLE OF PURCHASE ORDERS -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Material Request</th>
+                                <th>Requested Material</th>
+                                <th>Qty Needed</th>
+                                <th>Fulfillment Source</th>
+                                <th>Assigned Supplier</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="poTableBody">
+
+                            <!-- Row 1 -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-108</span></td>
+                                <td><span class="req-code">MR-2026-042</span></td>
+                                <td><strong>Portland Cement Grade 42.5</strong></td>
+                                <td>500 Bags</td>
+                                <td><span class="status-badge status-warning"><i class="fas fa-hourglass"></i> Unassigned</span></td>
+                                <td><em style="color:var(--text-muted)">Not Assigned</em></td>
+                                <td><span class="status-badge status-warning">Pending Review</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-108')">
+                                            <i class="fas fa-sliders"></i> Process PO
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-107</span></td>
+                                <td><span class="req-code">MR-2026-039</span> <span class="status-badge status-info" style="font-size:0.65rem; padding:2px 6px;">Substituted</span></td>
+                                <td><strong>Deformed Steel Bars 16mm (Sub: 18mm High-Grade)</strong></td>
+                                <td>250 Pcs</td>
+                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                <td>Apex Industrial Supply</td>
+                                <td><span class="status-badge status-info">Ready to Dispatch</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-107')">
+                                            <i class="fas fa-pen-to-square"></i> Review / Edit
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-105</span></td>
+                                <td><span class="req-code">MR-2026-035</span></td>
+                                <td><strong>Hydraulic Plywood 3/4"</strong></td>
+                                <td>120 Sheets</td>
+                                <td><span class="status-badge status-success"><i class="fas fa-boxes-stacked"></i> Internal Warehouse</span></td>
+                                <td>Warehouse 3 (Internal)</td>
+                                <td><span class="status-badge status-success">Transfer Issued</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-105')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4 -->
+                            <tr>
+                                <td><span class="po-code">PO-2026-101</span></td>
+                                <td><span class="req-code">MR-2026-028</span></td>
+                                <td><strong>Ready-Mix Concrete 3000 PSI</strong></td>
+                                <td>40 Cu.m</td>
+                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                <td>BuildPro Hardware</td>
+                                <td><span class="status-badge status-info">Ordered (Sent)</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-101')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 5 -->
+                            <tr>
+                                <td><span class="po-code" style="text-decoration:line-through;">PO-2026-098</span></td>
+                                <td><span class="req-code">MR-2026-019</span></td>
+                                <td><strong>Industrial Solvent 20L</strong></td>
+                                <td>15 Drums</td>
+                                <td><em style="color:var(--text-muted)">N/A</em></td>
+                                <td><em style="color:var(--text-muted)">N/A</em></td>
+                                <td><span class="status-badge status-danger">Cancelled</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-098')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
-            <!-- KPI CARDS -->
-            <div class="grid grid-cols-3 mb-3">
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Pending Purchase Orders</div>
-                        <div class="kpi-icon warning"><i class="fas fa-hourglass-half"></i></div>
-                    </div>
-                    <div class="kpi-value">18</div>
-                    <div class="kpi-description">Awaiting supplier assignment</div>
-                </div>
-
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Ordered Purchase Orders</div>
-                        <div class="kpi-icon primary"><i class="fas fa-file-export"></i></div>
-                    </div>
-                    <div class="kpi-value">34</div>
-                    <div class="kpi-description">Issued to suppliers</div>
-                </div>
-
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Delivering Orders</div>
-                        <div class="kpi-icon orange"><i class="fas fa-truck-fast"></i></div>
-                    </div>
-                    <div class="kpi-value">12</div>
-                    <div class="kpi-description">In transit to warehouse</div>
-                </div>
-
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Completed Deliveries</div>
-                        <div class="kpi-icon success"><i class="fas fa-circle-check"></i></div>
-                    </div>
-                    <div class="kpi-value">142</div>
-                    <div class="kpi-description">Fully received & verified</div>
-                </div>
-
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Delayed Deliveries</div>
-                        <div class="kpi-icon danger"><i class="fas fa-triangle-exclamation"></i></div>
-                    </div>
-                    <div class="kpi-value">3</div>
-                    <div class="kpi-description">Past expected delivery date</div>
-                </div>
-
-                <div class="card kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-title">Pending Verification</div>
-                        <div class="kpi-icon warning"><i class="fas fa-boxes-packing"></i></div>
-                    </div>
-                    <div class="kpi-value">7</div>
-                    <div class="kpi-description">At warehouse awaiting inspection</div>
-                </div>
-            </div>
-
-            <!-- SUMMARY CARDS -->
-            <div class="grid grid-cols-3 mb-3">
-                <div class="card">
-                    <div class="summary-card-title"><i class="fas fa-sitemap"></i> Fulfillment Source</div>
-                    <div class="fulfillment-box">
-                        <div class="fulfillment-option">
-                            <i class="fas fa-boxes-stacked"></i>
-                            <h4>In-Stock Inventory</h4>
-                            <p>Directly fulfilled from active warehouse stocks.</p>
-                            <div class="fulfillment-count">28</div>
-                        </div>
-                        <div class="fulfillment-option">
-                            <i class="fas fa-cart-shopping"></i>
-                            <h4>Supplier Purchase</h4>
-                            <p>Procured externally via approved suppliers.</p>
-                            <div class="fulfillment-count">64</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="summary-card-title"><i class="fas fa-tasks"></i> Ordering & Approval Status</div>
-                    <div class="metric-sub-grid">
-                        <div class="metric-block metric-border-warning">
-                            <div class="metric-value">12</div>
-                            <div class="metric-label">Draft / Pending</div>
-                        </div>
-                        <div class="metric-block metric-border-info">
-                            <div class="metric-value">25</div>
-                            <div class="metric-label">Issued to Supplier</div>
-                        </div>
-                        <div class="metric-block metric-border-success">
-                            <div class="metric-value">84</div>
-                            <div class="metric-label">Approved & Processed</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="summary-card-title"><i class="fas fa-clipboard-check"></i> Warehouse Verification</div>
-                    <div class="metric-sub-grid">
-                        <div class="metric-block metric-border-warning">
-                            <div class="metric-value">7</div>
-                            <div class="metric-label">Awaiting QC</div>
-                        </div>
-                        <div class="metric-block metric-border-success">
-                            <div class="metric-value">118</div>
-                            <div class="metric-label">Passed & Stocked</div>
-                        </div>
-                        <div class="metric-block metric-border-danger">
-                            <div class="metric-value">4</div>
-                            <div class="metric-label">Rejected / Returned</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LOWER GRID -->
-            <div class="dashboard-lower-grid mb-3">
-                <div class="card">
-                    <div class="summary-card-title"><i class="fas fa-building"></i> Supplier Performance Summary</div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Supplier</th>
-                                    <th>Active POs</th>
-                                    <th>On-Time Rate</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="supplier-name">Apex Industrial Supply</td>
-                                    <td>8</td>
-                                    <td>98.5%</td>
-                                    <td><span class="status-badge status-success">Excellent</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="supplier-name">BuildPro Hardware</td>
-                                    <td>5</td>
-                                    <td>92.0%</td>
-                                    <td><span class="status-badge status-success">Good</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="supplier-name">Vanguard Logistics Corp</td>
-                                    <td>11</td>
-                                    <td>84.5%</td>
-                                    <td><span class="status-badge status-warning">Warning</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="supplier-name">Metro Chemical Materials</td>
-                                    <td>3</td>
-                                    <td>76.0%</td>
-                                    <td><span class="status-badge status-danger">At Risk</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="summary-card-title"><i class="fas fa-warehouse"></i> Warehouse Status</div>
-                    <div class="warehouse-list">
-                        <div class="warehouse-item">
-                            <div class="warehouse-header">
-                                <span class="warehouse-name">Warehouse 1</span>
-                                <span class="warehouse-status good">82% Capacity</span>
-                            </div>
-                            <div class="warehouse-description">Receiving active shipments. Storage operating normally.</div>
-                        </div>
-                        <div class="warehouse-item">
-                            <div class="warehouse-header">
-                                <span class="warehouse-name">Warehouse 2</span>
-                                <span class="warehouse-status warning">94% Capacity</span>
-                            </div>
-                            <div class="warehouse-description">Near full capacity. Priority dispatch advised.</div>
-                        </div>
-                        <div class="warehouse-item">
-                            <div class="warehouse-header">
-                                <span class="warehouse-name">Warehouse 3</span>
-                                <span class="warehouse-status good">45% Capacity</span>
-                            </div>
-                            <div class="warehouse-description">Open bay availability for upcoming bulk orders.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mb-3">
-                    <div class="summary-card-title"><i class="fas fa-history"></i> Recent Procurement Activity</div>
-                    <div class="notification-feed">
-                        <div class="feed-item success">
-                            <div class="feed-icon-wrapper"><i class="fas fa-check"></i></div>
-                            <div>
-                                <div class="feed-title">PO-2026-104 Fully Received</div>
-                                <div class="feed-meta">Verified by Central Depot A • 10 minutes ago</div>
-                            </div>
-                        </div>
-                        <div class="feed-item info">
-                            <div class="feed-icon-wrapper"><i class="fas fa-paper-plane"></i></div>
-                            <div>
-                                <div class="feed-title">PO-2026-107 Dispatched to Supplier</div>
-                                <div class="feed-meta">Issued to Apex Industrial Supply • 1 hour ago</div>
-                            </div>
-                        </div>
-                        <div class="feed-item warning">
-                            <div class="feed-icon-wrapper"><i class="fas fa-arrows-rotate"></i></div>
-                            <div>
-                                <div class="feed-title">Substitution Request Approved</div>
-                                <div class="feed-meta">SR-2026-014 processed for procurement • 3 hours ago</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+
     </main>
 
 </div>
 
+
+<!-- =========================
+     PROCESS / EDIT PO DRAWER
+========================== -->
+
+<div class="modal-overlay" id="poDrawerOverlay">
+    <div class="drawer">
+
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="drawerPoTitle">Process Purchase Order PO-2026-108</div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Origin: Material Request <strong id="drawerMrCode">MR-2026-042</strong></div>
+            </div>
+            <button class="drawer-close" onclick="closePODrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <!-- Request & Approval Info -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-clipboard-check"></i> Request & Approval Information</span>
+                    <span class="status-badge status-success" id="drawerApproveStatus">Approved by Management</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Requesting Department / Site</span>
+                        <span class="info-value">Tower B Construction Site</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Project Manager Approver</span>
+                        <span class="info-value">Engr. R. Santos (Approved Aug 8, 2026)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Material Requested</span>
+                        <span class="info-value" id="drawerMaterialName">Portland Cement Grade 42.5</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Requested Quantity</span>
+                        <span class="info-value" id="drawerMaterialQty">500 Bags</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Material Substitution Check -->
+            <div class="detail-section" style="border-left: 4px solid var(--color-info);">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-random"></i> Material Substitution Check</span>
+                    <span class="status-badge status-info">Substitution System</span>
+                </div>
+                <div style="font-size:0.85rem; color:var(--text-dark); margin-bottom:10px;">
+                    Is there an approved engineering material substitution active for this item?
+                </div>
+                <select class="select-input" style="width:100%;" id="substitutionSelect" onchange="onSubstitutionChange()">
+                    <option value="none">No Substitution - Procure Original Spec (Portland Cement Grade 42.5)</option>
+                    <option value="sub1">Approved Substitution: Type 1P Blended Cement (Approved SR-2026-014)</option>
+                </select>
+                <div id="substitutionNotice" style="display:none; margin-top:10px; font-size:0.8rem; background:#DBEAFE; padding:10px; border-radius:6px; color:#1E40AF;">
+                    <i class="fas fa-info-circle"></i> Item spec updated in PO header to <strong>Type 1P Blended Cement</strong> as per approved Substitution SR-2026-014.
+                </div>
+            </div>
+
+
+            <!-- Warehouse Availability & Fulfillment Source -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-warehouse"></i> Warehouse Availability & Fulfillment Source</span>
+                </div>
+
+                <div style="background:#F8FAFC; padding:12px; border-radius:8px; margin-bottom:14px; font-size:0.85rem;">
+                    <strong>Real-Time Stock Query:</strong>
+                    <ul style="margin-left:20px; margin-top:6px; color:var(--text-muted);">
+                        <li><strong>Warehouse 1:</strong> 120 Bags available</li>
+                        <li><strong>Warehouse 2:</strong> 0 Bags (Out of Stock)</li>
+                        <li><strong>Warehouse 3:</strong> 650 Bags available <span style="color:var(--color-success); font-weight:700;">(Sufficient Stock)</span></li>
+                    </ul>
+                </div>
+
+                <div style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">Select Fulfillment Route:</div>
+
+                <div class="fulfillment-selector">
+                    <div class="fulfillment-card" id="cardInternal" onclick="selectFulfillment('INTERNAL')">
+                        <i class="fas fa-check-circle check-icon"></i>
+                        <h4><i class="fas fa-boxes-stacked" style="color:var(--color-primary)"></i> Internal Transfer</h4>
+                        <p>Transfer existing stock from <strong>Warehouse 3</strong> to site directly.</p>
+                    </div>
+
+                    <div class="fulfillment-card selected" id="cardExternal" onclick="selectFulfillment('EXTERNAL')">
+                        <i class="fas fa-check-circle check-icon"></i>
+                        <h4><i class="fas fa-cart-shopping" style="color:var(--color-primary)"></i> External Purchase</h4>
+                        <p>Issue formal PO to an approved third-party supplier.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Supplier Selection -->
+            <div class="detail-section" id="supplierSection">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-building"></i> Assign Supplier & Edit Purchase Details</span>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label class="info-label" style="margin-bottom:4px; display:block;">Select Approved Supplier</label>
+                        <select class="select-input" style="width:100%;" id="supplierSelect">
+                            <option value="">-- Select Vendor --</option>
+                            <option value="Apex Industrial Supply" selected>Apex Industrial Supply (On-Time: 98.5%)</option>
+                            <option value="BuildPro Hardware">BuildPro Hardware (On-Time: 92.0%)</option>
+                            <option value="Vanguard Logistics Corp">Vanguard Logistics Corp (On-Time: 84.5%)</option>
+                        </select>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label class="info-label" style="margin-bottom:4px; display:block;">Unit Price ($)</label>
+                            <input type="number" class="search-input" value="12.50" id="unitPriceInput" style="padding-left:12px;">
+                        </div>
+                        <div>
+                            <label class="info-label" style="margin-bottom:4px; display:block;">Target Delivery Date</label>
+                            <input type="date" class="search-input" value="2026-08-15" style="padding-left:12px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Change History -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-history"></i> PO Change History & Audit Trail</span>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-text">Material Request MR-2026-042 Approved by Site Mgr</div>
+                        <div class="timeline-time">Aug 8, 2026 - 14:20 PM</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-text">PO Draft Auto-Generated (PO-2026-108)</div>
+                        <div class="timeline-time">Aug 8, 2026 - 14:22 PM</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-text">Purchasing Officer Review initiated</div>
+                        <div class="timeline-time">Aug 9, 2026 - 09:15 AM</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- DRAWER FOOTER ACTIONS -->
+        <div class="drawer-footer">
+            <button class="btn btn-outline-danger" onclick="cancelPO()">
+                <i class="fas fa-ban"></i> Cancel PO
+            </button>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" onclick="savePODraft()">
+                    <i class="fas fa-floppy-disk"></i> Save Draft
+                </button>
+                <button class="btn btn-primary" onclick="confirmAndSendPO()">
+                    <i class="fas fa-paper-plane"></i> Confirm & Send PO
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <script>
+    // Tab switching and active status handler
+    function switchTab(element, tabName) {
+        // Remove active class from all nav items
+        const items = document.querySelectorAll('.nav-item');
+        items.forEach(item => item.classList.remove('active'));
+
+        // Set active class on clicked item
+        element.classList.add('active');
+
+        // Update page titles dynamically
+        document.getElementById('currentPageTitle').innerText = tabName;
+        document.getElementById('breadcrumbCurrent').innerText = tabName;
+
+        // Map tab names to actual URLs if external routing is preferred
+        const pageRoutes = {
+            'Dashboard': 'po-dashboard.html',
+            'Purchase Orders': 'po-management.html',
+            'Suppliers': 'po-suppliers.html',
+            'Deliveries': 'po-deliveries.html',
+            'Warehouse': 'po-warehouse.html',
+            'Substitutions': 'po-substitutions.html'
+        };
+
+        // If you are navigating across multi-page files, uncomment the following line:
+        // transitionTo(pageRoutes[tabName]);
+    }
+
+    function handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            transitionTo('index.html');
+        }
+    }
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = url;
+        }, 200);
+    }
+
     function toggleNotifications() {
         document.getElementById('notificationWrapper').classList.toggle('open');
     }
@@ -1117,6 +1184,80 @@
     function markAllRead() {
         const badge = document.querySelector('.badge-dot');
         if (badge) badge.style.display = 'none';
+    }
+
+    // Drawer Logic
+    let currentFulfillment = 'EXTERNAL';
+
+    function openPODrawer(poNum) {
+        document.getElementById('drawerPoTitle').innerText = 'Process Purchase Order ' + poNum;
+        document.getElementById('poDrawerOverlay').classList.add('open');
+    }
+
+    function closePODrawer() {
+        document.getElementById('poDrawerOverlay').classList.remove('open');
+    }
+
+    function selectFulfillment(type) {
+        currentFulfillment = type;
+        const cardInt = document.getElementById('cardInternal');
+        const cardExt = document.getElementById('cardExternal');
+        const supplierSec = document.getElementById('supplierSection');
+
+        if (type === 'INTERNAL') {
+            cardInt.classList.add('selected');
+            cardExt.classList.remove('selected');
+            supplierSec.style.opacity = '0.5';
+            supplierSec.style.pointerEvents = 'none';
+        } else {
+            cardExt.classList.add('selected');
+            cardInt.classList.remove('selected');
+            supplierSec.style.opacity = '1';
+            supplierSec.style.pointerEvents = 'auto';
+        }
+    }
+
+    function onSubstitutionChange() {
+        const val = document.getElementById('substitutionSelect').value;
+        const notice = document.getElementById('substitutionNotice');
+        if (val === 'sub1') {
+            notice.style.display = 'block';
+            document.getElementById('drawerMaterialName').innerText = 'Type 1P Blended Cement (Substituted)';
+        } else {
+            notice.style.display = 'none';
+            document.getElementById('drawerMaterialName').innerText = 'Portland Cement Grade 42.5';
+        }
+    }
+
+    function savePODraft() {
+        alert('Purchase Order progress saved successfully as Draft.');
+        closePODrawer();
+    }
+
+    function confirmAndSendPO() {
+        if (currentFulfillment === 'EXTERNAL') {
+            const supplier = document.getElementById('supplierSelect').value;
+            if (!supplier) {
+                alert('Please assign a supplier before sending the Purchase Order.');
+                return;
+            }
+            alert('PO Confirmed and sent to supplier: ' + supplier);
+        } else {
+            alert('Internal Warehouse Transfer Request Issued successfully to Warehouse 3.');
+        }
+        closePODrawer();
+    }
+
+    function cancelPO() {
+        if (confirm('Are you sure you want to cancel this Purchase Order?')) {
+            alert('Purchase Order has been cancelled and recorded.');
+            closePODrawer();
+        }
+    }
+
+    function resetFilters() {
+        document.getElementById('poSearch').value = '';
+        document.getElementById('statusFilter').value = 'ALL';
     }
 </script>
 
