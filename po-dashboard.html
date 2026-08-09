@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenebrowse - Purchase Orders Management</title>
+    <title>Tenebrowse - Purchasing Officer</title>
 
     <!-- Google Fonts: League Spartan -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,11 +53,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        body.page-exit {
-            opacity: 0;
         }
 
         .app-wrapper {
@@ -67,7 +62,7 @@
         }
 
         /* =========================
-           SIDEBAR (CLICKABLE TABS)
+           SIDEBAR
         ========================= */
 
         .sidebar {
@@ -79,9 +74,7 @@
             flex-shrink: 0;
         }
 
-        .sidebar-header {
-            padding: 24px 20px;
-        }
+        .sidebar-header { padding: 24px 20px; }
 
         .sidebar-logo {
             display: flex;
@@ -92,26 +85,11 @@
             color: var(--color-primary);
         }
 
-        .brand-logo {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
+        .brand-logo { width: 32px; height: 32px; object-fit: contain; }
 
-        .sidebar-nav {
-            padding: 10px 16px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        .sidebar-nav { padding: 10px 16px; flex-grow: 1; }
 
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            height: 100%;
-        }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 
         .nav-item {
             padding: 12px 18px;
@@ -122,87 +100,51 @@
             font-weight: 600;
             color: #64748B;
             border-radius: 10px;
-            cursor: pointer; /* Ensures pointer hand appears */
-            user-select: none;
+            cursor: pointer;
             transition: all 0.2s ease;
+            user-select: none;
         }
 
-        .nav-item:hover {
-            background-color: #F1F5F9;
-            color: var(--text-dark);
-        }
+        .nav-item:hover { background-color: #F1F5F9; color: var(--text-dark); }
 
-        .nav-item.active {
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-        }
+        .nav-item.active { background-color: var(--color-primary); color: #FFFFFF; }
 
-        .nav-item.active:hover {
-            background-color: var(--color-primary-light);
-        }
+        .nav-item.active:hover { background-color: var(--color-primary-light); }
 
-        .logout-item {
-            margin-top: auto;
-            margin-bottom: 20px;
-            color: var(--color-danger);
-        }
-
-        .logout-item:hover {
-            background-color: var(--color-danger-light);
-            color: var(--color-danger);
-        }
+        .logout-item { margin-top: auto; margin-bottom: 20px; }
 
         /* =========================
            MAIN CONTENT
         ========================= */
 
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-x: hidden; }
+
+        /* =========================
+           TOPBAR
+        ========================= */
 
         .topbar {
             height: 70px;
-            background-color: #FFFFFF;
+            background-color: var(--bg-body);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
-            border-bottom: 1px solid #E2E8F0;
         }
 
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
 
-        .menu-toggle {
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            display: none;
-        }
+        .menu-toggle { font-size: 1.2rem; cursor: pointer; color: var(--text-muted); display: none; }
 
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0F172A;
-        }
+        .page-title { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
 
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .topbar-right { display: flex; align-items: center; gap: 20px; }
 
         .icon-btn {
             background: none;
             border: none;
             font-size: 1.1rem;
-            color: #64748B;
+            color: var(--color-primary);
             cursor: pointer;
             position: relative;
             padding: 6px;
@@ -218,14 +160,7 @@
             border-radius: 50%;
         }
 
-        .profile-trigger {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+        .profile-trigger { display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; }
 
         .profile-avatar {
             width: 38px;
@@ -240,30 +175,18 @@
             font-size: 0.95rem;
         }
 
-        .profile-info {
-            text-align: left;
-        }
-
-        .profile-name {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #0F172A;
-            line-height: 1.1;
-        }
-
-        .profile-role {
-            font-size: 0.8rem;
-            color: #64748B;
-        }
+        .profile-info { text-align: left; }
+        .profile-name { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); line-height: 1.1; }
+        .profile-role { font-size: 0.8rem; color: var(--text-muted); }
 
         /* =========================
-           PAGE CONTAINER & CARDS
+           PAGE CONTAINER
         ========================= */
 
-        .page-container {
-            padding: 32px;
-            flex-grow: 1;
-        }
+        .page-container { padding: 0 32px 32px 32px; flex-grow: 1; }
+
+        .page-view { display: none; }
+        .page-view.active { display: block; }
 
         .breadcrumb {
             display: flex;
@@ -275,15 +198,12 @@
             margin-bottom: 20px;
         }
 
-        .breadcrumb a {
-            color: var(--color-primary);
-            text-decoration: none;
-        }
+        .breadcrumb a { color: var(--color-primary); text-decoration: none; cursor: pointer; }
+        .breadcrumb-icon { font-size: 0.65rem; color: var(--text-muted); }
 
-        .breadcrumb-icon {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
+        /* =========================
+           CARDS & UTILS
+        ========================= */
 
         .card {
             background-color: var(--bg-card);
@@ -293,30 +213,140 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
+        .mb-2 { margin-bottom: 16px; }
         .mb-3 { margin-bottom: 24px; }
 
-        .controls-bar {
+        /* =========================
+           WELCOME BANNER
+        ========================= */
+
+        .welcome-card-dark {
+            background-color: #0F172A;
+            border: none;
+            border-radius: 12px;
+            padding: 32px;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #F97316;
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+
+        .welcome-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: #FFFFFF; }
+        .welcome-text { color: #94A3B8; font-size: 0.95rem; line-height: 1.5; max-width: 800px; }
+
+        /* =========================
+           GRID
+        ========================= */
+
+        .grid { display: grid; gap: 20px; }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+        /* =========================
+           KPI CARDS
+        ========================= */
+
+        .kpi-card { position: relative; overflow: hidden; }
+        .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .kpi-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); }
+
+        .kpi-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .kpi-icon.primary { background: var(--color-info-light); color: var(--color-info); }
+        .kpi-icon.success { background: var(--color-success-light); color: var(--color-success); }
+        .kpi-icon.warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .kpi-icon.danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .kpi-icon.orange { background: #FFF0E8; color: var(--color-primary); }
+
+        .kpi-value { font-size: 2rem; font-weight: 700; color: var(--text-dark); }
+        .kpi-description { margin-top: 5px; color: var(--text-muted); font-size: 0.8rem; }
+
+        .section-title { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
+
+        /* =========================
+           METRIC SUB GRID
+        ========================= */
+
+        .summary-card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .search-box {
-            position: relative;
-            flex-grow: 1;
-            max-width: 380px;
-        }
+        .metric-sub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .metric-block { padding: 16px 8px; background-color: #F8FAFC; border-radius: 8px; text-align: center; border-top: 3px solid transparent; }
+        .metric-border-primary { border-top-color: var(--color-primary); }
+        .metric-border-secondary { border-top-color: var(--color-secondary); }
+        .metric-border-success { border-top-color: var(--color-success); }
+        .metric-border-danger { border-top-color: var(--color-danger); }
+        .metric-border-info { border-top-color: var(--color-info); }
+        .metric-border-warning { border-top-color: var(--color-warning); }
+        .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .metric-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
 
-        .search-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
+        /* =========================
+           LOWER GRID
+        ========================= */
+
+        .dashboard-lower-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
         }
+        td { padding: 16px 12px; font-size: 0.88rem; border-bottom: 1px solid #F1F5F9; color: var(--text-dark); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #F8FAFC; }
+        .supplier-name { font-weight: 700; }
+        .po-code { font-weight: 700; color: var(--color-primary); }
+        .req-code { font-weight: 600; color: var(--text-dark); }
 
+        /* =========================
+           STATUS BADGES
+        ========================= */
+
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-info { background: var(--color-info-light); color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
+
+        /* =========================
+           CONTROLS / FILTER BAR
+        ========================= */
+
+        .controls-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .search-box { position: relative; flex-grow: 1; max-width: 380px; }
+        .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-input {
             width: 100%;
             padding: 10px 14px 10px 38px;
@@ -326,17 +356,8 @@
             outline: none;
             transition: border-color 0.2s;
         }
-
-        .search-input:focus {
-            border-color: var(--color-primary);
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .search-input:focus { border-color: var(--color-primary); }
+        .filter-group { display: flex; align-items: center; gap: 10px; }
         .select-input {
             padding: 10px 14px;
             border: 1px solid var(--border-color);
@@ -360,100 +381,14 @@
             gap: 8px;
             transition: background-color 0.2s;
         }
+        .btn-primary { background-color: var(--color-primary); color: #FFFFFF; }
+        .btn-primary:hover { background-color: var(--color-primary-light); }
+        .btn-secondary { background-color: #F1F5F9; color: var(--text-dark); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #E2E8F0; }
+        .btn-outline-danger { background-color: transparent; color: var(--color-danger); border: 1px solid var(--color-danger); }
+        .btn-outline-danger:hover { background-color: var(--color-danger-light); }
 
-        .btn-primary {
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-primary-light);
-        }
-
-        .btn-secondary {
-            background-color: #F1F5F9;
-            color: var(--text-dark);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #E2E8F0;
-        }
-
-        .btn-outline-danger {
-            background-color: transparent;
-            color: var(--color-danger);
-            border: 1px solid var(--color-danger);
-        }
-
-        .btn-outline-danger:hover {
-            background-color: var(--color-danger-light);
-        }
-
-        /* TABLE */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 14px 12px;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 16px 12px;
-            font-size: 0.88rem;
-            border-bottom: 1px solid #F1F5F9;
-            color: var(--text-dark);
-            vertical-align: middle;
-        }
-
-        tr:hover td {
-            background-color: #F8FAFC;
-        }
-
-        .po-code {
-            font-weight: 700;
-            color: var(--color-primary);
-        }
-
-        .req-code {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .status-success { background: var(--color-success-light); color: var(--color-success); }
-        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
-        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
-        .status-info { background: var(--color-info-light); color: var(--color-info); }
-        .status-neutral { background: #E2E8F0; color: #475569; }
-
-        .action-btns {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .action-btns { display: flex; align-items: center; gap: 8px; }
         .btn-icon {
             width: 32px;
             height: 32px;
@@ -467,12 +402,51 @@
             cursor: pointer;
             transition: all 0.15s;
         }
+        .btn-icon:hover { background-color: var(--color-primary); color: #FFFFFF; border-color: var(--color-primary); }
 
-        .btn-icon:hover {
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-            border-color: var(--color-primary);
+        /* =========================
+           PAGINATION
+        ========================= */
+
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
         }
+
+        .pagination-info { font-size: 0.82rem; color: var(--text-muted); }
+
+        .pagination-controls { display: flex; align-items: center; gap: 6px; }
+
+        .page-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .page-btn:hover:not(:disabled):not(.active) { background-color: #F1F5F9; border-color: var(--color-secondary); }
+
+        .page-btn.active { background-color: var(--color-primary); border-color: var(--color-primary); color: #FFFFFF; cursor: default; }
+
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .page-btn-ellipsis { border: none; background: none; cursor: default; color: var(--text-muted); }
 
         /* =========================
            DRAWER / MODAL STYLES
@@ -486,10 +460,7 @@
             z-index: 2000;
             justify-content: flex-end;
         }
-
-        .modal-overlay.open {
-            display: flex;
-        }
+        .modal-overlay.open { display: flex; }
 
         .drawer {
             width: 720px;
@@ -503,10 +474,7 @@
             animation: slideIn 0.25s ease-out;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
         .drawer-header {
             padding: 24px;
@@ -517,28 +485,9 @@
             background-color: #F8FAFC;
         }
 
-        .drawer-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .drawer-close {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .drawer-body {
-            padding: 24px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
+        .drawer-title { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
+        .drawer-close { background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
+        .drawer-body { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; gap: 24px; }
         .drawer-footer {
             padding: 20px 24px;
             border-top: 1px solid var(--border-color);
@@ -550,13 +499,7 @@
             bottom: 0;
         }
 
-        .detail-section {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 18px;
-            background: #FFFFFF;
-        }
-
+        .detail-section { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; background: #FFFFFF; }
         .detail-section-title {
             font-size: 0.9rem;
             font-weight: 700;
@@ -569,38 +512,12 @@
             justify-content: space-between;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px 20px;
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 20px; }
+        .info-item { display: flex; flex-direction: column; gap: 3px; }
+        .info-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+        .info-value { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); }
 
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .info-label {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* Fulfillment Choice Box */
-        .fulfillment-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 10px;
-        }
-
+        .fulfillment-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
         .fulfillment-card {
             border: 2px solid var(--border-color);
             border-radius: 10px;
@@ -609,86 +526,59 @@
             transition: all 0.2s;
             position: relative;
         }
+        .fulfillment-card:hover { border-color: var(--color-secondary); }
+        .fulfillment-card.selected { border-color: var(--color-primary); background-color: #FFF0E8; }
+        .fulfillment-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; color: var(--text-dark); }
+        .fulfillment-card p { font-size: 0.78rem; color: var(--text-muted); }
+        .fulfillment-card .check-icon { position: absolute; top: 12px; right: 12px; color: var(--color-primary); display: none; }
+        .fulfillment-card.selected .check-icon { display: block; }
 
-        .fulfillment-card:hover {
-            border-color: var(--color-secondary);
-        }
+        .fulfillment-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .fulfillment-option { padding: 20px; border: 1px solid var(--border-color); border-radius: 10px; background: #F8FAFC; }
+        .fulfillment-option i { font-size: 1.4rem; color: var(--color-primary); margin-bottom: 10px; }
+        .fulfillment-option h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .fulfillment-option p { color: var(--text-muted); font-size: 0.78rem; line-height: 1.4; }
+        .fulfillment-count { font-size: 1.5rem; font-weight: 700; margin-top: 10px; }
 
-        .fulfillment-card.selected {
-            border-color: var(--color-primary);
-            background-color: #FFF0E8;
-        }
+        .timeline { display: flex; flex-direction: column; gap: 14px; position: relative; padding-left: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background-color: var(--border-color); }
+        .timeline-item { position: relative; font-size: 0.85rem; }
+        .timeline-item::before { content: ''; position: absolute; left: -18px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--color-primary); }
+        .timeline-time { font-size: 0.75rem; color: var(--text-muted); }
+        .timeline-text { font-weight: 600; color: var(--text-dark); }
 
-        .fulfillment-card h4 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-dark);
-        }
+        /* =========================
+           WAREHOUSE
+        ========================= */
 
-        .fulfillment-card p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
+        .warehouse-list { display: flex; flex-direction: column; gap: 12px; }
+        .warehouse-item { padding: 15px; background: #F8FAFC; border-radius: 9px; border: 1px solid #EEF2F7; }
+        .warehouse-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+        .warehouse-name { font-weight: 700; font-size: 0.9rem; }
+        .warehouse-description { font-size: 0.78rem; color: var(--text-muted); }
+        .warehouse-status { font-size: 0.75rem; font-weight: 700; }
+        .warehouse-status.good { color: var(--color-success); }
+        .warehouse-status.warning { color: var(--color-warning); }
+        .warehouse-status.danger { color: var(--color-danger); }
 
-        .fulfillment-card .check-icon {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            color: var(--color-primary);
-            display: none;
-        }
+        /* =========================
+           ACTIVITY FEED
+        ========================= */
 
-        .fulfillment-card.selected .check-icon {
-            display: block;
-        }
+        .notification-feed { display: flex; flex-direction: column; gap: 12px; }
+        .feed-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 8px; background-color: #F8FAFC; }
+        .feed-icon-wrapper { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85rem; }
+        .feed-item.success .feed-icon-wrapper { background-color: var(--color-success-light); color: var(--color-success); }
+        .feed-item.danger .feed-icon-wrapper { background-color: var(--color-danger-light); color: var(--color-danger); }
+        .feed-item.warning .feed-icon-wrapper { background-color: var(--color-warning-light); color: var(--color-warning); }
+        .feed-item.info .feed-icon-wrapper { background-color: var(--color-info-light); color: var(--color-info); }
+        .feed-title { font-size: 0.9rem; font-weight: 700; color: var(--text-dark); }
+        .feed-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
 
-        /* Timeline */
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: relative;
-            padding-left: 20px;
-        }
+        /* =========================
+           NOTIFICATION DROPDOWN
+        ========================= */
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 4px;
-            bottom: 4px;
-            width: 2px;
-            background-color: var(--border-color);
-        }
-
-        .timeline-item {
-            position: relative;
-            font-size: 0.85rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -18px;
-            top: 4px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--color-primary);
-        }
-
-        .timeline-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .timeline-text {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* Notification Dropdown */
         .notification-wrapper { position: relative; }
         .notification-panel {
             display: none;
@@ -703,20 +593,51 @@
             z-index: 1000;
             padding: 16px;
         }
-
         .notification-wrapper.open .notification-panel { display: block; }
+        .notification-panel-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .notification-panel-header h4 { font-size: 1rem; }
+        .notification-panel-header span { font-size: 0.75rem; color: var(--color-primary); cursor: pointer; }
+
+        /* =========================
+           PLACEHOLDER PAGE
+        ========================= */
+
+        .placeholder-card {
+            text-align: center;
+            padding: 70px 30px;
+        }
+        .placeholder-card i {
+            font-size: 2.4rem;
+            color: var(--color-secondary);
+            margin-bottom: 16px;
+        }
+        .placeholder-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .placeholder-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1200px) {
+            .grid-cols-3 { grid-template-columns: repeat(2, 1fr); }
+        }
 
         @media (max-width: 1024px) {
+            .dashboard-lower-grid { grid-template-columns: 1fr; }
             .sidebar { width: 80px; }
             .sidebar-logo span, .nav-item span { display: none; }
+            .sidebar-header { padding: 24px; }
             .nav-item { justify-content: center; padding: 13px; }
         }
 
         @media (max-width: 768px) {
             .topbar { padding: 0 20px; }
-            .page-container { padding: 20px; }
+            .page-container { padding: 0 20px 25px; }
             .profile-info { display: none; }
-            .fulfillment-selector { grid-template-columns: 1fr; }
+            .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
+            .metric-sub-grid { grid-template-columns: 1fr; }
+            .fulfillment-box, .fulfillment-selector { grid-template-columns: 1fr; }
+            .notification-panel { width: 290px; }
         }
     </style>
 </head>
@@ -726,49 +647,64 @@
 <div class="app-wrapper">
 
     <!-- =========================
-         SIDEBAR (INTERACTIVE)
+         SIDEBAR
     ========================== -->
 
     <aside class="sidebar">
+
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                <img
+                    src="assets/logo.png"
+                    alt="Icon"
+                    class="brand-logo"
+                    onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'"
+                >
                 <span>Tenebrowse</span>
             </div>
         </div>
 
         <nav class="sidebar-nav">
-            <ul class="nav-list">
-                <li class="nav-item" onclick="switchTab(this, 'Dashboard')">
+            <ul class="nav-list" id="navList">
+
+                <li class="nav-item active" data-page="dashboard" data-title="Purchasing Officer Dashboard" data-crumb="Purchasing Officer Dashboard" onclick="showPage('dashboard', this)">
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </li>
-                <li class="nav-item active" onclick="switchTab(this, 'Purchase Orders')">
+
+                <li class="nav-item" data-page="purchase-orders" data-title="Purchase Orders &amp; Processing" data-crumb="Purchase Orders" onclick="showPage('purchase-orders', this)">
                     <i class="fas fa-file-invoice"></i>
                     <span>Purchase Orders</span>
                 </li>
-                <li class="nav-item" onclick="switchTab(this, 'Suppliers')">
+
+                <li class="nav-item" data-page="suppliers" data-title="Suppliers" data-crumb="Suppliers" onclick="showPage('suppliers', this)">
                     <i class="fas fa-building"></i>
                     <span>Suppliers</span>
                 </li>
-                <li class="nav-item" onclick="switchTab(this, 'Deliveries')">
+
+                <li class="nav-item" data-page="deliveries" data-title="Deliveries" data-crumb="Deliveries" onclick="showPage('deliveries', this)">
                     <i class="fas fa-truck"></i>
                     <span>Deliveries</span>
                 </li>
-                <li class="nav-item" onclick="switchTab(this, 'Warehouse')">
+
+                <li class="nav-item" data-page="warehouse" data-title="Warehouse" data-crumb="Warehouse" onclick="showPage('warehouse', this)">
                     <i class="fas fa-warehouse"></i>
                     <span>Warehouse</span>
                 </li>
-                <li class="nav-item" onclick="switchTab(this, 'Substitutions')">
+
+                <li class="nav-item" data-page="substitutions" data-title="Substitutions" data-crumb="Substitutions" onclick="showPage('substitutions', this)">
                     <i class="fas fa-random"></i>
                     <span>Substitutions</span>
                 </li>
-                <li class="nav-item logout-item" onclick="handleLogout()">
+
+                <li class="nav-item logout-item" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </li>
+
             </ul>
         </nav>
+
     </aside>
 
 
@@ -779,29 +715,66 @@
     <main class="main-content">
 
         <!-- TOPBAR -->
+
         <header class="topbar">
+
             <div class="topbar-left">
                 <i class="fas fa-bars menu-toggle"></i>
-                <h2 class="page-title" id="currentPageTitle">Purchase Orders & Processing</h2>
+                <h2 class="page-title" id="pageTitleText">Purchasing Officer Dashboard</h2>
             </div>
 
             <div class="topbar-right">
+
+                <!-- Notifications -->
+
                 <div class="notification-wrapper" id="notificationWrapper">
+
                     <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
                         <i class="far fa-bell"></i>
                         <span class="badge-dot"></span>
                     </button>
+
                     <div class="notification-panel">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+
+                        <div class="notification-panel-header">
                             <h4>Notifications</h4>
-                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
+                            <span onclick="markAllRead()">Mark all as read</span>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:10px;">
-                            <div style="font-size:0.85rem;"><strong>PO-2026-108</strong> pending supplier dispatch</div>
-                            <div style="font-size:0.85rem;"><strong>SR-2026-014</strong> material substitution approved</div>
+
+                        <div class="notification-feed">
+
+                            <div class="feed-item success">
+                                <div class="feed-icon-wrapper"><i class="fas fa-file-circle-check"></i></div>
+                                <div>
+                                    <div class="feed-title">New Purchase Order Approved</div>
+                                    <div class="feed-meta">PO-2026-108 is ready for supplier assignment.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item warning">
+                                <div class="feed-icon-wrapper"><i class="fas fa-exchange-alt"></i></div>
+                                <div>
+                                    <div class="feed-title">Substitution Approved</div>
+                                    <div class="feed-meta">SR-2026-014 requires procurement processing.</div>
+                                </div>
+                            </div>
+
+                            <div class="feed-item danger">
+                                <div class="feed-icon-wrapper"><i class="fas fa-truck-ramp-box"></i></div>
+                                <div>
+                                    <div class="feed-title">Delivery Delayed</div>
+                                    <div class="feed-meta">PO-2026-099 requires supplier follow-up.</div>
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
+
+                <!-- PROFILE -->
 
                 <div class="profile-trigger">
                     <div class="profile-avatar">PT</div>
@@ -810,152 +783,406 @@
                         <div class="profile-role">Purchasing Officer</div>
                     </div>
                 </div>
+
             </div>
+
         </header>
 
 
         <!-- PAGE CONTAINER -->
+
         <div class="page-container">
 
+            <!-- Breadcrumb -->
             <div class="breadcrumb">
-                <a href="#">Tenebrowse Control</a>
+                <a onclick="showPage('dashboard', document.querySelector('[data-page=dashboard]'))">Tenebrowse Control</a>
                 <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                <span id="breadcrumbCurrent">Purchase Orders</span>
+                <span id="breadcrumbCurrent">Purchasing Officer Dashboard</span>
             </div>
 
 
-            <!-- CONTROLS & TABLE CARD -->
-            <div class="card">
+            <!-- =========================================================
+                 VIEW: DASHBOARD
+            ========================================================== -->
 
-                <div class="controls-bar mb-3">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" class="search-input" placeholder="Search PO #, MR #, Material or Supplier..." id="poSearch">
+            <div class="page-view active" id="view-dashboard">
+
+                <!-- WELCOME -->
+                <div class="welcome-card-dark mb-3">
+                    <span class="welcome-badge">Procurement & Warehouse Operations</span>
+                    <h1 class="welcome-title">Welcome Back, Purchasing Officer Tolentino</h1>
+                    <p class="welcome-text">
+                        Coordinate approved material requests, assign suppliers,
+                        manage purchase orders, monitor deliveries, and ensure
+                        materials reach the warehouse for inventory verification.
+                    </p>
+                </div>
+
+                <!-- KPI CARDS -->
+                <div class="grid grid-cols-3 mb-3">
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Pending Purchase Orders</div>
+                            <div class="kpi-icon warning"><i class="fas fa-hourglass-half"></i></div>
+                        </div>
+                        <div class="kpi-value">18</div>
+                        <div class="kpi-description">Awaiting supplier assignment</div>
                     </div>
 
-                    <div class="filter-group">
-                        <select class="select-input" id="statusFilter">
-                            <option value="ALL">All Statuses</option>
-                            <option value="Approved">Approved Request (Pending Processing)</option>
-                            <option value="Internal Transfer">Internal Transfer</option>
-                            <option value="Ordered">Ordered / Sent to Supplier</option>
-                            <option value="Substitution">Substituted</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Ordered Purchase Orders</div>
+                            <div class="kpi-icon primary"><i class="fas fa-file-export"></i></div>
+                        </div>
+                        <div class="kpi-value">34</div>
+                        <div class="kpi-description">Issued to suppliers</div>
+                    </div>
 
-                        <button class="btn btn-secondary" onclick="resetFilters()">
-                            <i class="fas fa-rotate-left"></i> Reset
-                        </button>
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Delivering Orders</div>
+                            <div class="kpi-icon orange"><i class="fas fa-truck-fast"></i></div>
+                        </div>
+                        <div class="kpi-value">12</div>
+                        <div class="kpi-description">In transit to warehouse</div>
+                    </div>
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Completed Deliveries</div>
+                            <div class="kpi-icon success"><i class="fas fa-circle-check"></i></div>
+                        </div>
+                        <div class="kpi-value">142</div>
+                        <div class="kpi-description">Fully received & verified</div>
+                    </div>
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Delayed Deliveries</div>
+                            <div class="kpi-icon danger"><i class="fas fa-triangle-exclamation"></i></div>
+                        </div>
+                        <div class="kpi-value">3</div>
+                        <div class="kpi-description">Past expected delivery date</div>
+                    </div>
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-title">Pending Verification</div>
+                            <div class="kpi-icon warning"><i class="fas fa-boxes-packing"></i></div>
+                        </div>
+                        <div class="kpi-value">7</div>
+                        <div class="kpi-description">At warehouse awaiting inspection</div>
+                    </div>
+
+                </div>
+
+                <!-- MIDDLE SUMMARY CARDS -->
+                <div class="grid grid-cols-3 mb-3">
+
+                    <div class="card">
+                        <div class="summary-card-title"><i class="fas fa-sitemap"></i> Fulfillment Source</div>
+                        <div class="fulfillment-box">
+                            <div class="fulfillment-option">
+                                <i class="fas fa-boxes-stacked"></i>
+                                <h4>In-Stock Inventory</h4>
+                                <p>Directly fulfilled from active warehouse stocks.</p>
+                                <div class="fulfillment-count">28</div>
+                            </div>
+                            <div class="fulfillment-option">
+                                <i class="fas fa-cart-shopping"></i>
+                                <h4>Supplier Purchase</h4>
+                                <p>Procured externally via approved suppliers.</p>
+                                <div class="fulfillment-count">64</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title"><i class="fas fa-tasks"></i> Ordering & Approval Status</div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-warning">
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Draft / Pending</div>
+                            </div>
+                            <div class="metric-block metric-border-info">
+                                <div class="metric-value">25</div>
+                                <div class="metric-label">Issued to Supplier</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">84</div>
+                                <div class="metric-label">Approved & Processed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title"><i class="fas fa-clipboard-check"></i> Warehouse Verification</div>
+                        <div class="metric-sub-grid">
+                            <div class="metric-block metric-border-warning">
+                                <div class="metric-value">7</div>
+                                <div class="metric-label">Awaiting QC</div>
+                            </div>
+                            <div class="metric-block metric-border-success">
+                                <div class="metric-value">118</div>
+                                <div class="metric-label">Passed & Stocked</div>
+                            </div>
+                            <div class="metric-block metric-border-danger">
+                                <div class="metric-value">4</div>
+                                <div class="metric-label">Rejected / Returned</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- LOWER GRID -->
+                <div class="dashboard-lower-grid mb-3">
+
+                    <div class="card">
+                        <div class="summary-card-title"><i class="fas fa-building"></i> Supplier Performance Summary</div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>Supplier</th><th>Active POs</th><th>On-Time Rate</th><th>Status</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="supplier-name">Apex Industrial Supply</td>
+                                        <td>8</td><td>98.5%</td>
+                                        <td><span class="status-badge status-success">Excellent</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="supplier-name">BuildPro Hardware</td>
+                                        <td>5</td><td>92.0%</td>
+                                        <td><span class="status-badge status-success">Good</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="supplier-name">Vanguard Logistics Corp</td>
+                                        <td>11</td><td>84.5%</td>
+                                        <td><span class="status-badge status-warning">Warning</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="supplier-name">Metro Chemical Materials</td>
+                                        <td>3</td><td>76.0%</td>
+                                        <td><span class="status-badge status-danger">At Risk</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="summary-card-title"><i class="fas fa-warehouse"></i> Warehouse Status</div>
+                        <div class="warehouse-list">
+                            <div class="warehouse-item">
+                                <div class="warehouse-header">
+                                    <span class="warehouse-name">Warehouse 1</span>
+                                    <span class="warehouse-status good">82% Capacity</span>
+                                </div>
+                                <div class="warehouse-description">Receiving active shipments. Storage operating normally.</div>
+                            </div>
+                            <div class="warehouse-item">
+                                <div class="warehouse-header">
+                                    <span class="warehouse-name">Warehouse 2</span>
+                                    <span class="warehouse-status warning">94% Capacity</span>
+                                </div>
+                                <div class="warehouse-description">Near full capacity. Priority dispatch advised.</div>
+                            </div>
+                            <div class="warehouse-item">
+                                <div class="warehouse-header">
+                                    <span class="warehouse-name">Warehouse 3</span>
+                                    <span class="warehouse-status good">45% Capacity</span>
+                                </div>
+                                <div class="warehouse-description">Open bay availability for upcoming bulk orders.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RECENT PROCUREMENT ACTIVITY -->
+                <div class="card mb-3">
+                    <div class="summary-card-title"><i class="fas fa-history"></i> Recent Procurement Activity</div>
+                    <div class="notification-feed">
+                        <div class="feed-item success">
+                            <div class="feed-icon-wrapper"><i class="fas fa-check"></i></div>
+                            <div>
+                                <div class="feed-title">PO-2026-104 Fully Received</div>
+                                <div class="feed-meta">Verified by Central Depot A • 10 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="feed-item info">
+                            <div class="feed-icon-wrapper"><i class="fas fa-paper-plane"></i></div>
+                            <div>
+                                <div class="feed-title">PO-2026-107 Dispatched to Supplier</div>
+                                <div class="feed-meta">Issued to Apex Industrial Supply • 1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="feed-item warning">
+                            <div class="feed-icon-wrapper"><i class="fas fa-arrows-rotate"></i></div>
+                            <div>
+                                <div class="feed-title">Substitution Request Approved</div>
+                                <div class="feed-meta">SR-2026-014 processed for procurement • 3 hours ago</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+            </div>
 
-                <!-- TABLE OF PURCHASE ORDERS -->
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>PO Number</th>
-                                <th>Material Request</th>
-                                <th>Requested Material</th>
-                                <th>Qty Needed</th>
-                                <th>Fulfillment Source</th>
-                                <th>Assigned Supplier</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="poTableBody">
 
-                            <!-- Row 1 -->
-                            <tr>
-                                <td><span class="po-code">PO-2026-108</span></td>
-                                <td><span class="req-code">MR-2026-042</span></td>
-                                <td><strong>Portland Cement Grade 42.5</strong></td>
-                                <td>500 Bags</td>
-                                <td><span class="status-badge status-warning"><i class="fas fa-hourglass"></i> Unassigned</span></td>
-                                <td><em style="color:var(--text-muted)">Not Assigned</em></td>
-                                <td><span class="status-badge status-warning">Pending Review</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-108')">
-                                            <i class="fas fa-sliders"></i> Process PO
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+            <!-- =========================================================
+                 VIEW: PURCHASE ORDERS
+            ========================================================== -->
 
-                            <!-- Row 2 -->
-                            <tr>
-                                <td><span class="po-code">PO-2026-107</span></td>
-                                <td><span class="req-code">MR-2026-039</span> <span class="status-badge status-info" style="font-size:0.65rem; padding:2px 6px;">Substituted</span></td>
-                                <td><strong>Deformed Steel Bars 16mm (Sub: 18mm High-Grade)</strong></td>
-                                <td>250 Pcs</td>
-                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
-                                <td>Apex Industrial Supply</td>
-                                <td><span class="status-badge status-info">Ready to Dispatch</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-107')">
-                                            <i class="fas fa-pen-to-square"></i> Review / Edit
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+            <div class="page-view" id="view-purchase-orders">
 
-                            <!-- Row 3 -->
-                            <tr>
-                                <td><span class="po-code">PO-2026-105</span></td>
-                                <td><span class="req-code">MR-2026-035</span></td>
-                                <td><strong>Hydraulic Plywood 3/4"</strong></td>
-                                <td>120 Sheets</td>
-                                <td><span class="status-badge status-success"><i class="fas fa-boxes-stacked"></i> Internal Warehouse</span></td>
-                                <td>Warehouse 3 (Internal)</td>
-                                <td><span class="status-badge status-success">Transfer Issued</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-105')" title="View Details"><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                <div class="card">
 
-                            <!-- Row 4 -->
-                            <tr>
-                                <td><span class="po-code">PO-2026-101</span></td>
-                                <td><span class="req-code">MR-2026-028</span></td>
-                                <td><strong>Ready-Mix Concrete 3000 PSI</strong></td>
-                                <td>40 Cu.m</td>
-                                <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
-                                <td>BuildPro Hardware</td>
-                                <td><span class="status-badge status-info">Ordered (Sent)</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-101')" title="View Details"><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                    <div class="controls-bar mb-3">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="search-input" placeholder="Search PO #, MR #, Material or Supplier..." id="poSearch" oninput="applyFilters()">
+                        </div>
 
-                            <!-- Row 5 -->
-                            <tr>
-                                <td><span class="po-code" style="text-decoration:line-through;">PO-2026-098</span></td>
-                                <td><span class="req-code">MR-2026-019</span></td>
-                                <td><strong>Industrial Solvent 20L</strong></td>
-                                <td>15 Drums</td>
-                                <td><em style="color:var(--text-muted)">N/A</em></td>
-                                <td><em style="color:var(--text-muted)">N/A</em></td>
-                                <td><span class="status-badge status-danger">Cancelled</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <button class="btn-icon" onclick="openPODrawer('PO-2026-098')" title="View Details"><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <div class="filter-group">
+                            <select class="select-input" id="statusFilter" onchange="applyFilters()">
+                                <option value="ALL">All Statuses</option>
+                                <option value="Pending Review">Approved Request (Pending Processing)</option>
+                                <option value="Transfer Issued">Internal Transfer</option>
+                                <option value="Ordered (Sent)">Ordered / Sent to Supplier</option>
+                                <option value="Ready to Dispatch">Substituted</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
 
-                        </tbody>
-                    </table>
+                            <button class="btn btn-secondary" onclick="resetFilters()">
+                                <i class="fas fa-rotate-left"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PO Number</th>
+                                    <th>Material Request</th>
+                                    <th>Requested Material</th>
+                                    <th>Qty Needed</th>
+                                    <th>Fulfillment Source</th>
+                                    <th>Assigned Supplier</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poTableBody">
+
+                                <tr data-status="Pending Review">
+                                    <td><span class="po-code">PO-2026-108</span></td>
+                                    <td><span class="req-code">MR-2026-042</span></td>
+                                    <td><strong>Portland Cement Grade 42.5</strong></td>
+                                    <td>500 Bags</td>
+                                    <td><span class="status-badge status-warning"><i class="fas fa-hourglass"></i> Unassigned</span></td>
+                                    <td><em style="color:var(--text-muted)">Not Assigned</em></td>
+                                    <td><span class="status-badge status-warning">Pending Review</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-108')">
+                                                <i class="fas fa-sliders"></i> Process PO
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr data-status="Ready to Dispatch">
+                                    <td><span class="po-code">PO-2026-107</span></td>
+                                    <td><span class="req-code">MR-2026-039</span> <span class="status-badge status-info" style="font-size:0.65rem; padding:2px 6px;">Substituted</span></td>
+                                    <td><strong>Deformed Steel Bars 16mm (Sub: 18mm High-Grade)</strong></td>
+                                    <td>250 Pcs</td>
+                                    <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                    <td>Apex Industrial Supply</td>
+                                    <td><span class="status-badge status-info">Ready to Dispatch</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openPODrawer('PO-2026-107')">
+                                                <i class="fas fa-pen-to-square"></i> Review / Edit
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr data-status="Transfer Issued">
+                                    <td><span class="po-code">PO-2026-105</span></td>
+                                    <td><span class="req-code">MR-2026-035</span></td>
+                                    <td><strong>Hydraulic Plywood 3/4"</strong></td>
+                                    <td>120 Sheets</td>
+                                    <td><span class="status-badge status-success"><i class="fas fa-boxes-stacked"></i> Internal Warehouse</span></td>
+                                    <td>Warehouse 3 (Internal)</td>
+                                    <td><span class="status-badge status-success">Transfer Issued</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="btn-icon" onclick="openPODrawer('PO-2026-105')" title="View Details"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr data-status="Ordered (Sent)">
+                                    <td><span class="po-code">PO-2026-101</span></td>
+                                    <td><span class="req-code">MR-2026-028</span></td>
+                                    <td><strong>Ready-Mix Concrete 3000 PSI</strong></td>
+                                    <td>40 Cu.m</td>
+                                    <td><span class="status-badge status-neutral"><i class="fas fa-shopping-cart"></i> External Vendor</span></td>
+                                    <td>BuildPro Hardware</td>
+                                    <td><span class="status-badge status-info">Ordered (Sent)</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="btn-icon" onclick="openPODrawer('PO-2026-101')" title="View Details"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr data-status="Cancelled">
+                                    <td><span class="po-code" style="text-decoration:line-through;">PO-2026-098</span></td>
+                                    <td><span class="req-code">MR-2026-019</span></td>
+                                    <td><strong>Industrial Solvent 20L</strong></td>
+                                    <td>15 Drums</td>
+                                    <td><em style="color:var(--text-muted)">N/A</em></td>
+                                    <td><em style="color:var(--text-muted)">N/A</em></td>
+                                    <td><span class="status-badge status-danger">Cancelled</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            <button class="btn-icon" onclick="openPODrawer('PO-2026-098')" title="View Details"><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- WORKING PAGINATION -->
+                    <div class="pagination-bar">
+                        <div class="pagination-info" id="poPaginationInfo">Showing 1-5 of 5 purchase orders</div>
+                        <div class="pagination-controls" id="poPaginationControls"></div>
+                    </div>
+
                 </div>
 
+            </div>
+
+
+            <!-- =========================================================
+                 VIEW: PLACEHOLDER (Suppliers / Deliveries / Warehouse / Substitutions)
+            ========================================================== -->
+
+            <div class="page-view" id="view-placeholder">
+                <div class="card placeholder-card">
+                    <i class="fas fa-hammer"></i>
+                    <h3 id="placeholderTitle">This section is coming soon</h3>
+                    <p>This part of Tenebrowse hasn't been built yet in this preview. Dashboard and Purchase Orders are fully wired up.</p>
+                </div>
             </div>
 
         </div>
@@ -982,7 +1209,7 @@
 
         <div class="drawer-body">
 
-            <!-- Request & Approval Info -->
+            <!-- 1. Original Material Request & Approvals -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-clipboard-check"></i> Request & Approval Information</span>
@@ -1008,8 +1235,7 @@
                 </div>
             </div>
 
-
-            <!-- Material Substitution Check -->
+            <!-- 2. Process Approved Material Substitutions -->
             <div class="detail-section" style="border-left: 4px solid var(--color-info);">
                 <div class="detail-section-title">
                     <span><i class="fas fa-random"></i> Material Substitution Check</span>
@@ -1027,8 +1253,7 @@
                 </div>
             </div>
 
-
-            <!-- Warehouse Availability & Fulfillment Source -->
+            <!-- 3. Check Warehouse Availability & Select Fulfillment Source -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-warehouse"></i> Warehouse Availability & Fulfillment Source</span>
@@ -1060,8 +1285,7 @@
                 </div>
             </div>
 
-
-            <!-- Supplier Selection -->
+            <!-- 4. Supplier Selection & Edit PO Details -->
             <div class="detail-section" id="supplierSection">
                 <div class="detail-section-title">
                     <span><i class="fas fa-building"></i> Assign Supplier & Edit Purchase Details</span>
@@ -1091,8 +1315,7 @@
                 </div>
             </div>
 
-
-            <!-- Change History -->
+            <!-- 5. Change History / Audit Trail -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-history"></i> PO Change History & Audit Trail</span>
@@ -1115,7 +1338,6 @@
 
         </div>
 
-
         <!-- DRAWER FOOTER ACTIONS -->
         <div class="drawer-footer">
             <button class="btn btn-outline-danger" onclick="cancelPO()">
@@ -1137,45 +1359,57 @@
 
 
 <script>
-    // Tab switching and active status handler
-    function switchTab(element, tabName) {
-        // Remove active class from all nav items
-        const items = document.querySelectorAll('.nav-item');
-        items.forEach(item => item.classList.remove('active'));
+    /* =========================================================
+       PAGE NAVIGATION (client-side, no reload needed)
+    ========================================================== */
 
-        // Set active class on clicked item
-        element.classList.add('active');
+    const PLACEHOLDER_PAGES = {
+        suppliers: 'Suppliers',
+        deliveries: 'Deliveries',
+        warehouse: 'Warehouse',
+        substitutions: 'Substitutions'
+    };
 
-        // Update page titles dynamically
-        document.getElementById('currentPageTitle').innerText = tabName;
-        document.getElementById('breadcrumbCurrent').innerText = tabName;
+    function showPage(pageKey, navEl) {
+        // Toggle active nav item
+        document.querySelectorAll('.nav-item').forEach(li => li.classList.remove('active'));
+        if (navEl) navEl.classList.add('active');
 
-        // Map tab names to actual URLs if external routing is preferred
-        const pageRoutes = {
-            'Dashboard': 'po-dashboard.html',
-            'Purchase Orders': 'po-management.html',
-            'Suppliers': 'po-suppliers.html',
-            'Deliveries': 'po-deliveries.html',
-            'Warehouse': 'po-warehouse.html',
-            'Substitutions': 'po-substitutions.html'
-        };
+        // Toggle visible view
+        document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
 
-        // If you are navigating across multi-page files, uncomment the following line:
-        // transitionTo(pageRoutes[tabName]);
+        if (pageKey === 'dashboard') {
+            document.getElementById('view-dashboard').classList.add('active');
+        } else if (pageKey === 'purchase-orders') {
+            document.getElementById('view-purchase-orders').classList.add('active');
+        } else {
+            document.getElementById('placeholderTitle').innerText = (PLACEHOLDER_PAGES[pageKey] || 'This section') + ' is coming soon';
+            document.getElementById('view-placeholder').classList.add('active');
+        }
+
+        // Update topbar title + breadcrumb from the nav item's data attributes
+        const source = navEl || document.querySelector('[data-page="' + pageKey + '"]');
+        if (source) {
+            document.getElementById('pageTitleText').innerText = source.dataset.title || source.innerText.trim();
+            document.getElementById('breadcrumbCurrent').innerText = source.dataset.crumb || source.innerText.trim();
+        }
+
+        // Close any open panels/drawers when navigating
+        document.getElementById('notificationWrapper').classList.remove('open');
+        closePODrawer();
+
+        window.scrollTo(0, 0);
     }
 
-    function handleLogout() {
-        if (confirm('Are you sure you want to logout?')) {
-            transitionTo('index.html');
+    function logout() {
+        if (confirm('Log out of Tenebrowse?')) {
+            alert('You have been logged out. (In production this would return to the login screen.)');
         }
     }
 
-    function transitionTo(url) {
-        document.body.classList.add('page-exit');
-        setTimeout(() => {
-            window.location.href = url;
-        }, 200);
-    }
+    /* =========================================================
+       NOTIFICATIONS
+    ========================================================== */
 
     function toggleNotifications() {
         document.getElementById('notificationWrapper').classList.toggle('open');
@@ -1186,7 +1420,109 @@
         if (badge) badge.style.display = 'none';
     }
 
-    // Drawer Logic
+    /* =========================================================
+       PURCHASE ORDERS: SEARCH / FILTER / PAGINATION
+    ========================================================== */
+
+    const PO_PAGE_SIZE = 3;
+    let poCurrentPage = 1;
+
+    function getAllPoRows() {
+        return Array.from(document.querySelectorAll('#poTableBody tr'));
+    }
+
+    function applyFilters() {
+        poCurrentPage = 1;
+        renderPoTable();
+    }
+
+    function resetFilters() {
+        document.getElementById('poSearch').value = '';
+        document.getElementById('statusFilter').value = 'ALL';
+        poCurrentPage = 1;
+        renderPoTable();
+    }
+
+    function getFilteredRows() {
+        const query = document.getElementById('poSearch').value.trim().toLowerCase();
+        const statusVal = document.getElementById('statusFilter').value;
+
+        return getAllPoRows().filter(row => {
+            const matchesStatus = statusVal === 'ALL' || row.dataset.status === statusVal;
+            const matchesQuery = !query || row.innerText.toLowerCase().includes(query);
+            return matchesStatus && matchesQuery;
+        });
+    }
+
+    function renderPoTable() {
+        const allRows = getAllPoRows();
+        const filtered = getFilteredRows();
+        allRows.forEach(row => row.style.display = 'none');
+
+        const totalPages = Math.max(1, Math.ceil(filtered.length / PO_PAGE_SIZE));
+        if (poCurrentPage > totalPages) poCurrentPage = totalPages;
+        if (poCurrentPage < 1) poCurrentPage = 1;
+
+        const start = (poCurrentPage - 1) * PO_PAGE_SIZE;
+        const pageRows = filtered.slice(start, start + PO_PAGE_SIZE);
+        pageRows.forEach(row => row.style.display = '');
+
+        // Info text
+        const infoEl = document.getElementById('poPaginationInfo');
+        if (filtered.length === 0) {
+            infoEl.innerText = 'No purchase orders match your filters';
+        } else {
+            infoEl.innerText = 'Showing ' + (start + 1) + '-' + Math.min(start + PO_PAGE_SIZE, filtered.length) + ' of ' + filtered.length + ' purchase orders';
+        }
+
+        renderPaginationControls(totalPages);
+    }
+
+    function renderPaginationControls(totalPages) {
+        const controls = document.getElementById('poPaginationControls');
+        controls.innerHTML = '';
+
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn';
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.disabled = poCurrentPage === 1;
+        prevBtn.onclick = () => goToPoPage(poCurrentPage - 1);
+        controls.appendChild(prevBtn);
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (totalPages > 7 && i !== 1 && i !== totalPages && Math.abs(i - poCurrentPage) > 1) {
+                if (i === 2 || i === totalPages - 1) {
+                    const ell = document.createElement('span');
+                    ell.className = 'page-btn page-btn-ellipsis';
+                    ell.innerText = '...';
+                    controls.appendChild(ell);
+                }
+                continue;
+            }
+            const btn = document.createElement('button');
+            btn.className = 'page-btn' + (i === poCurrentPage ? ' active' : '');
+            btn.innerText = i;
+            btn.onclick = () => goToPoPage(i);
+            controls.appendChild(btn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn';
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.disabled = poCurrentPage === totalPages;
+        nextBtn.onclick = () => goToPoPage(poCurrentPage + 1);
+        controls.appendChild(nextBtn);
+    }
+
+    function goToPoPage(page) {
+        poCurrentPage = page;
+        renderPoTable();
+    }
+
+    /* =========================================================
+       PO DRAWER LOGIC
+    ========================================================== */
+
     let currentFulfillment = 'EXTERNAL';
 
     function openPODrawer(poNum) {
@@ -1255,10 +1591,11 @@
         }
     }
 
-    function resetFilters() {
-        document.getElementById('poSearch').value = '';
-        document.getElementById('statusFilter').value = 'ALL';
-    }
+    /* =========================================================
+       INIT
+    ========================================================== */
+
+    document.addEventListener('DOMContentLoaded', renderPoTable);
 </script>
 
 </body>
