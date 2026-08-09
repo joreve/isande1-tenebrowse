@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Purchasing Officer Dashboard</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #2563eb;
+            --topbar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            
+            /* Status Badge Colors */
+            --status-pending-bg: #fef3c7; --status-pending-txt: #92400e; --status-pending-border: #fcd34d;
+            --status-ordered-bg: #e0f2fe; --status-ordered-txt: #075985; --status-ordered-border: #bae6fd;
+            --status-purchased-bg: #f0fdf4; --status-purchased-txt: #166534; --status-purchased-border: #bbf7d0;
+            --status-delivering-bg: #e0e7ff; --status-delivering-txt: #3730a3; --status-delivering-border: #c7d2fe;
+            --status-delivered-bg: #dcfce7; --status-delivered-txt: #14532d; --status-delivered-border: #86efac;
+            --status-delayed-bg: #fee2e2; --status-delayed-txt: #991b1b; --status-delayed-border: #fca5a5;
+            --status-cancelled-bg: #f1f5f9; --status-cancelled-txt: #475569; --status-cancelled-border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.25rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #38bdf8;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            background-color: var(--sidebar-active);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item.logout-item {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f87171;
+        }
+
+        .nav-item.logout-item:hover {
+            background-color: #f87171;
+            color: #ffffff;
+        }
+
+        /* Main Workspace Structure */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Topbar Header */
+        .topbar {
+            height: 64px;
+            background-color: var(--topbar-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.75rem;
+        }
+
+        .topbar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .notif-btn {
+            background: none;
+            border: none;
+            position: relative;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .notif-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        .notif-badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 9px;
+            height: 9px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #2563eb;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-info .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-info .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Container & Grid Layouts */
+        .content-area {
+            flex: 1;
+            padding: 1.5rem 1.75rem;
+            overflow-y: auto;
+        }
+
+        .summary-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-info .card-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+
+        .card-info .card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .icon-pending { background-color: #fef3c7; color: #d97706; }
+        .icon-ordered { background-color: #e0f2fe; color: #0284c7; }
+        .icon-delivering { background-color: #e0e7ff; color: #4338ca; }
+        .icon-completed { background-color: #dcfce7; color: #15803d; }
+        .icon-delayed { background-color: #fee2e2; color: #b91c1c; }
+
+        .dashboard-main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-link {
+            font-size: 0.8125rem;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Tables Component */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .table th {
+            padding: 0.75rem 0.85rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8fafc;
+        }
+
+        .table td {
+            padding: 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .badge-pending { background-color: var(--status-pending-bg); color: var(--status-pending-txt); border: 1px solid var(--status-pending-border); }
+        .badge-ordered { background-color: var(--status-ordered-bg); color: var(--status-ordered-txt); border: 1px solid var(--status-ordered-border); }
+        .badge-purchased { background-color: var(--status-purchased-bg); color: var(--status-purchased-txt); border: 1px solid var(--status-purchased-border); }
+        .badge-delivering { background-color: var(--status-delivering-bg); color: var(--status-delivering-txt); border: 1px solid var(--status-delivering-border); }
+        .badge-delivered { background-color: var(--status-delivered-bg); color: var(--status-delivered-txt); border: 1px solid var(--status-delivered-border); }
+        .badge-delayed { background-color: var(--status-delayed-bg); color: var(--status-delayed-txt); border: 1px solid var(--status-delayed-border); }
+        .badge-cancelled { background-color: var(--status-cancelled-bg); color: var(--status-cancelled-txt); border: 1px solid var(--status-cancelled-border); }
+
+        /* Notification Feed & Supplier Ratings */
+        .notif-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .notif-content {
+            flex: 1;
+        }
+
+        .notif-title {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .notif-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .notif-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .supplier-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .supplier-row:last-child {
+            border-bottom: none;
+        }
+
+        .supplier-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .supplier-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .rating-box {
+            text-align: right;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        /* Notifications Dropdown Panel */
+        .dropdown-menu {
+            position: absolute;
+            top: 55px;
+            right: 1.75rem;
+            width: 340px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Quick Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 10px;
+            width: 580px;
+            max-width: 90%;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        .modal-footer {
+            padding: 0.85rem 1.25rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+        }
+
+        @media (max-width: 1200px) {
+            .summary-cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .dashboard-main-grid, .dashboard-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-boxes-stacked"></i>
+            Tenebrowse
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item active" onclick="switchTab('dashboard')">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </li>
+            <li class="nav-item" onclick="switchTab('purchase-orders')">
+                <i class="fas fa-file-invoice-dollar"></i> Purchase Orders
+            </li>
+            <li class="nav-item" onclick="switchTab('suppliers')">
+                <i class="fas fa-store"></i> Suppliers
+            </li>
+            <li class="nav-item" onclick="switchTab('deliveries')">
+                <i class="fas fa-truck-ramps-box"></i> Deliveries
+            </li>
+            <li class="nav-item logout-item" onclick="alert('Logging out...')">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <div class="main-wrapper">
+        
+        <!-- Top Navigation Bar -->
+        <header class="topbar">
+            <div class="topbar-title" id="pageTitle">Purchasing Officer Dashboard</div>
+            
+            <div class="topbar-actions">
+                <div style="position: relative;">
+                    <button class="notif-btn" onclick="toggleNotifDropdown(event)">
+                        <i class="far fa-bell"></i>
+                        <span class="notif-badge-dot" id="notifDot"></span>
+                    </button>
+
+                    <!-- Notifications Dropdown -->
+                    <div class="dropdown-menu" id="notifDropdown">
+                        <div class="dropdown-header">
+                            <span>Procurement Notifications</span>
+                            <a href="javascript:void(0)" class="btn-link" onclick="markAllRead()">Mark read</a>
+                        </div>
+                        <div id="dropdownNotifList" style="max-height: 280px; overflow-y: auto; padding: 0.5rem 1rem;">
+                            <!-- Populated via Javascript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-profile">
+                    <div class="avatar">PO</div>
+                    <div class="user-info">
+                        <div class="user-name">Alex Rivera</div>
+                        <div class="user-role">Purchasing Officer</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Container -->
+        <main class="content-area">
+            
+            <!-- SECTION: DASHBOARD -->
+            <div id="section-dashboard">
+                
+                <!-- 5 Dashboard Summary Cards -->
+                <div class="summary-cards-grid">
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <div class="card-label">Pending POs</div>
+                            <div class="card-value" id="card-pending">2</div>
+                        </div>
+                        <div class="card-icon icon-pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <div class="card-label">Ordered POs</div>
+                            <div class="card-value" id="card-ordered">3</div>
+                        </div>
+                        <div class="card-icon icon-ordered">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <div class="card-label">Delivering POs</div>
+                            <div class="card-value" id="card-delivering">2</div>
+                        </div>
+                        <div class="card-icon icon-delivering">
+                            <i class="fas fa-truck-fast"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <div class="card-label">Completed</div>
+                            <div class="card-value" id="card-completed">14</div>
+                        </div>
+                        <div class="card-icon icon-completed">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <div class="card-label">Delayed POs</div>
+                            <div class="card-value" id="card-delayed">1</div>
+                        </div>
+                        <div class="card-icon icon-delayed">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Layout Grid (Recent POs & Supplier Performance) -->
+                <div class="dashboard-main-grid">
+                    
+                    <!-- Recent Purchase Orders Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-file-invoice text-primary" style="color: #2563eb;"></i>
+                                Recent Purchase Orders
+                            </div>
+                            <a href="javascript:void(0)" class="btn-link" onclick="switchTab('purchase-orders')">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>PO Number</th>
+                                        <th>Project</th>
+                                        <th>Supplier</th>
+                                        <th>Est. Cost</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableRecentPOs">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Performance Summary -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-star" style="color: #f59e0b;"></i>
+                                Supplier Performance
+                            </div>
+                            <a href="javascript:void(0)" class="btn-link" onclick="switchTab('suppliers')">Directory</a>
+                        </div>
+                        <div id="supplierPerformanceList">
+                            <!-- Dynamic Supplier Rows -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Secondary Layout Grid (Delivery Updates & Recent Notifications) -->
+                <div class="dashboard-sub-grid">
+                    
+                    <!-- Recent Delivery Updates -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-truck-ramp-box" style="color: #0284c7;"></i>
+                                Recent Delivery Updates
+                            </div>
+                            <a href="javascript:void(0)" class="btn-link" onclick="switchTab('deliveries')">Manage Deliveries</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>PO Number</th>
+                                        <th>Expected Date</th>
+                                        <th>Delivery Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableRecentDeliveries">
+                                    <!-- Dynamic Delivery Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Notifications Feed -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-bell" style="color: #0284c7;"></i>
+                                Recent Notifications
+                            </div>
+                        </div>
+                        <div id="recentNotificationsFeed" style="max-height: 230px; overflow-y: auto;">
+                            <!-- Dynamic Notifications -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SECTION PLACEHOLDERS FOR ROUTING -->
+            <div id="section-purchase-orders" style="display: none;" class="card">
+                <div class="card-title"><i class="fas fa-file-invoice-dollar"></i> Purchase Orders Management</div>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem;">
+                    Full Purchase Orders ledger interface placeholder. Select "Dashboard" from sidebar to return.
+                </p>
+            </div>
+
+            <div id="section-suppliers" style="display: none;" class="card">
+                <div class="card-title"><i class="fas fa-store"></i> Supplier Directory</div>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem;">
+                    Full Supplier directory and evaluation records placeholder. Select "Dashboard" from sidebar to return.
+                </p>
+            </div>
+
+            <div id="section-deliveries" style="display: none;" class="card">
+                <div class="card-title"><i class="fas fa-truck-ramps-box"></i> Delivery Tracking</div>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem;">
+                    Delivery monitoring and warehouse dispatch center placeholder. Select "Dashboard" from sidebar to return.
+                </p>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- PO INSPECT MODAL -->
+    <div class="modal-overlay" id="poModal">
+        <div class="modal">
+            <div class="modal-header">
+                <strong id="modalTitle" style="font-size: 1rem;">PO Details</strong>
+                <button onclick="closePoModal()" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closePoModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Sample System Data Store */
+        const dashboardData = {
+            purchaseOrders: [
+                { poNumber: "PO-2026-001", mrNumber: "MR-8801", project: "Metro Tower Site A", materials: "Grade 60 Structural Rebar 12mm", quantity: 1500, unit: "pcs", supplier: "Apex Steel Corp", dateCreated: "2026-08-01", expectedDeliveryDate: "2026-08-12", totalCost: "$45,200.00", status: "Delivery in Progress", approvedBy: "General Manager (E. Vance)" },
+                { poNumber: "PO-2026-002", mrNumber: "MR-8804", project: "Bridge Expansion Sector 4", materials: "Ready-Mix Concrete Grade 40", quantity: 125, unit: "cu.m", supplier: "BuildMax Concrete Inc", dateCreated: "2026-08-03", expectedDeliveryDate: "2026-08-14", totalCost: "$18,750.00", status: "Ordered", approvedBy: "General Manager (E. Vance)" },
+                { poNumber: "PO-2026-003", mrNumber: "MR-8809", project: "Harbor Logistics Hub", materials: "Heavy Duty Scaffolding Frames", quantity: 400, unit: "sets", supplier: "Unassigned", dateCreated: "2026-08-07", expectedDeliveryDate: "2026-08-20", totalCost: "$60,400.00", status: "Pending", approvedBy: "General Manager (E. Vance)" },
+                { poNumber: "PO-2026-004", mrNumber: "MR-8812", project: "Metro Tower Site B", materials: "Schedule 40 PVC Pressure Pipes 4\"", quantity: 300, unit: "pcs", supplier: "Vanguard Piping Solutions", dateCreated: "2026-07-28", expectedDeliveryDate: "2026-08-05", totalCost: "$12,900.00", status: "Delayed", approvedBy: "General Manager (E. Vance)" },
+                { poNumber: "PO-2026-005", mrNumber: "MR-8790", project: "Civil Complex Facility", materials: "Portland Cement Type 1", quantity: 2000, unit: "bags", supplier: "BuildMax Concrete Inc", dateCreated: "2026-07-20", expectedDeliveryDate: "2026-07-29", totalCost: "$19,000.00", status: "Delivered", approvedBy: "General Manager (E. Vance)" }
+            ],
+            suppliers: [
+                { name: "Apex Steel Corp", completed: 42, rating: "4.9 ★" },
+                { name: "BuildMax Concrete Inc", completed: 31, rating: "4.7 ★" },
+                { name: "Vanguard Piping Solutions", completed: 25, rating: "4.2 ★" },
+                { name: "Titan Lumber & Hardware", completed: 18, rating: "3.8 ★" }
+            ],
+            notifications: [
+                { title: "Newly Approved PO", desc: "PO-2026-003 approved by GM and ready for supplier assignment.", time: "10 mins ago", read: false, po: "PO-2026-003", icon: "fa-plus-circle", color: "#2563eb" },
+                { title: "Delayed Shipment Alert", desc: "PO-2026-004 past expected delivery date (Vanguard Piping).", time: "1 hour ago", read: false, po: "PO-2026-004", icon: "fa-triangle-exclamation", color: "#dc2626" },
+                { title: "Delivery Status Update", desc: "PO-2026-001 delivery status changed to 'Delivery in Progress'.", time: "3 hours ago", read: true, po: "PO-2026-001", icon: "fa-truck-fast", color: "#0284c7" }
+            ]
+        };
+
+        /* Render Dashboard UI */
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSummaryMetrics();
+            renderRecentPOs();
+            renderSupplierPerformance();
+            renderRecentDeliveries();
+            renderNotificationsFeed();
+        });
+
+        function renderSummaryMetrics() {
+            const counts = { Pending: 0, Ordered: 0, 'Delivery in Progress': 0, Delivered: 0, Delayed: 0 };
+            dashboardData.purchaseOrders.forEach(po => {
+                if (counts[po.status] !== undefined) counts[po.status]++;
+            });
+
+            document.getElementById('card-pending').textContent = counts.Pending;
+            document.getElementById('card-ordered').textContent = counts.Ordered;
+            document.getElementById('card-delivering').textContent = counts['Delivery in Progress'];
+            document.getElementById('card-completed').textContent = counts.Delivered + 13; // Plus baseline
+            document.getElementById('card-delayed').textContent = counts.Delayed;
+        }
+
+        function getBadgeClass(status) {
+            switch(status) {
+                case 'Pending': return 'badge-pending';
+                case 'Ordered': return 'badge-ordered';
+                case 'Purchased': return 'badge-purchased';
+                case 'Delivery in Progress': return 'badge-delivering';
+                case 'Delivered': return 'badge-delivered';
+                case 'Delayed': return 'badge-delayed';
+                case 'Cancelled': return 'badge-cancelled';
+                default: return 'badge-pending';
+            }
+        }
+
+        function renderRecentPOs() {
+            const tbody = document.getElementById('tableRecentPOs');
+            tbody.innerHTML = '';
+            
+            dashboardData.purchaseOrders.forEach(po => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${po.poNumber}</strong></td>
+                        <td>${po.project}</td>
+                        <td>${po.supplier}</td>
+                        <td>${po.totalCost}</td>
+                        <td><span class="badge ${getBadgeClass(po.status)}">${po.status}</span></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="inspectPo('${po.poNumber}')">Inspect</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderSupplierPerformance() {
+            const container = document.getElementById('supplierPerformanceList');
+            container.innerHTML = '';
+
+            dashboardData.suppliers.forEach(s => {
+                container.innerHTML += `
+                    <div class="supplier-row">
+                        <div>
+                            <div class="supplier-name">${s.name}</div>
+                            <div class="supplier-meta">Completed Orders: ${s.completed}</div>
+                        </div>
+                        <div class="rating-box">
+                            ${s.rating}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderRecentDeliveries() {
+            const tbody = document.getElementById('tableRecentDeliveries');
+            tbody.innerHTML = '';
+
+            const deliveries = dashboardData.purchaseOrders.filter(p => ['Ordered', 'Delivery in Progress', 'Delayed', 'Delivered'].includes(p.status));
+            deliveries.forEach(d => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${d.poNumber}</strong></td>
+                        <td>${d.expectedDeliveryDate}</td>
+                        <td><span class="badge ${getBadgeClass(d.status)}">${d.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderNotificationsFeed() {
+            const feed = document.getElementById('recentNotificationsFeed');
+            const dropdown = document.getElementById('dropdownNotifList');
+            feed.innerHTML = '';
+            dropdown.innerHTML = '';
+
+            let hasUnread = false;
+
+            dashboardData.notifications.forEach(n => {
+                if(!n.read) hasUnread = true;
+
+                const itemHtml = `
+                    <div class="notif-item" onclick="inspectPo('${n.po}')" style="cursor: pointer;">
+                        <div class="notif-icon-circle" style="background-color: ${n.color}15; color: ${n.color};">
+                            <i class="fas ${n.icon}"></i>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-title">${n.title}</div>
+                            <div class="notif-desc">${n.desc}</div>
+                            <div class="notif-time">${n.time}</div>
+                        </div>
+                    </div>
+                `;
+
+                feed.innerHTML += itemHtml;
+                dropdown.innerHTML += itemHtml;
+            });
+
+            document.getElementById('notifDot').style.display = hasUnread ? 'block' : 'none';
+        }
+
+        /* Routing Tab Switcher */
+        function switchTab(tabKey) {
+            document.querySelectorAll('.sidebar-nav .nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.content-area > div').forEach(el => el.style.display = 'none');
+
+            document.getElementById(`section-${tabKey}`).style.display = 'block';
+
+            const titles = {
+                'dashboard': 'Purchasing Officer Dashboard',
+                'purchase-orders': 'Purchase Order Management',
+                'suppliers': 'Supplier Directory',
+                'deliveries': 'Delivery Monitoring'
+            };
+            document.getElementById('pageTitle').textContent = titles[tabKey] || 'Workspace';
+
+            const activeNav = Array.from(document.querySelectorAll('.sidebar-nav .nav-item')).find(item => item.getAttribute('onclick').includes(tabKey));
+            if(activeNav) activeNav.classList.add('active');
+        }
+
+        /* PO Inspect Modal Functions */
+        function inspectPo(poNumber) {
+            const po = dashboardData.purchaseOrders.find(p => p.poNumber === poNumber);
+            if (!po) return;
+
+            document.getElementById('modalTitle').textContent = `Purchase Order - ${po.poNumber}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; background: #f8fafc; padding: 0.85rem; border-radius: 6px; font-size: 0.8125rem;">
+                    <div><strong>MR Ref:</strong> ${po.mrNumber}</div>
+                    <div><strong>Status:</strong> <span class="badge ${getBadgeClass(po.status)}">${po.status}</span></div>
+                    <div><strong>Project:</strong> ${po.project}</div>
+                    <div><strong>Approved By:</strong> ${po.approvedBy}</div>
+                    <div><strong>Supplier:</strong> ${po.supplier}</div>
+                    <div><strong>Est. Total:</strong> ${po.totalCost}</div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Materials Ordered</label>
+                    <div style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; margin-top: 0.25rem; font-size: 0.875rem; font-weight: 600;">
+                        ${po.materials} (${po.quantity} ${po.unit})
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('poModal').style.display = 'flex';
+        }
+
+        function closePoModal() {
+            document.getElementById('poModal').style.display = 'none';
+        }
+
+        function toggleNotifDropdown(event) {
+            event.stopPropagation();
+            const dd = document.getElementById('notifDropdown');
+            dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function markAllRead() {
+            dashboardData.notifications.forEach(n => n.read = true);
+            renderNotificationsFeed();
+        }
+
+        document.addEventListener('click', () => {
+            document.getElementById('notifDropdown').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
