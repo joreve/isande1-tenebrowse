@@ -293,67 +293,6 @@
         .mb-2 { margin-bottom: 16px; }
         .mb-3 { margin-bottom: 24px; }
 
-        /* Flow Stepper Bar */
-        .flow-card {
-            background-color: #0F172A;
-            border-radius: 12px;
-            padding: 20px 28px;
-            color: #FFFFFF;
-        }
-
-        .flow-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #F97316;
-            margin-bottom: 12px;
-        }
-
-        .flow-steps {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .flow-step {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 0.88rem;
-            color: #94A3B8;
-        }
-
-        .flow-step.active {
-            color: #FFFFFF;
-        }
-
-        .flow-step-num {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #94A3B8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .flow-step.active .flow-step-num {
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-        }
-
-        .flow-arrow {
-            color: #475569;
-            font-size: 0.75rem;
-        }
-
         /* Controls / Filter Bar */
         .controls-bar {
             display: flex;
@@ -795,7 +734,7 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23d44f00'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>'">
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
                 <span>Tenebrowse</span>
             </div>
         </div>
@@ -884,43 +823,6 @@
                 <a href="#">Tenebrowse Control</a>
                 <i class="fas fa-chevron-right breadcrumb-icon"></i>
                 <span>Purchase Orders</span>
-            </div>
-
-
-            <!-- FLOW STEPPER HEADER -->
-            <div class="flow-card mb-3">
-                <div class="flow-title">Core Purchasing Officer Flow</div>
-                <div class="flow-steps">
-                    <div class="flow-step active">
-                        <span class="flow-step-num">1</span>
-                        <span>Approved Material Request</span>
-                    </div>
-                    <i class="fas fa-chevron-right flow-arrow"></i>
-                    <div class="flow-step active">
-                        <span class="flow-step-num">2</span>
-                        <span>Review PO Details</span>
-                    </div>
-                    <i class="fas fa-chevron-right flow-arrow"></i>
-                    <div class="flow-step active">
-                        <span class="flow-step-num">3</span>
-                        <span>Check Warehouse Stock</span>
-                    </div>
-                    <i class="fas fa-chevron-right flow-arrow"></i>
-                    <div class="flow-step active">
-                        <span class="flow-step-num">4</span>
-                        <span>Fulfillment Source</span>
-                    </div>
-                    <i class="fas fa-chevron-right flow-arrow"></i>
-                    <div class="flow-step active">
-                        <span class="flow-step-num">5</span>
-                        <span>Assign Supplier</span>
-                    </div>
-                    <i class="fas fa-chevron-right flow-arrow"></i>
-                    <div class="flow-step active">
-                        <span class="flow-step-num">6</span>
-                        <span>Confirm & Send PO</span>
-                    </div>
-                </div>
             </div>
 
 
