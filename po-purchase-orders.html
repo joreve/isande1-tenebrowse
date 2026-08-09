@@ -67,7 +67,7 @@
         }
 
         /* =========================
-           SIDEBAR
+           SIDEBAR (INTERACTIVE TABS)
         ========================= */
 
         .sidebar {
@@ -101,6 +101,8 @@
         .sidebar-nav {
             padding: 10px 16px;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .nav-list {
@@ -108,6 +110,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            height: 100%;
         }
 
         .nav-item {
@@ -120,6 +123,7 @@
             color: #64748B;
             border-radius: 10px;
             cursor: pointer;
+            user-select: none;
             transition: all 0.2s ease;
         }
 
@@ -140,10 +144,16 @@
         .logout-item {
             margin-top: auto;
             margin-bottom: 20px;
+            color: var(--color-danger);
+        }
+
+        .logout-item:hover {
+            background-color: var(--color-danger-light);
+            color: var(--color-danger);
         }
 
         /* =========================
-           MAIN CONTENT
+           MAIN CONTENT & TOPBAR
         ========================= */
 
         .main-content {
@@ -153,17 +163,14 @@
             overflow-x: hidden;
         }
 
-        /* =========================
-           TOPBAR
-        ========================= */
-
         .topbar {
             height: 70px;
-            background-color: var(--bg-body);
+            background-color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
+            border-bottom: 1px solid #E2E8F0;
         }
 
         .topbar-left {
@@ -182,7 +189,7 @@
         .page-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-dark);
+            color: #0F172A;
         }
 
         .topbar-right {
@@ -195,7 +202,7 @@
             background: none;
             border: none;
             font-size: 1.1rem;
-            color: var(--color-primary);
+            color: #64748B;
             cursor: pointer;
             position: relative;
             padding: 6px;
@@ -240,21 +247,21 @@
         .profile-name {
             font-weight: 700;
             font-size: 0.95rem;
-            color: var(--text-dark);
+            color: #0F172A;
             line-height: 1.1;
         }
 
         .profile-role {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: #64748B;
         }
 
         /* =========================
-           PAGE CONTAINER
+           PAGE CONTAINER & CARDS
         ========================= */
 
         .page-container {
-            padding: 0 32px 32px 32px;
+            padding: 32px;
             flex-grow: 1;
         }
 
@@ -278,10 +285,6 @@
             color: var(--text-muted);
         }
 
-        /* =========================
-           CARDS & UTILS
-        ========================= */
-
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -290,10 +293,8 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
-        .mb-2 { margin-bottom: 16px; }
         .mb-3 { margin-bottom: 24px; }
 
-        /* Controls / Filter Bar */
         .controls-bar {
             display: flex;
             align-items: center;
@@ -642,7 +643,7 @@
             display: block;
         }
 
-        /* History Timeline */
+        /* Timeline */
         .timeline {
             display: flex;
             flex-direction: column;
@@ -687,10 +688,7 @@
             color: var(--text-dark);
         }
 
-        /* =========================
-           NOTIFICATION DROPDOWN
-        ========================= */
-
+        /* Notification Dropdown */
         .notification-wrapper { position: relative; }
         .notification-panel {
             display: none;
@@ -716,7 +714,7 @@
 
         @media (max-width: 768px) {
             .topbar { padding: 0 20px; }
-            .page-container { padding: 0 20px 25px; }
+            .page-container { padding: 20px; }
             .profile-info { display: none; }
             .fulfillment-selector { grid-template-columns: 1fr; }
         }
@@ -728,7 +726,7 @@
 <div class="app-wrapper">
 
     <!-- =========================
-         SIDEBAR
+         SIDEBAR NAVIGATION
     ========================== -->
 
     <aside class="sidebar">
@@ -741,31 +739,32 @@
 
         <nav class="sidebar-nav">
             <ul class="nav-list">
-                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                <li class="nav-item" data-tab="Dashboard" onclick="switchTab(this, 'Dashboard', 'po-dashboard.html')">
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </li>
-                <li class="nav-item active">
+                <!-- Explicitly default active for Purchase Orders -->
+                <li class="nav-item active" data-tab="Purchase Orders" onclick="switchTab(this, 'Purchase Orders', 'po-management.html')">
                     <i class="fas fa-file-invoice"></i>
                     <span>Purchase Orders</span>
                 </li>
-                <li class="nav-item" onclick="transitionTo('po-suppliers.html')">
+                <li class="nav-item" data-tab="Suppliers" onclick="switchTab(this, 'Suppliers', 'po-suppliers.html')">
                     <i class="fas fa-building"></i>
                     <span>Suppliers</span>
                 </li>
-                <li class="nav-item" onclick="transitionTo('po-deliveries.html')">
+                <li class="nav-item" data-tab="Deliveries" onclick="switchTab(this, 'Deliveries', 'po-deliveries.html')">
                     <i class="fas fa-truck"></i>
                     <span>Deliveries</span>
                 </li>
-                <li class="nav-item" onclick="transitionTo('po-warehouse.html')">
+                <li class="nav-item" data-tab="Warehouse" onclick="switchTab(this, 'Warehouse', 'po-warehouse.html')">
                     <i class="fas fa-warehouse"></i>
                     <span>Warehouse</span>
                 </li>
-                <li class="nav-item" onclick="transitionTo('po-substitutions.html')">
+                <li class="nav-item" data-tab="Substitutions" onclick="switchTab(this, 'Substitutions', 'po-substitutions.html')">
                     <i class="fas fa-random"></i>
                     <span>Substitutions</span>
                 </li>
-                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                <li class="nav-item logout-item" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </li>
@@ -775,16 +774,16 @@
 
 
     <!-- =========================
-         MAIN CONTENT
+         MAIN CONTENT AREA
     ========================== -->
 
     <main class="main-content">
 
-        <!-- TOPBAR -->
+        <!-- TOPBAR WITH DIVIDER LINE -->
         <header class="topbar">
             <div class="topbar-left">
                 <i class="fas fa-bars menu-toggle"></i>
-                <h2 class="page-title">Purchase Orders & Processing</h2>
+                <h2 class="page-title" id="currentPageTitle">Purchase Orders & Processing</h2>
             </div>
 
             <div class="topbar-right">
@@ -822,7 +821,7 @@
             <div class="breadcrumb">
                 <a href="#">Tenebrowse Control</a>
                 <i class="fas fa-chevron-right breadcrumb-icon"></i>
-                <span>Purchase Orders</span>
+                <span id="breadcrumbCurrent">Purchase Orders</span>
             </div>
 
 
@@ -870,7 +869,7 @@
                         </thead>
                         <tbody id="poTableBody">
 
-                            <!-- Row 1: Approved MR pending processing -->
+                            <!-- Row 1 -->
                             <tr>
                                 <td><span class="po-code">PO-2026-108</span></td>
                                 <td><span class="req-code">MR-2026-042</span></td>
@@ -888,7 +887,7 @@
                                 </td>
                             </tr>
 
-                            <!-- Row 2: Approved Substitution Request -->
+                            <!-- Row 2 -->
                             <tr>
                                 <td><span class="po-code">PO-2026-107</span></td>
                                 <td><span class="req-code">MR-2026-039</span> <span class="status-badge status-info" style="font-size:0.65rem; padding:2px 6px;">Substituted</span></td>
@@ -906,7 +905,7 @@
                                 </td>
                             </tr>
 
-                            <!-- Row 3: Internal Transfer -->
+                            <!-- Row 3 -->
                             <tr>
                                 <td><span class="po-code">PO-2026-105</span></td>
                                 <td><span class="req-code">MR-2026-035</span></td>
@@ -922,7 +921,7 @@
                                 </td>
                             </tr>
 
-                            <!-- Row 4: Ordered to External Supplier -->
+                            <!-- Row 4 -->
                             <tr>
                                 <td><span class="po-code">PO-2026-101</span></td>
                                 <td><span class="req-code">MR-2026-028</span></td>
@@ -938,7 +937,7 @@
                                 </td>
                             </tr>
 
-                            <!-- Row 5: Cancelled PO -->
+                            <!-- Row 5 -->
                             <tr>
                                 <td><span class="po-code" style="text-decoration:line-through;">PO-2026-098</span></td>
                                 <td><span class="req-code">MR-2026-019</span></td>
@@ -984,7 +983,7 @@
 
         <div class="drawer-body">
 
-            <!-- 1. Original Material Request & Approvals -->
+            <!-- Request & Approval Information -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-clipboard-check"></i> Request & Approval Information</span>
@@ -1011,7 +1010,7 @@
             </div>
 
 
-            <!-- 2. Process Approved Material Substitutions -->
+            <!-- Material Substitution Check -->
             <div class="detail-section" style="border-left: 4px solid var(--color-info);">
                 <div class="detail-section-title">
                     <span><i class="fas fa-random"></i> Material Substitution Check</span>
@@ -1030,7 +1029,7 @@
             </div>
 
 
-            <!-- 3. Check Warehouse Availability & Select Fulfillment Source -->
+            <!-- Warehouse Availability & Fulfillment Source -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-warehouse"></i> Warehouse Availability & Fulfillment Source</span>
@@ -1048,14 +1047,12 @@
                 <div style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">Select Fulfillment Route:</div>
 
                 <div class="fulfillment-selector">
-                    <!-- Option A: Internal Transfer -->
                     <div class="fulfillment-card" id="cardInternal" onclick="selectFulfillment('INTERNAL')">
                         <i class="fas fa-check-circle check-icon"></i>
                         <h4><i class="fas fa-boxes-stacked" style="color:var(--color-primary)"></i> Internal Transfer</h4>
                         <p>Transfer existing stock from <strong>Warehouse 3</strong> to site directly.</p>
                     </div>
 
-                    <!-- Option B: External Vendor Purchase -->
                     <div class="fulfillment-card selected" id="cardExternal" onclick="selectFulfillment('EXTERNAL')">
                         <i class="fas fa-check-circle check-icon"></i>
                         <h4><i class="fas fa-cart-shopping" style="color:var(--color-primary)"></i> External Purchase</h4>
@@ -1065,7 +1062,7 @@
             </div>
 
 
-            <!-- 4. Supplier Selection & Edit PO Details -->
+            <!-- Supplier Selection & PO Details -->
             <div class="detail-section" id="supplierSection">
                 <div class="detail-section-title">
                     <span><i class="fas fa-building"></i> Assign Supplier & Edit Purchase Details</span>
@@ -1096,7 +1093,7 @@
             </div>
 
 
-            <!-- 5. Change History / Audit Trail -->
+            <!-- Audit Trail -->
             <div class="detail-section">
                 <div class="detail-section-title">
                     <span><i class="fas fa-history"></i> PO Change History & Audit Trail</span>
@@ -1141,13 +1138,35 @@
 
 
 <script>
-    function toggleNotifications() {
-        document.getElementById('notificationWrapper').classList.toggle('open');
+    // Tab switching function specifically wired to Purchase Orders and other tabs
+    function switchTab(element, tabName, targetPageUrl) {
+        // Remove 'active' state from all navigation tabs
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+
+        // Apply active class to the clicked tab
+        element.classList.add('active');
+
+        // Dynamically update headings & breadcrumbs for Purchase Orders or selected view
+        if (tabName === 'Purchase Orders') {
+            document.getElementById('currentPageTitle').innerText = 'Purchase Orders & Processing';
+            document.getElementById('breadcrumbCurrent').innerText = 'Purchase Orders';
+        } else {
+            document.getElementById('currentPageTitle').innerText = tabName + ' Overview';
+            document.getElementById('breadcrumbCurrent').innerText = tabName;
+        }
+
+        // Handle page transition if linking to different HTML pages
+        if (targetPageUrl && window.location.pathname.indexOf(targetPageUrl) === -1) {
+            // Uncomment the line below when linking across separate HTML files
+            // transitionTo(targetPageUrl);
+        }
     }
 
-    function markAllRead() {
-        const badge = document.querySelector('.badge-dot');
-        if (badge) badge.style.display = 'none';
+    function handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            transitionTo('index.html');
+        }
     }
 
     function transitionTo(url) {
@@ -1157,7 +1176,16 @@
         }, 200);
     }
 
-    // Drawer Logic
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    // Drawer Logic for Purchase Orders Processing
     let currentFulfillment = 'EXTERNAL';
 
     function openPODrawer(poNum) {
@@ -1212,9 +1240,9 @@
                 alert('Please assign a supplier before sending the Purchase Order.');
                 return;
             }
-            alert('PO Confirmed and sent to supplier: ' + supplier);
+            alert('Purchase Order Confirmed and sent to supplier: ' + supplier);
         } else {
-            alert('Internal Warehouse Transfer Request Issued successfully to Warehouse 3.');
+            alert('Internal Warehouse Transfer Request Issued successfully.');
         }
         closePODrawer();
     }
