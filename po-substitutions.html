@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Material Substitutions & Change Tracking</title>
+
+    <!-- Google Fonts: League Spartan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --color-primary: #d44f00;
+            --color-primary-light: #f65e03;
+            --color-secondary: #e19c74;
+            --color-secondary-light: #f9cda4;
+
+            --color-success: #16A34A;
+            --color-success-light: #DCFCE7;
+
+            --color-danger: #DC2626;
+            --color-danger-light: #FEE2E2;
+
+            --color-warning: #D97706;
+            --color-warning-light: #FEF3C7;
+
+            --color-info: #2563EB;
+            --color-info-light: #DBEAFE;
+
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.page-exit { opacity: 0; }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header { padding: 24px 20px; }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav {
+            padding: 10px 16px;
+            flex-grow: 1;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748B;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .logout-item {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            height: 70px;
+            background-color: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+        }
+
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--color-danger);
+            border-radius: 50%;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* PAGE CONTAINER */
+        .page-container {
+            padding: 0 32px 32px 32px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .mb-3 { margin-bottom: 24px; }
+
+        /* WORKFLOW PROCESS STEPPER */
+        .workflow-stepper {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .step-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+        }
+
+        .step-card.active {
+            border-color: var(--color-primary);
+            background: #FFFBF8;
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .step-card.active .step-num {
+            background: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+        }
+
+        .step-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* CONTROLS BAR */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .select-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #FFFFFF;
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background-color: var(--color-primary); color: #FFFFFF; }
+        .btn-primary:hover { background-color: var(--color-primary-light); }
+        .btn-secondary { background-color: #F1F5F9; color: var(--text-dark); border: 1px solid var(--border-color); }
+        .btn-success { background-color: var(--color-success); color: #FFFFFF; }
+
+        /* TABLE */
+        .table-container { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:hover td { background-color: #F8FAFC; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-success { background: var(--color-success-light); color: var(--color-success); }
+        .status-warning { background: var(--color-warning-light); color: var(--color-warning); }
+        .status-danger { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-info { background: var(--color-info-light); color: var(--color-info); }
+        .status-neutral { background: #E2E8F0; color: #475569; }
+
+        .sub-compare-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .original-item {
+            text-decoration: line-through;
+            color: var(--color-danger);
+            font-weight: 600;
+        }
+
+        .replacement-item {
+            color: var(--color-success);
+            font-weight: 700;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-icon:hover { background-color: var(--color-primary); color: #FFFFFF; }
+
+        /* MODAL / DRAWER */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            z-index: 2000;
+            justify-content: flex-end;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .drawer {
+            width: 820px;
+            max-width: 92vw;
+            background-color: #FFFFFF;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.25s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F8FAFC;
+        }
+
+        .drawer-title { font-size: 1.25rem; font-weight: 700; }
+        .drawer-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+
+        .drawer-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .drawer-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            background: #FFFFFF;
+        }
+
+        .detail-section-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* DIGITAL CHANGE LOG TIMELINE */
+        .change-audit-box {
+            background-color: #F8FAFC;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.82rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .audit-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .audit-time {
+            font-weight: 700;
+            color: var(--text-muted);
+            min-width: 110px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width { grid-column: span 2; }
+
+        .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-dark); }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        /* NOTIFICATION WRAPPER */
+        .notification-wrapper { position: relative; }
+        .notification-panel {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 350px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            z-index: 1000;
+            padding: 16px;
+        }
+        .notification-wrapper.open .notification-panel { display: block; }
+    </style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                <span>Tenebrowse</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-main.html')">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Purchase Orders</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-suppliers.html')">
+                    <i class="fas fa-building"></i>
+                    <span>Suppliers</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-deliveries.html')">
+                    <i class="fas fa-truck"></i>
+                    <span>Deliveries</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-warehouse.html')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse</span>
+                </li>
+                <li class="nav-item active">
+                    <i class="fas fa-random"></i>
+                    <span>Substitutions</span>
+                </li>
+                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2 class="page-title">Material Substitutions & Digital Change Tracking</h2>
+
+            <div class="topbar-right">
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </button>
+                    <div class="notification-panel">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <h4>Change & Cancellation Log</h4>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark read</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;" id="notificationList">
+                            <div style="font-size:0.85rem;"><strong>SUB-2026-004</strong> Pending Purchasing Officer Approval</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-trigger">
+                    <div class="profile-avatar">PT</div>
+                    <div style="text-align:left;">
+                        <div style="font-weight:700; font-size:0.95rem;">Purchasing Officer Tolentino</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">Purchasing Officer</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+
+            <div class="breadcrumb">
+                <a href="#">Tenebrowse Control</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem;"></i>
+                <span>Material Substitution Flow</span>
+            </div>
+
+            <!-- MANDATED SUBFLOW STEPPER -->
+            <div class="workflow-stepper">
+                <div class="step-card active">
+                    <div class="step-num">1</div>
+                    <div class="step-title">1. Approved Request</div>
+                    <div class="step-desc">Site Engineer / Project Manager approves item change</div>
+                </div>
+                <div class="step-card active">
+                    <div class="step-num">2</div>
+                    <div class="step-title">2. PO Reviews</div>
+                    <div class="step-desc">Purchasing Officer verifies spec, cost & lead times</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <div class="step-title">3. Replace Material</div>
+                    <div class="step-desc">Swap item directly in linked Purchase Order</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <div class="step-title">4. Dispatch Alerts</div>
+                    <div class="step-desc">Auto-notify Supplier & Project-in-Charge</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">5</div>
+                    <div class="step-title">5. Digital Record</div>
+                    <div class="step-desc">Log change history in Audit & Cancellation Tracking</div>
+                </div>
+            </div>
+
+            <!-- MAIN TABLE CARD -->
+            <div class="card">
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="subSearch" placeholder="Search Request #, PO #, Material, Supplier..." onkeyup="searchSubstitutions()">
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <select class="select-input" id="statusFilter" onchange="filterSubstitutions()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Approved Request">Approved Request (Awaiting PO Review)</option>
+                            <option value="Material Replaced">Material Replaced & Notified</option>
+                            <option value="Recorded">Recorded in Change Tracking</option>
+                            <option value="Cancelled">Cancelled Change</option>
+                        </select>
+
+                        <button class="btn btn-primary" onclick="openNewSubstitutionDrawer()">
+                            <i class="fas fa-plus"></i> New Substitution Request
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sub Request ID</th>
+                                <th>Linked PO #</th>
+                                <th>Original → Replacement Item</th>
+                                <th>Project-in-Charge</th>
+                                <th>Supplier</th>
+                                <th>Cost Difference</th>
+                                <th>Workflow Stage</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subTableBody">
+
+                            <!-- Row 1: Ready for PO Review & Replacement -->
+                            <tr id="row-SUB-001" data-status="Approved Request">
+                                <td>
+                                    <strong>SUB-2026-001</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Req Date: Aug 08, 2026</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-107</strong></td>
+                                <td>
+                                    <div class="sub-compare-box">
+                                        <span class="original-item">Deformed Steel 18mm</span>
+                                        <i class="fas fa-arrow-right" style="font-size:0.75rem; color:var(--text-muted);"></i>
+                                        <span class="replacement-item">Grade 60 Rebar 20mm</span>
+                                    </div>
+                                </td>
+                                <td>Engr. Aris Thorne</td>
+                                <td>Apex Industrial Supply</td>
+                                <td><span style="color:var(--color-danger); font-weight:700;">+$850.00</span></td>
+                                <td id="status-col-SUB-001"><span class="status-badge status-warning"><i class="fas fa-clock"></i> PO Reviews Pending</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="openSubstitutionProcessDrawer('SUB-001')">
+                                        Review & Replace
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2: Completed Workflow -->
+                            <tr id="row-SUB-002" data-status="Recorded">
+                                <td>
+                                    <strong>SUB-2026-002</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Req Date: Aug 02, 2026</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-088</strong></td>
+                                <td>
+                                    <div class="sub-compare-box">
+                                        <span class="original-item">Standard Paint Sealant</span>
+                                        <i class="fas fa-arrow-right" style="font-size:0.75rem; color:var(--text-muted);"></i>
+                                        <span class="replacement-item">Polyurethane Coating</span>
+                                    </div>
+                                </td>
+                                <td>Arch. Liza Santos</td>
+                                <td>Global Chemical Coating</td>
+                                <td><span style="color:var(--color-success); font-weight:700;">-$320.00</span></td>
+                                <td><span class="status-badge status-success"><i class="fas fa-check-double"></i> Replaced & Recorded</span></td>
+                                <td>
+                                    <button class="btn-icon" onclick="openSubstitutionProcessDrawer('SUB-002')" title="View Change Audit Log"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- PROCESS SUBSTITUTION WORKFLOW DRAWER -->
+<div class="modal-overlay" id="subProcessDrawerOverlay">
+    <div class="drawer">
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="drawerSubTitle">Process Material Substitution (SUB-2026-001)</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);" id="drawerPoSub">Target Purchase Order: PO-2026-107</div>
+            </div>
+            <button class="drawer-close" onclick="closeSubProcessDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <!-- STEP 1: APPROVED REQUEST SUMMARY -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-file-signature"></i> 1. Site Engineer Approved Request Details</span>
+                    <span class="status-badge status-success">Site Approved</span>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:0.88rem;">
+                    <div><span style="color:var(--text-muted)">Project-in-Charge:</span> <strong id="valProjectPic">Engr. Aris Thorne</strong></div>
+                    <div><span style="color:var(--text-muted)">Reason for Change:</span> <strong>Original stock out of market; equivalent structural grade required.</strong></div>
+                    <div><span style="color:var(--text-muted)">Original Material:</span> <span class="original-item" id="valOrigItem">Deformed Steel Bars 18mm (1,200 pcs)</span></div>
+                    <div><span style="color:var(--text-muted)">Requested Replacement:</span> <span class="replacement-item" id="valRepItem">Grade 60 Rebar 20mm (1,200 pcs)</span></div>
+                </div>
+            </div>
+
+            <!-- STEP 2: PURCHASING OFFICER REVIEW -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-user-check"></i> 2. Purchasing Officer (PO) Review & Replace</span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Supplier Confirmation Status</label>
+                        <select class="form-control" id="poSupplierConfirm">
+                            <option value="Confirmed">Confirmed Stock & Lead Time (3 Days)</option>
+                            <option value="Pending">Pending Supplier Response</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adjusted PO Total Variance ($)</label>
+                        <input type="text" class="form-control" id="poPriceVariance" value="+$850.00 (Price difference per metric ton)">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Purchasing Officer Order Notes</label>
+                        <input type="text" class="form-control" id="poReviewNotes" value="Material specs match engineering standards. Approved to replace on active PO-2026-107.">
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 & 4: AUTOMATION ALERTS & DIGITAL CHANGE TRACKING -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-bell"></i> 3 & 4. Automated Notifications & Change Tracking</span>
+                </div>
+
+                <div class="change-audit-box">
+                    <div class="audit-entry">
+                        <span class="audit-time">Aug 08, 10:15 AM</span>
+                        <div><strong>Request Created:</strong> Engr. Aris Thorne submitted substitution request SUB-2026-001.</div>
+                    </div>
+                    <div class="audit-entry" id="auditPoReview">
+                        <span class="audit-time">Aug 09, 02:00 PM</span>
+                        <div><strong>PO Review Active:</strong> Purchasing Officer Tolentino inspecting supplier availability.</div>
+                    </div>
+                    <div class="audit-entry" id="auditStepComplete" style="display:none; color:var(--color-success);">
+                        <span class="audit-time">Just Now</span>
+                        <div><strong>AUTOMATED ACTIONS COMPLETE:</strong> Item replaced in PO-2026-107. Email & System alert sent to Supplier (Apex Industrial) & Project-in-Charge (Engr. Aris Thorne). Logged in Digital Change & Cancellation Tracking.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-secondary" onclick="closeSubProcessDrawer()">Cancel</button>
+            <button class="btn btn-success" id="btnExecuteWorkflow" onclick="executeSubstitutionWorkflow()">
+                <i class="fas fa-check-double"></i> Replace Material & Dispatch Alerts
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- NEW REQUEST MODAL DRAWER -->
+<div class="modal-overlay" id="newSubDrawerOverlay">
+    <div class="drawer">
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title">New Material Substitution Request</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">Initiate engineering material change for an existing Purchase Order</div>
+            </div>
+            <button class="drawer-close" onclick="closeNewSubstitutionDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+            <form id="newSubForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Select Target Purchase Order *</label>
+                        <select class="form-control" id="newPoSelect" required>
+                            <option value="PO-2026-107">PO-2026-107 (Apex Industrial Supply)</option>
+                            <option value="PO-2026-108">PO-2026-108 (BuildPro Hardware)</option>
+                            <option value="PO-2026-109">PO-2026-109 (Vanguard Logistics)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Project-in-Charge *</label>
+                        <input type="text" class="form-control" id="newPic" value="Engr. Aris Thorne" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Original Material Item *</label>
+                        <input type="text" class="form-control" id="newOrigItem" placeholder="e.g. Portland Cement 40kg" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Proposed Replacement Material *</label>
+                        <input type="text" class="form-control" id="newRepItem" placeholder="e.g. Pozzolan Cement 40kg" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Reason for Substitution Request *</label>
+
+                        <textarea class="form-control" id="newReason" rows="3" placeholder="Provide technical or availability justification..." required></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-secondary" onclick="closeNewSubstitutionDrawer()">Cancel</button>
+            <button class="btn btn-primary" onclick="submitNewSubRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSubId = 'SUB-001';
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => { window.location.href = url; }, 200);
+    }
+
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    // MANDATED WORKFLOW EXECUTION:
+    // Approved Request -> PO reviews -> Replace Material -> Notify Supplier -> Notify Project-in-Charge -> Record Change
+    function executeSubstitutionWorkflow() {
+        // Show execution in audit timeline
+        const auditComplete = document.getElementById('auditStepComplete');
+        if (auditComplete) auditComplete.style.display = 'flex';
+
+        const btn = document.getElementById('btnExecuteWorkflow');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Replacing Material & Dispatching Alerts...`;
+
+        setTimeout(() => {
+            // Update UI Table Status
+            const statusTd = document.getElementById('status-col-' + currentSubId);
+            if (statusTd) {
+                statusTd.innerHTML = `<span class="status-badge status-success"><i class="fas fa-check-double"></i> Replaced & Recorded</span>`;
+            }
+
+            const row = document.getElementById('row-' + currentSubId);
+            if (row) {
+                row.setAttribute('data-status', 'Recorded');
+            }
+
+            // Append alert to Notification Panel (Digital Change & Cancellation Tracking)
+            const notifList = document.getElementById('notificationList');
+            if (notifList) {
+                const newAlert = document.createElement('div');
+                newAlert.style.fontSize = '0.85rem';
+                newAlert.style.padding = '6px';
+                newAlert.style.background = 'var(--color-success-light)';
+                newAlert.style.borderRadius = '6px';
+                newAlert.innerHTML = `<strong>DIGITAL CHANGE RECORDED:</strong> ${currentSubId} executed on PO-2026-107. Material substituted. Notifications sent to Apex Industrial & Engr. Aris Thorne.`;
+                notifList.prepend(newAlert);
+                document.querySelector('.badge-dot').style.display = 'block';
+            }
+
+            alert(`WORKFLOW COMPLETED SUCCESSFULLY:\n\n1. Material replaced in Purchase Order.\n2. Automated Email sent to Supplier (Apex Industrial Supply).\n3. Automated System Notice sent to Project-in-Charge (Engr. Aris Thorne).\n4. Recorded in Digital Change & Cancellation Tracking Ledger.`);
+
+            closeSubProcessDrawer();
+        }, 1000);
+    }
+
+    // DRAWER CONTROLS
+    function openSubstitutionProcessDrawer(subId) {
+        currentSubId = subId;
+        const auditComplete = document.getElementById('auditStepComplete');
+        const btn = document.getElementById('btnExecuteWorkflow');
+
+        if (subId === 'SUB-001') {
+            document.getElementById('drawerSubTitle').innerText = 'Process Material Substitution (SUB-2026-001)';
+            document.getElementById('drawerPoSub').innerText = 'Target Purchase Order: PO-2026-107';
+            document.getElementById('valProjectPic').innerText = 'Engr. Aris Thorne';
+            document.getElementById('valOrigItem').innerText = 'Deformed Steel Bars 18mm (1,200 pcs)';
+            document.getElementById('valRepItem').innerText = 'Grade 60 Rebar 20mm (1,200 pcs)';
+
+            if (auditComplete) auditComplete.style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-check-double"></i> Replace Material & Dispatch Alerts`;
+        } else {
+            document.getElementById('drawerSubTitle').innerText = 'Substitution Record (SUB-2026-002)';
+            document.getElementById('drawerPoSub').innerText = 'Target Purchase Order: PO-2026-088';
+            document.getElementById('valProjectPic').innerText = 'Arch. Liza Santos';
+            document.getElementById('valOrigItem').innerText = 'Standard Paint Sealant';
+            document.getElementById('valRepItem').innerText = 'Polyurethane Coating';
+
+            if (auditComplete) auditComplete.style.display = 'flex';
+            btn.disabled = true;
+            btn.innerText = 'Workflow Already Completed';
+        }
+
+        document.getElementById('subProcessDrawerOverlay').classList.add('open');
+    }
+
+    function closeSubProcessDrawer() {
+        document.getElementById('subProcessDrawerOverlay').classList.remove('open');
+    }
+
+    function openNewSubstitutionDrawer() {
+        document.getElementById('newSubDrawerOverlay').classList.add('open');
+    }
+
+    function closeNewSubstitutionDrawer() {
+        document.getElementById('newSubDrawerOverlay').classList.remove('open');
+    }
+
+    function submitNewSubRequest() {
+        const po = document.getElementById('newPoSelect').value;
+        const pic = document.getElementById('newPic').value;
+        const orig = document.getElementById('newOrigItem').value;
+        const rep = document.getElementById('newRepItem').value;
+
+        if (!orig || !rep) {
+            alert('Please fill out all required material fields.');
+            return;
+        }
+
+        alert(`Substitution Request submitted for ${po}.\nStatus set to: "Approved Request -> Awaiting PO Review".`);
+        closeNewSubstitutionDrawer();
+    }
+
+    function filterSubstitutions() {
+        const statusVal = document.getElementById('statusFilter').value;
+        const rows = document.querySelectorAll('#subTableBody tr');
+
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            if (statusVal === 'ALL' || rowStatus === statusVal) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function searchSubstitutions() {
+        const query = document.getElementById('subSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#subTableBody tr');
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>
