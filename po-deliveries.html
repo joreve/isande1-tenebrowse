@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenebrowse - Delivery Tracking</title>
+
+    <!-- Google Fonts: League Spartan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --color-primary: #d44f00;
+            --color-primary-light: #f65e03;
+            --color-secondary: #e19c74;
+            --color-secondary-light: #f9cda4;
+
+            --color-success: #16A34A;
+            --color-success-light: #DCFCE7;
+
+            --color-danger: #DC2626;
+            --color-danger-light: #FEE2E2;
+
+            --color-warning: #D97706;
+            --color-warning-light: #FEF3C7;
+
+            --color-info: #2563EB;
+            --color-info-light: #DBEAFE;
+
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.page-exit { opacity: 0; }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header { padding: 24px 20px; }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav {
+            padding: 10px 16px;
+            flex-grow: 1;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748B;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #F1F5F9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .logout-item {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            height: 70px;
+            background-color: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+        }
+
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--color-danger);
+            border-radius: 50%;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* PAGE CONTAINER */
+        .page-container {
+            padding: 0 32px 32px 32px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .mb-3 { margin-bottom: 24px; }
+
+        /* PIPELINE & CONTROLS */
+        .status-pipeline-pills {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .pipeline-pill {
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .pipeline-pill.active {
+            background: var(--text-dark);
+            color: #FFFFFF;
+            border-color: var(--text-dark);
+        }
+
+        .pill-count {
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.08);
+            font-size: 0.75rem;
+        }
+
+        .pipeline-pill.active .pill-count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 380px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background-color: var(--color-primary); color: #FFFFFF; }
+        .btn-primary:hover { background-color: var(--color-primary-light); }
+        .btn-secondary { background-color: #F1F5F9; color: var(--text-dark); border: 1px solid var(--border-color); }
+
+        /* TABLE */
+        .table-container { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 12px;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:hover td { background-color: #F8FAFC; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .status-ordered { background: #E2E8F0; color: #334155; }
+        .status-purchased { background: var(--color-info-light); color: var(--color-info); }
+        .status-in-progress { background: #FEF08A; color: #854D0E; }
+        .status-delivered { background: var(--color-success-light); color: var(--color-success); }
+        .status-cancelled { background: var(--color-danger-light); color: var(--color-danger); }
+        .status-delayed { background: #FFEDD5; color: #C2410C; }
+
+        .status-select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.82rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-icon:hover { background-color: var(--color-primary); color: #FFFFFF; }
+
+        /* DRAWER & MODALS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.5);
+            z-index: 2000;
+            justify-content: flex-end;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .drawer {
+            width: 760px;
+            max-width: 92vw;
+            background-color: #FFFFFF;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.25s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #F8FAFC;
+        }
+
+        .drawer-title { font-size: 1.25rem; font-weight: 700; }
+        .drawer-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+
+        .drawer-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .drawer-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-section {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            background: #FFFFFF;
+        }
+
+        .detail-section-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* TRACKING TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-step {
+            position: relative;
+        }
+
+        .timeline-node {
+            position: absolute;
+            left: -28px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 2px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+        }
+
+        .timeline-step.completed .timeline-node {
+            background: var(--color-success);
+            border-color: var(--color-success);
+            color: #FFFFFF;
+        }
+
+        .timeline-step.active .timeline-node {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(212, 79, 0, 0.2);
+        }
+
+        .timeline-title { font-weight: 700; font-size: 0.9rem; }
+        .timeline-time { font-size: 0.78rem; color: var(--text-muted); }
+
+        /* TRIGGER HIGHLIGHT BANNER */
+        .automation-banner {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .automation-icon {
+            color: var(--color-success);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        /* NOTIFICATION WRAPPER */
+        .notification-wrapper { position: relative; }
+        .notification-panel {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            width: 350px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            z-index: 1000;
+            padding: 16px;
+        }
+        .notification-wrapper.open .notification-panel { display: block; }
+    </style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="Icon" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 24 24\' fill=\'%23d44f00\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                <span>Tenebrowse</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item" onclick="transitionTo('po-dashboard.html')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-main.html')">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Purchase Orders</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-suppliers.html')">
+                    <i class="fas fa-building"></i>
+                    <span>Suppliers</span>
+                </li>
+                <li class="nav-item active">
+                    <i class="fas fa-truck"></i>
+                    <span>Deliveries</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-warehouse.html')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse</span>
+                </li>
+                <li class="nav-item" onclick="transitionTo('po-substitutions.html')">
+                    <i class="fas fa-random"></i>
+                    <span>Substitutions</span>
+                </li>
+                <li class="nav-item logout-item" onclick="transitionTo('index.html')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <h2 class="page-title">Delivery Tracking & Status Sync</h2>
+
+            <div class="topbar-right">
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button class="icon-btn" onclick="toggleNotifications()" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </button>
+                    <div class="notification-panel">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <h4>System Alerts</h4>
+                            <span style="font-size:0.75rem; color:var(--color-primary); cursor:pointer;" onclick="markAllRead()">Mark all as read</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:10px;" id="notificationList">
+                            <div style="font-size:0.85rem;"><strong>Delivery Sync Active:</strong> Updating delivery status auto-syncs connected PO & Warehouse tasks.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-trigger">
+                    <div class="profile-avatar">PT</div>
+                    <div style="text-align:left;">
+                        <div style="font-weight:700; font-size:0.95rem;">Purchasing Officer Tolentino</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">Purchasing Officer</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTAINER -->
+        <div class="page-container">
+
+            <div class="breadcrumb">
+                <a href="#">Tenebrowse Control</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem;"></i>
+                <span>Deliveries Pipeline</span>
+            </div>
+
+            <!-- STATUS PIPELINE QUICK FILTERS -->
+            <div class="status-pipeline-pills">
+                <button class="pipeline-pill active" onclick="filterPipeline('ALL', this)">
+                    All Shipments <span class="pill-count" id="count-ALL">4</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Ordered', this)">
+                    <i class="fas fa-file-lines" style="color:#64748B;"></i> Ordered <span class="pill-count" id="count-Ordered">1</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Purchased', this)">
+                    <i class="fas fa-shopping-cart" style="color:var(--color-info);"></i> Purchased <span class="pill-count" id="count-Purchased">1</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Delivery in Progress', this)">
+                    <i class="fas fa-truck-fast" style="color:#D97706;"></i> Delivery in Progress <span class="pill-count" id="count-Progress">1</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Delivered', this)">
+                    <i class="fas fa-circle-check" style="color:var(--color-success);"></i> Delivered <span class="pill-count" id="count-Delivered">1</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Delayed', this)">
+                    <i class="fas fa-triangle-exclamation" style="color:#C2410C;"></i> Delayed <span class="pill-count" id="count-Delayed">0</span>
+                </button>
+                <button class="pipeline-pill" onclick="filterPipeline('Cancelled', this)">
+                    <i class="fas fa-circle-xmark" style="color:var(--color-danger);"></i> Cancelled <span class="pill-count" id="count-Cancelled">0</span>
+                </button>
+            </div>
+
+            <!-- MAIN TABLE CARD -->
+            <div class="card">
+                <div class="controls-bar mb-3">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" id="deliverySearch" placeholder="Search PO #, Waybill, Supplier, Material..." onkeyup="searchDeliveries()">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Delivery / Tracking Code</th>
+                                <th>Connected PO #</th>
+                                <th>Supplier</th>
+                                <th>Materials Included</th>
+                                <th>Est. Delivery Date</th>
+                                <th>Current Status</th>
+                                <th>Auto-Sync Trigger</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliveryTableBody">
+
+                            <!-- Item 1: In Progress -> Ready to deliver -->
+                            <tr id="row-DEL-1001" data-status="Delivery in Progress">
+                                <td>
+                                    <strong>DEL-2026-1001</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Waybill: #WB-88910</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-107</strong></td>
+                                <td>Apex Industrial Supply</td>
+                                <td>Deformed Steel Bars 18mm (1,200 pcs)</td>
+                                <td>Aug 10, 2026</td>
+                                <td>
+                                    <select class="status-select" onchange="updateDeliveryStatus('DEL-1001', 'PO-2026-107', this.value)">
+                                        <option value="Ordered">Ordered</option>
+                                        <option value="Purchased">Purchased</option>
+                                        <option value="Delivery in Progress" selected>Delivery in Progress</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Delayed">Delayed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td id="sync-DEL-1001">
+                                    <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-sync"></i> Awaiting Delivery</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="btn-icon" onclick="openTrackingDrawer('DEL-1001')" title="View Full Timeline & Log"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Item 2: Ordered -->
+                            <tr id="row-DEL-1002" data-status="Ordered">
+                                <td>
+                                    <strong>DEL-2026-1002</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Waybill: Pending</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-108</strong></td>
+                                <td>BuildPro Hardware Corp.</td>
+                                <td>Portland Cement Bags (500 bags)</td>
+                                <td>Aug 14, 2026</td>
+                                <td>
+                                    <select class="status-select" onchange="updateDeliveryStatus('DEL-1002', 'PO-2026-108', this.value)">
+                                        <option value="Ordered" selected>Ordered</option>
+                                        <option value="Purchased">Purchased</option>
+                                        <option value="Delivery in Progress">Delivery in Progress</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Delayed">Delayed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td id="sync-DEL-1002">
+                                    <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-clock"></i> PO Draft Created</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="btn-icon" onclick="openTrackingDrawer('DEL-1002')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Item 3: Purchased -->
+                            <tr id="row-DEL-1003" data-status="Purchased">
+                                <td>
+                                    <strong>DEL-2026-1003</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Waybill: #WB-99102</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-109</strong></td>
+                                <td>Vanguard Logistics</td>
+                                <td>Ready-Mix Concrete Batch G40 (20 cu.m)</td>
+                                <td>Aug 11, 2026</td>
+                                <td>
+                                    <select class="status-select" onchange="updateDeliveryStatus('DEL-1003', 'PO-2026-109', this.value)">
+                                        <option value="Ordered">Ordered</option>
+                                        <option value="Purchased" selected>Purchased</option>
+                                        <option value="Delivery in Progress">Delivery in Progress</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Delayed">Delayed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td id="sync-DEL-1003">
+                                    <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-file-invoice-dollar"></i> Invoice Payment Confirmed</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="btn-icon" onclick="openTrackingDrawer('DEL-1003')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Item 4: Delivered -->
+                            <tr id="row-DEL-1004" data-status="Delivered">
+                                <td>
+                                    <strong>DEL-2026-0998</strong><br>
+                                    <span style="font-size:0.78rem; color:var(--text-muted);">Waybill: #WB-77301</span>
+                                </td>
+                                <td><strong style="color:var(--color-primary)">PO-2026-088</strong></td>
+                                <td>Apex Industrial Supply</td>
+                                <td>Grade 60 Structural Steel Beams (24 pcs)</td>
+                                <td>Aug 04, 2026</td>
+                                <td>
+                                    <select class="status-select" onchange="updateDeliveryStatus('DEL-1004', 'PO-2026-088', this.value)">
+                                        <option value="Ordered">Ordered</option>
+                                        <option value="Purchased">Purchased</option>
+                                        <option value="Delivery in Progress">Delivery in Progress</option>
+                                        <option value="Delivered" selected>Delivered</option>
+                                        <option value="Delayed">Delayed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td id="sync-DEL-1004">
+                                    <span class="status-badge status-delivered"><i class="fas fa-check-double"></i> Warehouse Verified</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; gap:6px;">
+                                        <button class="btn-icon" onclick="openTrackingDrawer('DEL-1004')" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- DETAILED TRACKING & LOG DRAWER -->
+<div class="modal-overlay" id="trackingDrawerOverlay">
+    <div class="drawer">
+        <div class="drawer-header">
+            <div>
+                <div class="drawer-title" id="drawerDeliveryTitle">DEL-2026-1001 Details</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);" id="drawerPoSub">Linked Purchase Order: PO-2026-107</div>
+            </div>
+            <button class="drawer-close" onclick="closeTrackingDrawer()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="drawer-body">
+
+            <!-- AUTOMATION SYNC STATUS BANNER -->
+            <div class="automation-banner" id="automationBanner">
+                <i class="fas fa-robot automation-icon"></i>
+                <div>
+                    <strong style="font-size:0.9rem;">Automated Workflow Sync Connected</strong>
+                    <p style="font-size:0.82rem; color:#166534; margin-top:2px;">
+                        Changing status to <strong>Delivered</strong> will automatically mark <strong>PO-2026-107</strong> as Delivered, send a real-time notification to Warehouse Staff, and initiate Warehouse Verification inspection.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SHIPMENT SUMMARY -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-box-open"></i> Shipment Information</span>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:0.88rem;">
+                    <div><span style="color:var(--text-muted)">Supplier:</span> <strong id="drawerSupplier">Apex Industrial Supply</strong></div>
+                    <div><span style="color:var(--text-muted)">Est. Arrival:</span> <strong id="drawerEstDate">Aug 10, 2026</strong></div>
+                    <div><span style="color:var(--text-muted)">Items:</span> <strong id="drawerItems">Deformed Steel Bars 18mm (1,200 pcs)</strong></div>
+                    <div><span style="color:var(--text-muted)">Destination:</span> <strong>Main Site Warehouse A-2</strong></div>
+                </div>
+            </div>
+
+            <!-- LIVE TRACKING STAGE TIMELINE -->
+            <div class="detail-section">
+                <div class="detail-section-title">
+                    <span><i class="fas fa-route"></i> Delivery Lifecycle Stages</span>
+                </div>
+
+                <div class="timeline" id="trackingTimeline">
+                    <div class="timeline-step completed">
+                        <div class="timeline-node"><i class="fas fa-check"></i></div>
+                        <div class="timeline-title">Ordered</div>
+                        <div class="timeline-time">Aug 05, 2026 - PO Generated & Signed</div>
+                    </div>
+                    <div class="timeline-step completed">
+                        <div class="timeline-node"><i class="fas fa-check"></i></div>
+                        <div class="timeline-title">Purchased</div>
+                        <div class="timeline-time">Aug 06, 2026 - Payment Received by Supplier</div>
+                    </div>
+                    <div class="timeline-step active" id="timelineStepProgress">
+                        <div class="timeline-node"><i class="fas fa-truck"></i></div>
+                        <div class="timeline-title">Delivery in Progress</div>
+                        <div class="timeline-time">Aug 08, 2026 - Waybill #WB-88910 In Transit</div>
+                    </div>
+                    <div class="timeline-step" id="timelineStepDelivered">
+                        <div class="timeline-node"><i class="fas fa-warehouse"></i></div>
+                        <div class="timeline-title">Delivered & Warehouse Inspection</div>
+                        <div class="timeline-time">Pending Final Unloading</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="drawer-footer">
+            <button class="btn btn-secondary" onclick="closeTrackingDrawer()">Close Drawer</button>
+            <button class="btn btn-primary" onclick="triggerManualDeliverFromDrawer()">
+                <i class="fas fa-box-check"></i> Mark as Delivered & Sync Warehouse
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeDrawerDelId = 'DEL-1001';
+    let activeDrawerPoId = 'PO-2026-107';
+
+    function transitionTo(url) {
+        document.body.classList.add('page-exit');
+        setTimeout(() => { window.location.href = url; }, 200);
+    }
+
+    function toggleNotifications() {
+        document.getElementById('notificationWrapper').classList.toggle('open');
+    }
+
+    function markAllRead() {
+        const badge = document.querySelector('.badge-dot');
+        if (badge) badge.style.display = 'none';
+    }
+
+    // CORE AUTOMATION FUNCTION: UPDATE STATUS & AUTO-UPDATE PO + WAREHOUSE
+    function updateDeliveryStatus(delCode, poCode, newStatus) {
+        const row = document.getElementById('row-' + delCode);
+        if (row) {
+            row.setAttribute('data-status', newStatus);
+        }
+
+        const syncTd = document.getElementById('sync-' + delCode);
+
+        // SYNC LOGIC TRIGGER
+        if (newStatus === 'Delivered') {
+            if (syncTd) {
+                syncTd.innerHTML = `<span class="status-badge status-delivered"><i class="fas fa-spinner fa-spin"></i> Triggering Warehouse...</span>`;
+            }
+
+            // Simulate immediate automated system sync
+            setTimeout(() => {
+                if (syncTd) {
+                    syncTd.innerHTML = `<span class="status-badge status-delivered" title="Warehouse Staff notified! Verification pending."><i class="fas fa-check-circle"></i> PO Updated & Notified</span>`;
+                }
+
+                // Add Real-time Notification for Warehouse Verification
+                const notifList = document.getElementById('notificationList');
+                if (notifList) {
+                    const newAlert = document.createElement('div');
+                    newAlert.style.fontSize = '0.85rem';
+                    newAlert.style.padding = '6px';
+                    newAlert.style.background = 'var(--color-success-light)';
+                    newAlert.style.borderRadius = '6px';
+                    newAlert.innerHTML = `<strong>AUTOMATION TRIGGER:</strong> ${delCode} marked <em>Delivered</em>. ${poCode} updated automatically! Warehouse staff notified for verification.`;
+                    notifList.prepend(newAlert);
+                    document.querySelector('.badge-dot').style.display = 'block';
+                }
+
+                alert(`AUTOMATION SUCCESS:\n\n1. Delivery ${delCode} marked as "Delivered".\n2. Purchase Order ${poCode} updated automatically to "Delivered".\n3. Warehouse Staff notified for Inspection & Verification.`);
+            }, 500);
+
+        } else if (newStatus === 'Delivery in Progress') {
+            if (syncTd) syncTd.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-truck"></i> In Transit</span>`;
+        } else if (newStatus === 'Delayed') {
+            if (syncTd) syncTd.innerHTML = `<span style="font-size:0.8rem; color:var(--color-danger);"><i class="fas fa-triangle-exclamation"></i> Alert Sent to Buyer</span>`;
+        } else if (newStatus === 'Cancelled') {
+            if (syncTd) syncTd.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-ban"></i> PO Void Requested</span>`;
+        } else {
+            if (syncTd) syncTd.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-sync"></i> PO Synchronized</span>`;
+        }
+
+        updatePipelineCounts();
+    }
+
+    // DRAWER CONTROLS
+    function openTrackingDrawer(delCode) {
+        activeDrawerDelId = delCode;
+        if (delCode === 'DEL-1001') {
+            activeDrawerPoId = 'PO-2026-107';
+            document.getElementById('drawerDeliveryTitle').innerText = 'DEL-2026-1001 Details';
+            document.getElementById('drawerPoSub').innerText = 'Linked Purchase Order: PO-2026-107';
+            document.getElementById('drawerSupplier').innerText = 'Apex Industrial Supply';
+            document.getElementById('drawerEstDate').innerText = 'Aug 10, 2026';
+            document.getElementById('drawerItems').innerText = 'Deformed Steel Bars 18mm (1,200 pcs)';
+        }
+        document.getElementById('trackingDrawerOverlay').classList.add('open');
+    }
+
+    function closeTrackingDrawer() {
+        document.getElementById('trackingDrawerOverlay').classList.remove('open');
+    }
+
+    function triggerManualDeliverFromDrawer() {
+        const select = document.querySelector('#row-' + activeDrawerDelId + ' .status-select');
+        if (select) {
+            select.value = 'Delivered';
+        }
+        updateDeliveryStatus(activeDrawerDelId, activeDrawerPoId, 'Delivered');
+
+        // Update Timeline visual
+        const delStep = document.getElementById('timelineStepDelivered');
+        if (delStep) {
+            delStep.classList.add('completed');
+            delStep.querySelector('.timeline-time').innerText = 'Just Now - Delivered & Dispatched to Warehouse Verification';
+        }
+
+        closeTrackingDrawer();
+    }
+
+    // PIPELINE FILTERS & SEARCH
+    function filterPipeline(status, btn) {
+        document.querySelectorAll('.pipeline-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+
+        const rows = document.querySelectorAll('#deliveryTableBody tr');
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            if (status === 'ALL' || rowStatus === status) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function searchDeliveries() {
+        const query = document.getElementById('deliverySearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#deliveryTableBody tr');
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+
+    function updatePipelineCounts() {
+        const statuses = ['Ordered', 'Purchased', 'Delivery in Progress', 'Delivered', 'Delayed', 'Cancelled'];
+        let counts = { 'ALL': 0 };
+
+        statuses.forEach(s => counts[s] = 0);
+
+        const rows = document.querySelectorAll('#deliveryTableBody tr');
+        rows.forEach(row => {
+            const st = row.getAttribute('data-status');
+            if (counts[st] !== undefined) counts[st]++;
+            counts['ALL']++;
+        });
+
+        document.getElementById('count-ALL').innerText = counts['ALL'];
+        document.getElementById('count-Ordered').innerText = counts['Ordered'];
+        document.getElementById('count-Purchased').innerText = counts['Purchased'];
+        document.getElementById('count-Progress').innerText = counts['Delivery in Progress'];
+        document.getElementById('count-Delivered').innerText = counts['Delivered'];
+        document.getElementById('count-Delayed').innerText = counts['Delayed'];
+        document.getElementById('count-Cancelled').innerText = counts['Cancelled'];
+    }
+</script>
+
+</body>
+</html>
