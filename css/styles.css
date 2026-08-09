@@ -2728,3 +2728,92 @@ body:not(.guided-access-enabled) .guided-restore-btn {
 #gmPoDetailsModal .po-progress-header .badge {
     flex-shrink: 0;
 }
+
+
+/* ==========================================================================
+   Warehouse Staff - Guided Access Visual Standardization
+   ========================================================================== */
+
+/* Action controls:
+   - Guided Access OFF: neutral gray icon only.
+   - Guided Access ON: same action gains its explanatory label.
+   This applies to main tables and nested action lists rendered inside modals. */
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn {
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+}
+
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn i {
+    color: var(--color-text-muted);
+}
+
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn:hover,
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn:focus-visible {
+    color: var(--color-text-main);
+    background-color: var(--color-background);
+}
+
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn:hover i,
+body.warehouse-staff-page:not(.guided-access-enabled) .action-item-btn:focus-visible i {
+    color: var(--color-text-main);
+}
+
+body.warehouse-staff-page .action-item-btn .action-label {
+    display: none;
+}
+
+body.warehouse-staff-page.guided-access-enabled .action-item-btn {
+    color: var(--color-text-main);
+}
+
+body.warehouse-staff-page.guided-access-enabled .action-item-btn i {
+    color: var(--color-primary);
+}
+
+body.warehouse-staff-page.guided-access-enabled .action-item-btn .action-label {
+    display: inline;
+}
+
+/* Badge containment:
+   keep status/type text inside the pill throughout Warehouse Staff main views,
+   audit logs, guided helper, and modal content. */
+body.warehouse-staff-page .badge,
+body.warehouse-staff-page .material-status-badge {
+    white-space: nowrap;
+    width: max-content;
+    max-width: none;
+    line-height: 1.1;
+    flex-shrink: 0;
+    justify-content: center;
+}
+
+/* Give long status/type badges enough intrinsic table space instead of wrapping. */
+body.warehouse-staff-page #deliveriesTable td:nth-child(7),
+body.warehouse-staff-page #deliveryActivityTable td:nth-child(4),
+body.warehouse-staff-page #deliveryActivityTable td:nth-child(5),
+body.warehouse-staff-page #deliveryActivityTable td:nth-child(6),
+body.warehouse-staff-page #inventoryTable td:nth-child(8),
+body.warehouse-staff-page #activityTable td:nth-child(3) {
+    white-space: nowrap;
+}
+
+/* Guided helper progress badge remains compact and contained. */
+body.warehouse-staff-page .guided-helper-subbadge {
+    white-space: nowrap;
+    width: max-content;
+    max-width: 100%;
+}
+
+/* Standardized guide control visuals. */
+body.warehouse-staff-page .guided-helper-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.warehouse-staff-page .guided-restore-btn {
+    white-space: nowrap;
+}

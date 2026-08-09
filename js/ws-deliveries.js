@@ -913,10 +913,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 deliveriesGuidedHelper.classList.remove('hidden');
                 if (isCollapsed) {
                     deliveriesGuidedHelper.classList.add('collapsed');
-                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-plus"></i>';
+                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-chevron-up"></i>';
                 } else {
                     deliveriesGuidedHelper.classList.remove('collapsed');
-                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-minus"></i>';
+                    if (btnCollapseGuide) btnCollapseGuide.innerHTML = '<i class="fas fa-chevron-down"></i>';
                 }
             }
         }
@@ -935,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnCollapseGuide.addEventListener('click', () => {
                 const isCollapsed = deliveriesGuidedHelper.classList.toggle('collapsed');
                 sessionStorage.setItem('tenebrowseDeliveriesGuideCollapsed', isCollapsed ? 'true' : 'false');
-                btnCollapseGuide.innerHTML = isCollapsed ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
+                btnCollapseGuide.innerHTML = isCollapsed ? '<i class="fas fa-chevron-up"></i>' : '<i class="fas fa-chevron-down"></i>';
             });
         }
 

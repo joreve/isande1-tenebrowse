@@ -77,3 +77,7 @@
 - Increased Visible Request Records per Page for General Manager
 - Standardized Project-in-Charge Purchase Order View with General Manager Monitoring Layout
 - Improved Status Badge and Action Button Consistency Across Interfaces
+
+## v4.3 Visual Changes for Warehouse Staff
+- Improved Status Badge and Action Button Consistency Across Interfaces
+- Standardized Labels

@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fas fa-compass"></i>
                     <span>Guided Access</span>
                 </div>
-                <span id="guidedHelperSubbadge" class="badge badge-warning guided-helper-subbadge">Step 1: Select Facility &amp; Material</span>
+                <span id="guidedHelperSubbadge" class="badge badge-warning guided-helper-subbadge">Step 1 of 5</span>
                 <div class="guided-helper-actions">
                     <button type="button" id="guidedCollapseBtn" class="guided-helper-btn" title="Collapse/Expand Guide">
                         <i class="fas fa-chevron-down" id="guidedCollapseIcon"></i>
@@ -302,7 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
         restoreBtn.id = 'guidedRestoreBtn';
         restoreBtn.type = 'button';
         restoreBtn.className = 'guided-restore-btn hidden';
-        restoreBtn.innerHTML = `<i class="fas fa-compass"></i> Show Guided Access`;
+        restoreBtn.innerHTML = `<i class="fas fa-compass"></i><span>Show Guide</span>`;
+        restoreBtn.title = 'Show Guide';
+        restoreBtn.setAttribute('aria-label', 'Show Guide');
 
         document.body.appendChild(card);
         document.body.appendChild(restoreBtn);
@@ -418,8 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const subbadge = document.getElementById('guidedHelperSubbadge');
         if (subbadge) {
-            const stepName = stepNames[stepNum - 1] || `Step ${stepNum}`;
-            subbadge.textContent = `Step ${stepNum}: ${stepName}`;
+            subbadge.textContent = `Step ${stepNum} of ${stepNames.length}`;
         }
     };
 
@@ -665,7 +666,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${a.date} ${a.time}</td>
                 <td>${a.reference || '-'}</td>
                 <td class="text-right">
-                    <button class="action-btn" data-activity-view="${a.id}" title="View Activity Record"><i class="fas fa-eye"></i></button>
+                    <div class="action-list" aria-label="Inventory activity actions">
+                        <button class="action-item-btn" data-activity-view="${a.id}" title="View Activity Record" aria-label="View Activity Record">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                            <span class="action-label">View</span>
+                        </button>
+                    </div>
                 </td>
             `;
             activityTableBody.appendChild(tr);
