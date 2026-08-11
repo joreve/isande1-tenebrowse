@@ -750,7 +750,7 @@
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </li>
-                <li class="nav-item" onclick="transitionTo('po-main.html')">
+                <li class="nav-item" onclick="transitionTo('po-purchase-orders.html')">
                     <i class="fas fa-file-invoice"></i>
                     <span>Purchase Orders</span>
                 </li>
@@ -1441,7 +1441,7 @@
     function assignToPo(supplierName) {
         if (confirm('Assign "' + supplierName + '" to pending Purchase Order (PO-2026-108)?')) {
             alert('Supplier ' + supplierName + ' successfully assigned to PO-2026-108. Redirecting to Purchase Orders processing...');
-            transitionTo('po-main.html');
+            transitionTo('po-purchase-orders.html');
         }
     }
 
