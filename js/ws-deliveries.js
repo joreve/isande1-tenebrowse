@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'verifyModal',
         'verifyConfirmModal',
         'returnRequestModal',
+        'returnRequestDetailsModal',
         'discrepancyModal',
         'discrepancyDetailsModal'
     ]);
@@ -1833,6 +1834,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!dr) return;
 
+        // A submitted return request is read-only. If one already exists for
+        // this Delivery Receipt, open its saved details instead of rebuilding
+        // the creation form and allowing a duplicate request.
+        if (dr.returnRequest) {
+            viewReturnRequest(po.poNumber, dr.receiptNumber);
+            return;
+        }
+
         selectedPoNumber = po.poNumber;
         selectedDrRefNumber = dr.receiptNumber;
 
@@ -1921,7 +1930,109 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const viewReturnRequest = (poNumber, receiptNumber) => {
-        openReturnRequest(poNumber, receiptNumber);
+        const po = purchaseOrdersData.find((item) => item.poNumber === poNumber);
+        if (!po) return;
+
+        const dr = receiptNumber
+            ? po.deliveryReceipts.find((item) => item.receiptNumber === receiptNumber)
+            : po.deliveryReceipts.find((item) => item.returnRequest);
+
+        if (!dr) return;
+
+        const request = dr.returnRequest;
+        const body = document.getElementById('returnRequestDetailsBody');
+        const title = document.getElementById('returnRequestDetailsTitle');
+
+        if (!body) return;
+
+        if (!request) {
+            body.innerHTML = `
+                <div class="empty-state-row">
+                    <i class="fas fa-info-circle mb-1"></i>
+                    <div>No saved return request details are available for ${escapeHtml(dr.receiptNumber)}.</div>
+                </div>
+            `;
+            if (title) {
+                title.innerHTML = '<i class="fas fa-undo-alt icon-primary"></i> Return Request Details';
+            }
+            openExclusiveModal('returnRequestDetailsModal');
+            return;
+        }
+
+        if (title) {
+            title.innerHTML = `<i class="fas fa-undo-alt icon-primary"></i> Return Request Details — ${escapeHtml(request.id)}`;
+        }
+
+        const materialRows = request.items.map((item) => `
+            <tr>
+                <td class="font-semibold text-main">${escapeHtml(item.materialId)}</td>
+                <td>${escapeHtml(item.description)}</td>
+                <td class="text-right">${formatPeso(item.unitPrice)}</td>
+                <td class="text-right text-danger">${item.damagedQty}</td>
+                <td class="text-right text-danger">${item.missingQty}</td>
+                <td class="text-right font-semibold">${item.returnQty}</td>
+                <td class="text-right font-semibold text-danger">${formatPeso(item.estimatedValue)}</td>
+                <td><span class="badge badge-info">${escapeHtml(item.resolution)}</span></td>
+            </tr>
+        `).join('');
+
+        body.innerHTML = `
+            <div class="dr-readonly-section mb-3">
+                <div class="sub-form-grid">
+                    <div><span class="text-muted-sm">Return Request ID</span><div class="font-semibold">${escapeHtml(request.id)}</div></div>
+                    <div><span class="text-muted-sm">Status</span><div><span class="badge badge-warning">${escapeHtml(request.status)}</span></div></div>
+                    <div><span class="text-muted-sm">Purchase Order Number</span><div class="font-semibold">${escapeHtml(po.poNumber)}</div></div>
+                    <div><span class="text-muted-sm">Receipt Number</span><div class="font-semibold">${escapeHtml(dr.receiptNumber)}</div></div>
+                    <div><span class="text-muted-sm">Supplier</span><div class="font-semibold">${escapeHtml(dr.supplier)}</div></div>
+                    <div><span class="text-muted-sm">Delivery Reference</span><div class="font-semibold">${escapeHtml(dr.deliveryRefNumber)}</div></div>
+                    <div><span class="text-muted-sm">Submitted</span><div class="font-semibold">${escapeHtml(request.submittedAt)}</div></div>
+                    <div><span class="text-muted-sm">Requested By</span><div class="font-semibold">${escapeHtml(request.requestedBy)}</div></div>
+                </div>
+            </div>
+
+            <div class="section-title mb-2">
+                <i class="fas fa-clipboard-list icon-secondary"></i>
+                <span>Returned Materials</span>
+            </div>
+
+            <div class="table-wrapper mb-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Material ID</th>
+                            <th>Material Description</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right">Damaged Qty</th>
+                            <th class="text-right">Missing Qty</th>
+                            <th class="text-right">Return Qty</th>
+                            <th class="text-right">Est. Return Value</th>
+                            <th>Resolution</th>
+                        </tr>
+                    </thead>
+                    <tbody>${materialRows}</tbody>
+                </table>
+            </div>
+
+            <div class="po-progress-card mb-3">
+                <div class="flex-between">
+                    <div>
+                        <div class="po-stat-label">Returned Materials</div>
+                        <div class="po-stat-value">${request.items.length} Material${request.items.length === 1 ? '' : 's'}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="po-stat-label">Total Estimated Return Value</div>
+                        <div class="po-stat-value text-danger">${formatPeso(request.totalEstimatedValue)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dr-readonly-section mb-0">
+                <span class="text-muted-sm">Return Reason & Additional Notes</span>
+                <div class="font-semibold mt-1">${escapeHtml(request.notes || 'No additional notes provided.')}</div>
+            </div>
+        `;
+
+        openExclusiveModal('returnRequestDetailsModal');
     };
 
     const openDiscrepancy = (poNumber, receiptNumber) => {
@@ -2271,6 +2382,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (error) error.style.display = 'none';
+
+            const returnItems = selectedRows.map((row) => {
+                const materialId = row.getAttribute('data-material-id');
+                const material = dr.materials.find((item) => item.materialId === materialId);
+                const returnQty = parseSafeInt(row.querySelector('.return-qty-input')?.value);
+                const resolution = row.querySelector('.return-resolution-select')?.value || 'Replacement';
+                const unitPrice = parseFloat(row.getAttribute('data-unit-price')) || 0;
+
+                return {
+                    materialId,
+                    description: material?.description || materialId,
+                    unitPrice,
+                    damagedQty: material?.damagedQty || 0,
+                    missingQty: material?.missingQty || 0,
+                    returnQty,
+                    resolution,
+                    estimatedValue: returnQty * unitPrice
+                };
+            });
+
+            dr.returnRequest = {
+                id: `RET-${dr.receiptNumber.replace(/^DR-/, '')}`,
+                status: 'Submitted',
+                submittedAt: TODAY_LABEL,
+                requestedBy: 'Arnie Velasco',
+                notes: document.getElementById('returnGeneralNotes')?.value.trim() || '',
+                items: returnItems,
+                totalEstimatedValue: returnItems.reduce((sum, item) => sum + item.estimatedValue, 0)
+            };
+
             dr.drStatus = 'Return Required';
             logActivity(
                 'fa-undo-alt',
@@ -2287,7 +2428,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     supplier: dr.supplier,
                     warehouse: dr.warehouse,
                     reference: dr.deliveryRefNumber,
-                    remarks: `Return request recorded for affected materials under ${dr.receiptNumber}.`
+                    remarks: `${dr.returnRequest.id} recorded for affected materials under ${dr.receiptNumber}.`
                 }
             );
             window.closeModal?.('returnRequestModal');

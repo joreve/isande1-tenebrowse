@@ -168,19 +168,19 @@
                         <form id="materialForm" class="form-grid">
                             <div class="form-group mb-0">
                                 <label class="form-label" for="matName">Material Name</label>
-                                <select id="matName" class="form-control" required>
-                                    <option value="">Select material...</option>
-                                </select>
+                                <input type="text" id="matName" class="form-control material-combobox-input"
+                                       list="materialCatalogOptions" placeholder="Select or enter material..."
+                                       autocomplete="off" required>
                             </div>
 
                             <div class="form-group mb-0">
                                 <label class="form-label" for="matCategory">Category</label>
-                                <input type="text" id="matCategory" class="form-control" placeholder="Auto-filled" readonly>
+                                <input type="text" id="matCategory" class="form-control" placeholder="Auto-filled for listed materials" readonly>
                             </div>
 
                             <div class="form-group mb-0">
                                 <label class="form-label" for="matUnit">Unit</label>
-                                <input type="text" id="matUnit" class="form-control" placeholder="Auto-filled" readonly>
+                                <input type="text" id="matUnit" class="form-control" placeholder="Auto-filled for listed materials" readonly>
                             </div>
 
                             <div class="form-group mb-0">
@@ -360,7 +360,9 @@
                     <div class="modal-form-grid">
                         <div class="form-group full-span-2">
                             <label class="form-label" for="editMatName">Material Name</label>
-                            <select id="editMatName" class="form-control" required></select>
+                            <input type="text" id="editMatName" class="form-control material-combobox-input"
+                                   list="materialCatalogOptions" placeholder="Select or enter material..."
+                                   autocomplete="off" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="editMatCategory">Category</label>
@@ -488,7 +490,7 @@
                     <div class="substitution-materials-header">
                         <div>
                             <h4 class="section-title mb-0">Materials to Substitute</h4>
-                            <p class="text-muted-sm">Select the affected materials, then choose a replacement and quantity for each selected row.</p>
+                            <p class="text-muted-sm">Select the affected materials, then choose an existing replacement or type a new material and enter the quantity for each selected row.</p>
                         </div>
                         <span class="badge badge-info" id="substitutionSelectionCount">0 materials selected</span>
                     </div>
@@ -543,6 +545,9 @@
             </form>
         </div>
     </div>
+
+    <!-- Shared material suggestions for Material Requests, Edit Material, and Substitution Requests -->
+    <datalist id="materialCatalogOptions"></datalist>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>

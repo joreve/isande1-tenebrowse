@@ -620,7 +620,23 @@
         </div>
     </div>
 
-    <!-- 6. Discrepancy Reporting Modal -->
+    <!-- 6. Read-Only Return Request Details Modal -->
+    <div class="modal-overlay" id="returnRequestDetailsModal" role="dialog" aria-modal="true" aria-labelledby="returnRequestDetailsTitle">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span id="returnRequestDetailsTitle"><i class="fas fa-undo-alt icon-primary"></i> Return Request Details</span>
+                <button type="button" class="action-btn" data-modal-close aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="returnRequestDetailsBody">
+                <!-- Populated dynamically with the submitted return request -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Discrepancy Reporting Modal -->
     <div class="modal-overlay" id="discrepancyModal" role="dialog" aria-modal="true" aria-labelledby="discrepancyTitle">
         <div class="modal">
             <div class="modal-header">
@@ -660,7 +676,7 @@
         </div>
     </div>
 
-    <!-- 7. Read-Only Delivery Discrepancy Details Modal -->
+    <!-- 8. Read-Only Delivery Discrepancy Details Modal -->
     <div class="modal-overlay" id="discrepancyDetailsModal" role="dialog" aria-modal="true" aria-labelledby="discrepancyDetailsTitle">
         <div class="modal modal-xl">
             <div class="modal-header">
@@ -676,7 +692,7 @@
         </div>
     </div>
 
-    <!-- 8. Read-Only Delivery Activity Details Modal -->
+    <!-- 9. Read-Only Delivery Activity Details Modal -->
     <div class="modal-overlay" id="deliveryActivityDetailsModal" role="dialog" aria-modal="true" aria-labelledby="deliveryActivityDetailsTitle">
         <div class="modal delivery-activity-details-modal">
             <div class="modal-header">

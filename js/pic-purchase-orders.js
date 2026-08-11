@@ -142,11 +142,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    // Shared read-only inventory reference used by PIC and General Manager monitoring views.
+    const inventoryData = [
+        { id: 'MAT-S101', name: 'Wood Screws 1.5"', category: 'Hardware', qty: 5000, unit: 'Pieces', warehouse: 'Warehouse 1', min: 1000, status: 'In Stock', lastUpdated: '2026-07-20' },
+        { id: 'MAT-S102', name: 'Common Nails 3"', category: 'Hardware', qty: 3200, unit: 'Pieces', warehouse: 'Warehouse 1', min: 500, status: 'In Stock', lastUpdated: '2026-07-19' },
+        { id: 'MAT-S103', name: 'Circuit Breaker 20A', category: 'Electrical', qty: 45, unit: 'Pieces', warehouse: 'Warehouse 1', min: 100, status: 'Low Stock', lastUpdated: '2026-07-21' },
+        { id: 'MAT-S104', name: 'Electrical Wire THHN 3.5mm', category: 'Electrical', qty: 210, unit: 'Rolls', warehouse: 'Warehouse 1', min: 250, status: 'Low Stock', lastUpdated: '2026-07-21' },
+        { id: 'MAT-S105', name: 'PVC Elbow Fitting 1/2"', category: 'Plumbing', qty: 800, unit: 'Pieces', warehouse: 'Warehouse 1', min: 200, status: 'Overstocked', lastUpdated: '2026-07-15' },
+        { id: 'MAT-S106', name: 'Structural Bolts M16', category: 'Structural', qty: 15, unit: 'Boxes', warehouse: 'Warehouse 1', min: 40, status: 'Low Stock', lastUpdated: '2026-07-22' },
+        { id: 'MAT-L201', name: 'Portland Cement (Type I)', category: 'Structural', qty: 1240, unit: 'Bags (40kg)', warehouse: 'Warehouse 2', min: 500, status: 'In Stock', lastUpdated: '2026-07-20' },
+        { id: 'MAT-L202', name: 'Steel Reinforcement Bar 12mm', category: 'Structural', qty: 85, unit: 'Pieces', warehouse: 'Warehouse 2', min: 300, status: 'Low Stock', lastUpdated: '2026-07-21' },
+        { id: 'MAT-L203', name: 'Marine Plywood 3/4"', category: 'Finishing', qty: 0, unit: 'Sheets', warehouse: 'Warehouse 2', min: 50, status: 'Out of Stock', lastUpdated: '2026-07-19' },
+        { id: 'MAT-L204', name: 'PVC Pipe 4-inch', category: 'Plumbing', qty: 620, unit: 'Lengths', warehouse: 'Warehouse 2', min: 100, status: 'Overstocked', lastUpdated: '2026-07-22' },
+        { id: 'MAT-L205', name: 'Concrete Hollow Blocks 6"', category: 'Structural', qty: 3400, unit: 'Pieces', warehouse: 'Warehouse 2', min: 1000, status: 'In Stock', lastUpdated: '2026-07-18' },
+        { id: 'MAT-L206', name: 'Roofing Sheets (Corrugated)', category: 'Finishing', qty: 480, unit: 'Sheets', warehouse: 'Warehouse 2', min: 150, status: 'In Stock', lastUpdated: '2026-07-17' },
+        { id: 'MAT-D301', name: 'Water-Damaged Gypsum Board', category: 'Finishing', qty: 12, unit: 'Sheets', warehouse: 'Warehouse 3', min: 0, status: 'Damaged', lastUpdated: '2026-07-20' },
+        { id: 'MAT-D302', name: 'Defective Circuit Breaker', category: 'Electrical', qty: 5, unit: 'Pieces', warehouse: 'Warehouse 3', min: 0, status: 'Damaged', lastUpdated: '2026-07-18' },
+        { id: 'MAT-D303', name: 'Cracked PVC Pipes 4"', category: 'Plumbing', qty: 8, unit: 'Lengths', warehouse: 'Warehouse 3', min: 0, status: 'Damaged', lastUpdated: '2026-07-21' }
+    ];
+
+    // Top tab navigation: Purchase Orders / Inventory Overview.
+    const tabButtons = document.querySelectorAll('.tabs-nav .tab-btn[data-tab]');
+    const tabPanels = document.querySelectorAll('.tab-content[data-tab-content]');
+
+    const activateTab = (name) => {
+        tabButtons.forEach((button) => {
+            const isActive = button.dataset.tab === name;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-selected', String(isActive));
+        });
+
+        tabPanels.forEach((panel) => {
+            panel.classList.toggle('active', panel.dataset.tabContent === name);
+        });
+    };
+
+    tabButtons.forEach((button) => {
+        button.addEventListener('click', () => activateTab(button.dataset.tab));
+    });
+
+    // Allows direct links such as pic-purchase-orders.html?tab=inventory.
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    if (requestedTab === 'inventory') activateTab('inventory-overview');
+
     const tableBody = document.getElementById('poTableBody');
     const searchInput = document.getElementById('searchInput');
     const statusFilter = document.getElementById('statusFilter');
     const btnExport = document.getElementById('btnExport');
     const poDetailsBody = document.getElementById('poDetailsBody');
+
+    const inventoryBody = document.getElementById('picInventoryBody');
+    const inventorySearchInput = document.getElementById('picInventorySearchInput');
+    const inventoryCategoryFilter = document.getElementById('picInventoryCategoryFilter');
+    const inventoryWarehouseFilter = document.getElementById('picInventoryWarehouseFilter');
+    const inventoryStatusFilter = document.getElementById('picInventoryStatusFilter');
+    const inventoryExportBtn = document.getElementById('picInventoryExportBtn');
+    const inventoryWarehouseBadge = document.getElementById('picInventoryWarehouseBadge');
 
     const escapeHtml = (value) => String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -166,6 +217,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (status === 'Verified') return 'badge-success';
         if (status === 'Verified with Discrepancy' || status === 'Return Required') return 'badge-danger';
         if (status === 'Arrived') return 'badge-warning';
+        return 'badge-info';
+    };
+
+    const badgeClassForInventory = (status) => {
+        if (status === 'In Stock') return 'badge-success';
+        if (status === 'Low Stock') return 'badge-warning';
+        if (status === 'Out of Stock' || status === 'Damaged') return 'badge-danger';
         return 'badge-info';
     };
 
@@ -356,6 +414,56 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.openModal === 'function') window.openModal('poDetailsModal');
     };
 
+    const updateInventorySummary = () => {
+        document.getElementById('picInventoryTotalCount').textContent = String(inventoryData.length);
+        document.getElementById('picInventoryAvailableCount').textContent = String(
+            inventoryData.filter((item) => item.status === 'In Stock' || item.status === 'Overstocked').length
+        );
+        document.getElementById('picInventoryLowCount').textContent = String(
+            inventoryData.filter((item) => item.status === 'Low Stock').length
+        );
+        document.getElementById('picInventoryOutCount').textContent = String(
+            inventoryData.filter((item) => item.status === 'Out of Stock').length
+        );
+    };
+
+    const renderInventoryTable = () => {
+        const searchTerm = inventorySearchInput.value.trim().toLowerCase();
+        const category = inventoryCategoryFilter.value;
+        const warehouse = inventoryWarehouseFilter.value;
+        const status = inventoryStatusFilter.value;
+
+        const filteredInventory = inventoryData.filter((item) => {
+            const matchesSearch = item.id.toLowerCase().includes(searchTerm) ||
+                item.name.toLowerCase().includes(searchTerm);
+            const matchesCategory = category === 'All' || item.category === category;
+            const matchesWarehouse = warehouse === 'All' || item.warehouse === warehouse;
+            const matchesStatus = status === 'All' || item.status === status;
+            return matchesSearch && matchesCategory && matchesWarehouse && matchesStatus;
+        });
+
+        inventoryWarehouseBadge.textContent = warehouse === 'All' ? 'All Warehouses' : warehouse;
+
+        if (!filteredInventory.length) {
+            inventoryBody.innerHTML = '<tr><td colspan="9" class="empty-state-row">No inventory records match your criteria.</td></tr>';
+            return;
+        }
+
+        inventoryBody.innerHTML = filteredInventory.map((item) => `
+            <tr>
+                <td><strong>${escapeHtml(item.id)}</strong></td>
+                <td>${escapeHtml(item.name)}</td>
+                <td>${escapeHtml(item.category)}</td>
+                <td class="font-semibold">${Number(item.qty).toLocaleString()}</td>
+                <td>${escapeHtml(item.unit)}</td>
+                <td>${escapeHtml(item.warehouse)}</td>
+                <td>${Number(item.min).toLocaleString()}</td>
+                <td><span class="badge ${badgeClassForInventory(item.status)}">${escapeHtml(item.status)}</span></td>
+                <td>${escapeHtml(item.lastUpdated)}</td>
+            </tr>
+        `).join('');
+    };
+
     tableBody.addEventListener('click', (event) => {
         const button = event.target.closest('[data-action="view-po"]');
         if (button) openPurchaseOrderDetails(button.dataset.id);
@@ -370,5 +478,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    inventorySearchInput.addEventListener('input', renderInventoryTable);
+    inventoryCategoryFilter.addEventListener('change', renderInventoryTable);
+    inventoryWarehouseFilter.addEventListener('change', renderInventoryTable);
+    inventoryStatusFilter.addEventListener('change', renderInventoryTable);
+    inventoryExportBtn.addEventListener('click', () => {
+        if (typeof window.showToast === 'function') {
+            window.showToast('Export Started', 'Generating the Project-in-Charge inventory overview report...', 'primary');
+        }
+    });
+
     renderPOTable();
+    updateInventorySummary();
+    renderInventoryTable();
 });

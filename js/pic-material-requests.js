@@ -5,8 +5,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const REQUEST_HISTORY_STORAGE_KEY = 'tenebrowsePicRequestHistoryV3';
+    const CUSTOM_MATERIAL_CATALOG_KEY = 'tenebrowsePicCustomMaterialCatalogV1';
 
-    const materialCatalog = [
+    const baseMaterialCatalog = [
         { name: 'Portland Cement Type 1', category: 'Masonry', unit: 'Bags (50kg)' },
         { name: 'Portland Cement High Early Strength', category: 'Masonry', unit: 'Bags (50kg)' },
         { name: 'Deformed Rebar 16mm x 6m', category: 'Metals', unit: 'Pieces' },
@@ -18,6 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'THHN Copper Wire 3.5mm', category: 'Electrical', unit: 'Rolls' },
         { name: 'THHN Copper Wire 5.5mm', category: 'Electrical', unit: 'Rolls' }
     ];
+
+    const loadCustomMaterialCatalog = () => {
+        try {
+            const stored = JSON.parse(localStorage.getItem(CUSTOM_MATERIAL_CATALOG_KEY));
+            return Array.isArray(stored)
+                ? stored.filter((item) => item && item.name && item.category && item.unit)
+                : [];
+        } catch (error) {
+            return [];
+        }
+    };
+
+    const materialCatalog = [...baseMaterialCatalog, ...loadCustomMaterialCatalog()];
 
     let materialList = [
         { id: 'MAT-8012', name: 'Portland Cement Type 1', category: 'Masonry', unit: 'Bags (50kg)', qty: 450, remarks: 'Site A Foundation Pour' },
@@ -186,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add form
     const inName = document.getElementById('matName');
+    const materialCatalogOptions = document.getElementById('materialCatalogOptions');
     const inCategory = document.getElementById('matCategory');
     const inUnit = document.getElementById('matUnit');
     const inQty = document.getElementById('matQty');
@@ -279,21 +294,68 @@ document.addEventListener('DOMContentLoaded', () => {
         month: 'short', day: '2-digit', year: 'numeric'
     }).format(new Date());
 
-    const getCatalogItem = (name) => materialCatalog.find((item) => item.name === name) || null;
+    const normalizeMaterialName = (value) => String(value || '').trim().toLowerCase();
 
-    const populateCatalogSelect = (select, selectedValue = '', includePlaceholder = true) => {
-        if (!select) return;
-        const placeholder = includePlaceholder ? '<option value="">Select material...</option>' : '';
-        select.innerHTML = placeholder + materialCatalog.map((item) =>
-            `<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)}</option>`
-        ).join('');
-        select.value = selectedValue;
+    const getCatalogItem = (name) => {
+        const normalized = normalizeMaterialName(name);
+        return materialCatalog.find((item) => normalizeMaterialName(item.name) === normalized) || null;
     };
 
-    const applyCatalogMetadata = (name, categoryInput, unitInput) => {
-        const catalogItem = getCatalogItem(name);
-        categoryInput.value = catalogItem?.category || '';
-        unitInput.value = catalogItem?.unit || '';
+    const populateMaterialDatalist = () => {
+        if (!materialCatalogOptions) return;
+        materialCatalogOptions.innerHTML = materialCatalog
+            .map((item) => `<option value="${escapeHtml(item.name)}"></option>`)
+            .join('');
+    };
+
+    const persistCustomMaterialCatalog = () => {
+        try {
+            const baseNames = new Set(baseMaterialCatalog.map((item) => normalizeMaterialName(item.name)));
+            const customItems = materialCatalog.filter((item) => !baseNames.has(normalizeMaterialName(item.name)));
+            localStorage.setItem(CUSTOM_MATERIAL_CATALOG_KEY, JSON.stringify(customItems));
+        } catch (error) {
+            // Persistence is optional for this front-end prototype.
+        }
+    };
+
+    const rememberCustomMaterial = (item) => {
+        if (!item?.name || !item?.category || !item?.unit || getCatalogItem(item.name)) return;
+        materialCatalog.push({
+            name: item.name.trim(),
+            category: item.category.trim(),
+            unit: item.unit.trim()
+        });
+        persistCustomMaterialCatalog();
+        populateMaterialDatalist();
+    };
+
+    const syncMaterialMetadataMode = (nameInput, categoryInput, unitInput, preserveCustomValues = false) => {
+        const catalogItem = getCatalogItem(nameInput.value);
+
+        if (catalogItem) {
+            categoryInput.value = catalogItem.category;
+            unitInput.value = catalogItem.unit;
+            categoryInput.readOnly = true;
+            unitInput.readOnly = true;
+            categoryInput.dataset.catalogSource = catalogItem.name;
+            unitInput.dataset.catalogSource = catalogItem.name;
+            categoryInput.placeholder = 'Auto-filled from material list';
+            unitInput.placeholder = 'Auto-filled from material list';
+            return;
+        }
+
+        const previouslyCatalogBased = Boolean(categoryInput.dataset.catalogSource || unitInput.dataset.catalogSource);
+        if (previouslyCatalogBased && !preserveCustomValues) {
+            categoryInput.value = '';
+            unitInput.value = '';
+        }
+
+        categoryInput.readOnly = false;
+        unitInput.readOnly = false;
+        categoryInput.dataset.catalogSource = '';
+        unitInput.dataset.catalogSource = '';
+        categoryInput.placeholder = 'Enter category for new material';
+        unitInput.placeholder = 'Enter unit for new material';
     };
 
     const statusBadgeClass = (status) => {
@@ -538,12 +600,14 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRequestTracking();
     };
 
-    const replacementOptionsFor = (originalMaterialName) =>
-        '<option value="">Select replacement...</option>' +
-        materialCatalog
-            .filter((item) => item.name !== originalMaterialName)
-            .map((item) => `<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)}</option>`)
-            .join('');
+    const replacementInputFor = (originalMaterialName) => `
+        <input type="text"
+               class="form-control table-material-combobox substitution-replacement-input"
+               list="materialCatalogOptions"
+               placeholder="Select or enter replacement..."
+               autocomplete="off"
+               data-original-material="${escapeHtml(originalMaterialName)}"
+               disabled>`;
 
     const updateSubstitutionSelectionCount = () => {
         const selected = substitutionItemsBody.querySelectorAll('.substitution-line-select:checked').length;
@@ -552,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const setSubstitutionRowEnabled = (row, enabled) => {
         row.classList.toggle('is-selected', enabled);
-        const replacement = row.querySelector('.substitution-replacement-select');
+        const replacement = row.querySelector('.substitution-replacement-input');
         const qtyInput = row.querySelector('.substitution-qty-input');
 
         replacement.disabled = !enabled;
@@ -577,9 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>${Number(material.qty).toLocaleString()} ${escapeHtml(material.unit)}</td>
                 <td>
-                    <select class="form-control table-select substitution-replacement-select" disabled>
-                        ${replacementOptionsFor(material.name)}
-                    </select>
+                    ${replacementInputFor(material.name)}
                 </td>
                 <td>
                     <input type="number" class="form-control table-input-number substitution-qty-input"
@@ -638,7 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const material = activeSubstitutionContext.items.find((item) => item.id === row.dataset.materialId);
                 return {
                     material,
-                    replacementMaterial: row.querySelector('.substitution-replacement-select')?.value || '',
+                    replacementMaterial: row.querySelector('.substitution-replacement-input')?.value || '',
                     qty: Number.parseInt(row.querySelector('.substitution-qty-input')?.value, 10)
                 };
             });
@@ -658,8 +720,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         for (const line of selected) {
-            if (!line.material || !line.replacementMaterial || !Number.isInteger(line.qty) || line.qty < 1) {
+            if (!line.material || !line.replacementMaterial.trim() || !Number.isInteger(line.qty) || line.qty < 1) {
                 showToast('Incomplete Material Substitution', 'Every selected material needs a replacement material and a valid quantity.', 'danger');
+                return false;
+            }
+
+            if (normalizeMaterialName(line.replacementMaterial) === normalizeMaterialName(line.material.name)) {
+                showToast('Invalid Replacement', `${line.material.name} cannot be substituted with the same material.`, 'danger');
                 return false;
             }
 
@@ -720,6 +787,12 @@ document.addEventListener('DOMContentLoaded', () => {
         materialForm.reset();
         inCategory.value = '';
         inUnit.value = '';
+        inCategory.dataset.catalogSource = '';
+        inUnit.dataset.catalogSource = '';
+        inCategory.readOnly = true;
+        inUnit.readOnly = true;
+        inCategory.placeholder = 'Auto-filled for listed materials';
+        inUnit.placeholder = 'Auto-filled for listed materials';
     };
 
     const openEditMaterial = (id) => {
@@ -727,8 +800,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!item) return;
         activeEditId = id;
         editMaterialIdDisplay.textContent = item.id;
-        populateCatalogSelect(editMatName, item.name);
-        applyCatalogMetadata(item.name, editMatCategory, editMatUnit);
+        editMatName.value = item.name;
+        editMatCategory.value = item.category;
+        editMatUnit.value = item.unit;
+        editMatCategory.dataset.catalogSource = '';
+        editMatUnit.dataset.catalogSource = '';
+
+        if (getCatalogItem(item.name)) {
+            syncMaterialMetadataMode(editMatName, editMatCategory, editMatUnit);
+        } else {
+            syncMaterialMetadataMode(editMatName, editMatCategory, editMatUnit, true);
+        }
+
         editMatQty.value = item.qty;
         editMatRemarks.value = item.remarks || '';
         openModal('editMaterialModal');
@@ -742,26 +825,42 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal('deleteMaterialModal');
     };
 
-    inName.addEventListener('change', () => applyCatalogMetadata(inName.value, inCategory, inUnit));
-    editMatName.addEventListener('change', () => applyCatalogMetadata(editMatName.value, editMatCategory, editMatUnit));
+    const syncAddMaterialMetadata = () => syncMaterialMetadataMode(inName, inCategory, inUnit);
+    const syncEditMaterialMetadata = () => syncMaterialMetadataMode(editMatName, editMatCategory, editMatUnit);
+
+    inName.addEventListener('input', syncAddMaterialMetadata);
+    inName.addEventListener('change', syncAddMaterialMetadata);
+    editMatName.addEventListener('input', syncEditMaterialMetadata);
+    editMatName.addEventListener('change', syncEditMaterialMetadata);
 
     materialForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const catalogItem = getCatalogItem(inName.value);
+
+        const materialName = inName.value.trim();
+        const catalogItem = getCatalogItem(materialName);
+        const category = catalogItem?.category || inCategory.value.trim();
+        const unit = catalogItem?.unit || inUnit.value.trim();
         const qty = Number.parseInt(inQty.value, 10);
-        if (!catalogItem || !Number.isInteger(qty) || qty < 1) {
-            showToast('Incomplete Material', 'Select a material and enter a valid quantity.', 'danger');
+
+        if (!materialName || !category || !unit || !Number.isInteger(qty) || qty < 1) {
+            showToast(
+                'Incomplete Material',
+                'Enter a material name, category, unit, and valid quantity. Existing materials will auto-fill their category and unit.',
+                'danger'
+            );
             return;
         }
 
         const newItem = {
             id: `MAT-${nextIdCounter++}`,
-            name: catalogItem.name,
-            category: catalogItem.category,
-            unit: catalogItem.unit,
+            name: catalogItem?.name || materialName,
+            category,
+            unit,
             qty,
             remarks: inRemarks.value.trim()
         };
+
+        if (!catalogItem) rememberCustomMaterial(newItem);
 
         materialList.push(newItem);
         resetAddForm();
@@ -780,19 +879,24 @@ document.addEventListener('DOMContentLoaded', () => {
     editMaterialForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const item = materialList.find((material) => material.id === activeEditId);
-        const catalogItem = getCatalogItem(editMatName.value);
+        const materialName = editMatName.value.trim();
+        const catalogItem = getCatalogItem(materialName);
+        const category = catalogItem?.category || editMatCategory.value.trim();
+        const unit = catalogItem?.unit || editMatUnit.value.trim();
         const qty = Number.parseInt(editMatQty.value, 10);
 
-        if (!item || !catalogItem || !Number.isInteger(qty) || qty < 1) {
-            showToast('Unable to Save', 'Please provide a valid material and quantity.', 'danger');
+        if (!item || !materialName || !category || !unit || !Number.isInteger(qty) || qty < 1) {
+            showToast('Unable to Save', 'Please provide a material name, category, unit, and valid quantity.', 'danger');
             return;
         }
 
-        item.name = catalogItem.name;
-        item.category = catalogItem.category;
-        item.unit = catalogItem.unit;
+        item.name = catalogItem?.name || materialName;
+        item.category = category;
+        item.unit = unit;
         item.qty = qty;
         item.remarks = editMatRemarks.value.trim();
+
+        if (!catalogItem) rememberCustomMaterial(item);
 
         renderTable();
         closeModal('editMaterialModal');
@@ -883,7 +987,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const substitutions = selectedLines.map((line) => ({
             sourceMaterialId: line.material.id,
             originalMaterial: line.material.name,
-            replacementMaterial: line.replacementMaterial,
+            replacementMaterial: line.replacementMaterial.trim(),
             qty: line.qty,
             unit: line.material.unit
         }));
@@ -953,8 +1057,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRequestTracking();
     });
 
-    populateCatalogSelect(inName);
-    populateCatalogSelect(editMatName);
+    populateMaterialDatalist();
+    resetAddForm();
     renderTable();
     refreshAllRequestUI();
 });
